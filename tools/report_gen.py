@@ -191,7 +191,11 @@ class ContrailReportInit(TestInputs):
                                             container=container)
                     break
         if (build_id.count('.') > 3):
-            build_id=re.match(r'([0-9\.-]*)\.',build_id).group(1)
+            match = re.match(r'.*?([0-9]+(?:\.[0-9]+)+)', build_id)
+            if match:
+                build_id = match.group(1)
+            else:
+                print("Error during extracting build_id")
         return [build_id.rstrip('\n'), build_sku]
 
     def get_distro(self):
