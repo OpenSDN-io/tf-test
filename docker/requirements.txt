@@ -13,7 +13,7 @@ easyprocess==0.2.10
 enum34==1.1.10 ; python_version < '3'
 future==0.18.2
 google-auth==1.11.2
-idna==2.9
+idna==3.7
 ipaddress==1.0.23 ; python_version == '2.7'
 jinja2==2.11.3
 junos-eznc==2.3.0
