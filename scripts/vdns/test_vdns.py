@@ -50,7 +50,8 @@ class TestvDNS0(BasevDNSTest):
     def runTest(self):
         pass
     #end runTest
-
+    
+    @test.attr(type=['full_sanity'])
     @preposttest_wrapper
     def test_vdns_ping_diff_vn(self):
         '''This Test tests vdns functionality-- test vms on different subnets and we should able to refer each by name.
@@ -220,6 +221,7 @@ class TestvDNS0(BasevDNSTest):
     #   (bng.juniper.net) vdns2        vdns3(eng.juniper.net)
     #
     #
+    @test.attr(type=['full_sanity'])
     @preposttest_wrapper
     @skip_because(feature='multi-ipam')
     def test_vdns_with_next_vdns(self):

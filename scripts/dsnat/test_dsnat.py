@@ -13,6 +13,7 @@ class TestDSNAT(BaseDSNAT):
 
     @attr(type=['sanity'])
     @preposttest_wrapper
+    @test.attr(type=['full_sanity'])
     def test_dsnat_basic(self):
         '''
             create a VN and enable fabric SNAT

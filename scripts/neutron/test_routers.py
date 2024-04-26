@@ -82,7 +82,8 @@ class TestRouters(BaseNeutronTest):
         self.add_vn_to_router(router_dict['id'], vn1_fixture, cleanup=False)
         assert vn1_vm1_fixture.ping_with_certainty(vn2_vm1_fixture.vm_ip)
     # end test_basic_router_behavior
-
+    
+    @test.attr(type=['full_sanity'])
     @preposttest_wrapper
     def test_router_rename(self):
         ''' Test router rename
@@ -96,6 +97,7 @@ class TestRouters(BaseNeutronTest):
         assert router_rsp['router'][
             'name'] == "test_router", 'Failed to update router name'
 
+    @test.attr(type=['full_sanity'])
     @preposttest_wrapper
     def test_router_admin_state_up(self):
         ''' Routing should not work with router's admin_state_up set to False

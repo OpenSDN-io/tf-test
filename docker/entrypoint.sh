@@ -16,7 +16,7 @@ Run contrail-test in container
   -p  contrail fab utils path. Default: /opt/contrail/utils
   -f  features to test. Default: sanity
       Valid options:
-        sanity, quick_sanity, ci_sanity, ci_sanity_WIP, ci_svc_sanity,
+        sanity, quick_sanity, ci_sanity, ci_full_sanity, ci_sanity_WIP, ci_svc_sanity,
         upgrade, webui_sanity, ci_webui_sanity, devstack_sanity, upgrade_only
   -T  test tags to run tests. If not provided, try $TEST_TAGS variable
   -l  path where contrail-test can be found. Default: /contrail-test
@@ -121,6 +121,10 @@ else
         ci_sanity)
             export ci_image=${CI_IMAGE:-'cirros'}
             $run_tests -T ci_sanity --send-mail -U $EXTRA_RUN_TEST_ARGS
+            rv_run_test=$?
+            ;;
+        full_sanity)
+            $run_tests -T full_sanity --send-mail -U -t $EXTRA_RUN_TEST_ARGS
             rv_run_test=$?
             ;;
         ci_sanity_WIP)

@@ -30,6 +30,7 @@ class AnalyticsTestSanity(base.AnalyticsBaseTest):
         super(AnalyticsTestSanity, cls).setUpClass()
 
     @preposttest_wrapper
+    @test.attr(type=['full_sanity'])
     def test_redis_stunnel_provision(self):
         ''' Test verify redis & stunnel services
             In SSL-ENABLED setup:
