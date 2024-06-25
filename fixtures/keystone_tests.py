@@ -66,7 +66,7 @@ class KeystoneCommands(object):
 
     def get_client(self, scope='domain'):
         return ks_client.Client(version=self.version, session=self.get_session(scope),
-                                      auth_url=self.auth_url, region_name=self.region_name)
+                                      auth_url=self.auth_url, region_name=self.region_name, interface='public')
 
     def get_handle(self):
         return self.keystone
