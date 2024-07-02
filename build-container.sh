@@ -121,7 +121,7 @@ EOF
         BASE_TAG='latest'
     fi
     if [[ -z $OPENSTACK_REPO ]]; then
-        OPENSTACK_REPO="http://mirror.centos.org/centos/7/cloud/x86_64/openstack-${SKU}"
+        OPENSTACK_REPO="http://vault.centos.org/centos/7/cloud/x86_64/openstack-${SKU}"
     fi
 
     local dockerfile='docker/Dockerfile'
