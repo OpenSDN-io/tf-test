@@ -33,7 +33,7 @@ import struct
 from .fabutils import *
 from fabric.exceptions import CommandTimeout, NetworkError
 from fabric.contrib.files import exists
-from fabric.context_managers import settings, hide, cd, lcd
+from fabric.context_managers import settings, hide
 from fabric.state import connections as fab_connections
 from paramiko.ssh_exception import ChannelException
 #from tcutils.util import retry
@@ -42,10 +42,34 @@ from testtools.testcase import TestSkipped
 import functools
 import testtools
 from .fabfile import *
-import ast
 
-sku_dict = {'2014.1': 'icehouse', '2014.2': 'juno', '2015.1': 'kilo', '12': 'liberty', '13': 'mitaka',
-            '14': 'newton', '15': 'ocata', '17': 'queens', '18': 'rocky', '20': 'train'}
+
+sku_dict = {
+    '2014.1': 'icehouse',
+    '2014.2': 'juno',
+    '2015.1': 'kilo',
+    '12': 'liberty',
+    '13': 'mitaka',
+    '14': 'newton',
+    '15': 'ocata',
+    '16': 'pike',
+    '17': 'queens',
+    '18': 'rocky',
+    '19': 'stein',
+    '20': 'train',
+    '21': 'ussuri',
+    '22': 'victoria',
+    '23': 'wallaby',
+    '24': 'xenz',
+    '25': 'yoga',
+    '26': 'zed',
+    '27': '2023.1',
+    '28': '2023.2',
+    '29': '2024.1',
+    '30': '2024.2',
+    '31': '2025.1',
+    '32': '2025.2',
+}
 
 
 # Code borrowed from http://wiki.python.org/moin/PythonDecoratorLibrary#Retry

@@ -5,11 +5,10 @@ declare -a pids
 trap resume_pids 10 1 2 3 6
 source tools/common.sh
 
-PYTHON=/usr/bin/python3
+export PYTHON=/usr/bin/python3
 TESTR=$(which testr)
 SUBUNIT2JUNIT=$(which subunit2junitxml)
 rm -rf .testrepository
-export PYTHON=${PYTHON}
 
 function wait_till_child_process_state
 {
