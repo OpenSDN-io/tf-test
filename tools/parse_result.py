@@ -1,10 +1,7 @@
-from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
 import sys
 from lxml import etree as ET
 import configparser
+
 
 def filter_by_tests(doc, value_list = ["process-returncode"]):
     elem = doc.xpath("/testsuite/testcase[@name='process-returncode']")
@@ -18,6 +15,7 @@ def filter_by_tests(doc, value_list = ["process-returncode"]):
     root.set('failures',str(failures))
     root.set('tests',str(tests))
     return doc
+
 
 def change_tests_name(doc):
     root = doc.getroot()
@@ -34,16 +32,17 @@ def change_tests_name(doc):
     except Exception as e:
         print('could not change test cases names')
 
+
 def _make_url(log_location, classname, name):
     name = name.split('[')[0]
     text = '%s/%s.html#%s' % (log_location, classname.lower(), name)
     return text
 # end _make_url
 
+
 def add_logfile_link(doc, log_location):
     ''' For failures, add a link to the debug log file
     '''
-    root = doc.getroot()
     try:
         elements = doc.xpath("/testsuite/testcase")
         for elem in elements:
@@ -65,8 +64,9 @@ def add_logfile_link(doc, log_location):
         print('Some error %s while adding log links' % (e))
 # end add_logfile_link
 
+
 def _get_log_location(report_file):
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(strict=False)
     config.read(report_file)
     log_location = config.get('Test', 'logslocation')
     return log_location
@@ -84,4 +84,3 @@ filter_by_tests(doc)
 change_tests_name(doc)
 add_logfile_link(doc, logs_location)
 write_to_a_file(xmlfile)
-
