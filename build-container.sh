@@ -53,6 +53,7 @@ docker_build_test_sku () {
         build_arg_opts+=" --build-arg BASE_TAG=${BASE_TAG}"
     fi
     build_arg_opts+=" --build-arg SKU=${SKU}"
+    build_arg_opts+=" --build-arg PIP_REPOSITORY=${PIP_REPOSITORY}"
     build_arg_opts+=" --build-arg CONTRAIL_REPO=${CONTRAIL_REPO}"
     build_arg_opts+=" --build-arg OPENSTACK_REPO=${OPENSTACK_REPO}"
     build_arg_opts+=" --build-arg DOCKERFILE_DIR=${dir}"
