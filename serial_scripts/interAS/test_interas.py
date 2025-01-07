@@ -1,14 +1,5 @@
 from common.interAS.base import BaseInterAS
-from builtins import str
 from tcutils.wrappers import preposttest_wrapper
-from common.neutron.base import BaseNeutronTest
-from security_group import SecurityGroupFixture
-import test
-import time
-from tcutils.util import *
-from tcutils.tcpdump_utils import *
-from common import isolated_creds
-from test import attr
 
 class TestInterAS(BaseInterAS):
 

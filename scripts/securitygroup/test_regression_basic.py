@@ -1,16 +1,14 @@
 from common.securitygroup.base import BaseSGTest
 from common.securitygroup.verify import VerifySecGroup
 from common.policy.config import ConfigPolicy
-import unittest
 from tcutils.wrappers import preposttest_wrapper
 from vnc_api.vnc_api import NoIdError
 from vn_test import VNFixture
 from vm_test import VMFixture
-import os
 import time
-import sys
 import test
-from tcutils.util import get_random_name, get_random_cidrs, set_attr
+from tcutils.util import get_random_name, get_random_cidrs
+
 
 class SecurityGroupBasicRegressionTests1(BaseSGTest, VerifySecGroup, ConfigPolicy):
 
@@ -23,7 +21,7 @@ class SecurityGroupBasicRegressionTests1(BaseSGTest, VerifySecGroup, ConfigPolic
         pass
 
     # remove from ci_sanity due to bug CEM-26917
-    @test.attr(type=['sanity','vcenter', 'suite1', 'cb_sanity', 'ci_contrail_go_kolla_ocata_sanity'])
+    @test.attr(type=['sanity', 'suite1', 'cb_sanity', 'ci_contrail_go_kolla_ocata_sanity'])
     @preposttest_wrapper
     def test_sec_group_basic(self):
         """
@@ -81,33 +79,16 @@ class SecurityGroupBasicRegressionTests1(BaseSGTest, VerifySecGroup, ConfigPolic
         assert vn_fixture.verify_on_setup()
         img_name = self.inputs.get_ci_image() or 'ubuntu-traffic'
 
-        #cannot use set_security_group in vro ,so remove default sg before adding new sg
-        if self.inputs.vro_based:
-            vm1_fixture = self.useFixture(VMFixture(
-                project_name=self.inputs.project_name, connections=self.connections,
-                vn_obj=vn_fixture.obj, image_name=img_name, flavor='contrail_flavor_small'))
-            vm2_fixture = self.useFixture(VMFixture(
-                project_name=self.inputs.project_name, connections=self.connections,
-                vn_obj=vn_fixture.obj, image_name=img_name, flavor='contrail_flavor_small'))
-            assert vm1_fixture.verify_on_setup()
-            assert vm1_fixture.wait_till_vm_is_up()
-            assert vm2_fixture.verify_on_setup()
-            assert vm2_fixture.wait_till_vm_is_up()
-            vm1_fixture.remove_security_group(secgrp='default')
-            vm2_fixture.remove_security_group(secgrp='default')
-            vm1_fixture.add_security_group(secgrp_id)
-            vm2_fixture.add_security_group(secgrp_id)
-        else:
-            vm1_fixture = self.useFixture(VMFixture(
-                project_name=self.inputs.project_name, connections=self.connections,
-                vn_obj=vn_fixture.obj, image_name=img_name, flavor='contrail_flavor_small',sg_ids=[secgrp_id]))
-            vm2_fixture = self.useFixture(VMFixture(
-                project_name=self.inputs.project_name, connections=self.connections,
-                vn_obj=vn_fixture.obj, image_name=img_name, flavor='contrail_flavor_small',sg_ids=[secgrp_id]))
-            assert vm1_fixture.verify_on_setup()
-            assert vm1_fixture.wait_till_vm_is_up()
-            assert vm2_fixture.verify_on_setup()
-            assert vm2_fixture.wait_till_vm_is_up()
+        vm1_fixture = self.useFixture(VMFixture(
+            project_name=self.inputs.project_name, connections=self.connections,
+            vn_obj=vn_fixture.obj, image_name=img_name, flavor='contrail_flavor_small',sg_ids=[secgrp_id]))
+        vm2_fixture = self.useFixture(VMFixture(
+            project_name=self.inputs.project_name, connections=self.connections,
+            vn_obj=vn_fixture.obj, image_name=img_name, flavor='contrail_flavor_small',sg_ids=[secgrp_id]))
+        assert vm1_fixture.verify_on_setup()
+        assert vm1_fixture.wait_till_vm_is_up()
+        assert vm2_fixture.verify_on_setup()
+        assert vm2_fixture.wait_till_vm_is_up()
 
         result, msg = vm1_fixture.verify_security_group(secgrp_name)
         assert result, msg
@@ -227,33 +208,16 @@ class SecurityGroupBasicRegressionTests1(BaseSGTest, VerifySecGroup, ConfigPolic
         assert vn_fixture.verify_on_setup()
         img_name = self.inputs.get_ci_image() or 'ubuntu-traffic'
 
-        # cannot use set_security_group in vro ,so remove default sg before adding new sg
-        if self.inputs.vro_based:
-            vm1_fixture = self.useFixture(VMFixture(
-                project_name=self.inputs.project_name, connections=self.connections,
-                vn_obj=vn_fixture.obj, image_name=img_name, flavor='contrail_flavor_small'))
-            vm2_fixture = self.useFixture(VMFixture(
-                project_name=self.inputs.project_name, connections=self.connections,
-                vn_obj=vn_fixture.obj, image_name=img_name, flavor='contrail_flavor_small'))
-            assert vm1_fixture.verify_on_setup()
-            assert vm1_fixture.wait_till_vm_is_up()
-            assert vm2_fixture.verify_on_setup()
-            assert vm2_fixture.wait_till_vm_is_up()
-            vm1_fixture.remove_security_group(secgrp='default')
-            vm2_fixture.remove_security_group(secgrp='default')
-            vm1_fixture.add_security_group(secgrp_id)
-            vm2_fixture.add_security_group(secgrp_id)
-        else:
-            vm1_fixture = self.useFixture(VMFixture(
-                project_name=self.inputs.project_name, connections=self.connections,
-                vn_obj=vn_fixture.obj, image_name=img_name, flavor='contrail_flavor_small',sg_ids=[secgrp_id]))
-            vm2_fixture = self.useFixture(VMFixture(
-                project_name=self.inputs.project_name, connections=self.connections,
-                vn_obj=vn_fixture.obj, image_name=img_name, flavor='contrail_flavor_small',sg_ids=[secgrp_id]))
-            assert vm1_fixture.verify_on_setup()
-            assert vm1_fixture.wait_till_vm_is_up()
-            assert vm2_fixture.verify_on_setup()
-            assert vm2_fixture.wait_till_vm_is_up()
+        vm1_fixture = self.useFixture(VMFixture(
+            project_name=self.inputs.project_name, connections=self.connections,
+            vn_obj=vn_fixture.obj, image_name=img_name, flavor='contrail_flavor_small',sg_ids=[secgrp_id]))
+        vm2_fixture = self.useFixture(VMFixture(
+            project_name=self.inputs.project_name, connections=self.connections,
+            vn_obj=vn_fixture.obj, image_name=img_name, flavor='contrail_flavor_small',sg_ids=[secgrp_id]))
+        assert vm1_fixture.verify_on_setup()
+        assert vm1_fixture.wait_till_vm_is_up()
+        assert vm2_fixture.verify_on_setup()
+        assert vm2_fixture.wait_till_vm_is_up()
 
         result, msg = vm1_fixture.verify_security_group(secgrp_name)
         assert result, msg

@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 # Need to import path to test/fixtures and test/scripts/
 # Ex : export PYTHONPATH='$PATH:/root/test/fixtures/:/root/test/scripts/'
 #
@@ -7,19 +6,13 @@ from __future__ import absolute_import
 # Set the env variable PARAMS_FILE to point to your ini file. Else it will try to pick params.ini in PWD
 #
 from . import base
-import re
 import os
-from user_test import UserFixture
-import fixtures
-import testtools
-import unittest
-from common.contrail_test_init import ContrailTestInit
+import sys
 from vn_test import *
 from quantum_test import *
 from vnc_api_test import *
 from nova_test import *
 from vm_test import *
-from common.connections import ContrailConnections
 from floating_ip import *
 from policy_test import *
 from multiple_vn_vm_test import *
@@ -27,10 +20,6 @@ from contrail_fixtures import *
 from tcutils.wrappers import preposttest_wrapper
 sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
 from tcutils.commands import *
-from testresources import ResourcedTestCase
-import traffic_tests
-from fabric.context_managers import settings
-from fabric.api import run
 import test
 
 
@@ -40,7 +29,7 @@ class FloatingipBasicTestSanity(base.FloatingIpBaseTest):
     def setUpClass(cls):
         super(FloatingipBasicTestSanity, cls).setUpClass()
 
-    @test.attr(type=['cb_sanity', 'sanity', 'ci_sanity', 'quick_sanity', 'vcenter', 'suite1','vrouter_gw', 'vcenter_compute', 'ci_contrail_go_kolla_ocata_sanity'])
+    @test.attr(type=['cb_sanity', 'sanity', 'ci_sanity', 'quick_sanity', 'suite1','vrouter_gw', 'ci_contrail_go_kolla_ocata_sanity'])
     @preposttest_wrapper
     def test_floating_ip(self):
         '''Test to validate floating-ip Assignment to a VM. It creates a VM, assigns a FIP to it and pings to a IP in the FIP VN.

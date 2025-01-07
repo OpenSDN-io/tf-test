@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 # Need to import path to test/fixtures and test/scripts/
 # Ex : export PYTHONPATH='$PATH:/root/test/fixtures/:/root/test/scripts/'
 #
@@ -11,8 +10,8 @@ from tcutils.wrappers import preposttest_wrapper
 from common.contrail_fabric.base import BaseFabricTest
 import test
 import random
-from tcutils.util import skip_because, get_random_name, get_random_cidr
-from tcutils.tcpdump_utils import verify_tcpdump_count, search_in_pcap
+from tcutils.util import skip_because
+from tcutils.tcpdump_utils import verify_tcpdump_count
 from common.device_connection import NetconfConnection
 
 class TestFabricEvpnType5(BaseFabricTest):

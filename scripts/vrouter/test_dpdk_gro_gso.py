@@ -2,7 +2,6 @@
 This FT automation implementation will perform GRO & GSO test
 Test performed on dpdk bond configuration
 '''
-from builtins import str
 from common.vrouter.base import BaseVrouterTest
 from tcutils.wrappers import preposttest_wrapper
 import test
@@ -21,7 +20,7 @@ class TestGroGso(BaseVrouterTest):
     def tearDownClass(cls):
         super(TestGroGso, cls).tearDownClass()
 
-    @test.attr(type=['sanity', 'vcenter_compute', 'dev_reg'])
+    @test.attr(type=['sanity', 'dev_reg'])
     @preposttest_wrapper
     @skip_because(min_nodes=2, dpdk_cluster=False)
     def test_dpdk_gro_gso(self):

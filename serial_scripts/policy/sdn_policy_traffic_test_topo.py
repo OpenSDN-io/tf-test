@@ -1,6 +1,3 @@
-from builtins import str
-from builtins import range
-from builtins import object
 class sdn_1vn_2vm_config(object):
 
     def __init__(self, domain='default-domain', project='admin', username=None, password=None):

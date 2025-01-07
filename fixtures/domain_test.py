@@ -1,15 +1,10 @@
-import os
-import fixtures
 from vnc_api.vnc_api import *
-import uuid
 import fixtures
 from vnc_api_test import *
 from contrail_fixtures import *
 from common.connections import ContrailConnections
 from tcutils.util import retry,get_plain_uuid
-from time import sleep
 from openstack import OpenstackAuth
-from vcenter import VcenterAuth
 
 
 class DomainFixture(fixtures.Fixture):
@@ -188,9 +183,6 @@ class DomainFixture(fixtures.Fixture):
 
     @retry(delay=2, tries=6)
     def verify_domain_in_api_server(self):
-        if self.inputs.orchestrator == 'vcenter':
-            self.logger.debug('No need to verify domains in case of vcenter')
-            return True
         result = True
         cs_domain_obj = self.api_s_inspect.get_cs_domain(
             self.domain_name)
@@ -212,9 +204,6 @@ class DomainFixture(fixtures.Fixture):
 
     @retry(delay=2, tries=5)
     def verify_domain_not_in_api_server(self):
-        if self.inputs.orchestrator == 'vcenter':
-            self.logger.debug('No need to verify domains in case of vcenter')
-            return True
         result = True
         cs_domain_obj = self.api_s_inspect.get_cs_domain(
             self.domain_name)

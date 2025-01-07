@@ -3,7 +3,6 @@ This FT automation implementation will check LACP convergence and configure
 LACP_RATE  bond interface configuration
 Tested on dpdk compute Bonded configuration
 """
-from builtins import str
 from common.vrouter.base import BaseVrouterTest
 from tcutils.wrappers import preposttest_wrapper
 import test
@@ -107,7 +106,7 @@ class TestLacp(BaseVrouterTest):
         return True 
     #end bond_lacp_config
 
-    @test.attr(type=['sanity', 'vcenter_compute', 'dev_reg'])
+    @test.attr(type=['sanity', 'dev_reg'])
     @preposttest_wrapper
     @skip_because(min_nodes=2, dpdk_cluster=False)
     def test_bond_lacp_config(self):

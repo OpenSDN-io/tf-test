@@ -1,22 +1,15 @@
-from builtins import str
-from builtins import range
-import test_v1
 from vn_test import MultipleVNFixture
 from common.device_connection import NetconfConnection
-import physical_device_fixture
 from physical_router_fixture import PhysicalRouterFixture
 from tcutils.contrail_status_check import *
-from fabric.api import run, hide, settings
+from fabric.api import run, settings
 from vm_test import MultipleVMFixture
 from vn_test import VNFixture
 from vm_test import VMFixture
 from vnc_api.vnc_api import *
-from policy_test import PolicyFixture
 from tcutils.util import get_random_name, retry
 from common.securitygroup.verify import VerifySecGroup
 from common.policy.config import ConfigPolicy
-from common import isolated_creds
-import os
 import re
 from time import sleep
 
@@ -97,54 +90,50 @@ class Md5Base(VerifySecGroup, ConfigPolicy):
 
 
     def config_basic(self):
-        #ipv6 not supported for vcenter so skipping config
-        if self.inputs.orchestrator != 'vcenter':
-            vn61_name = "test_vnv6sr"
-            vn61_net = ['2001::101:0/120']
-            #vn1_fixture = self.config_vn(vn1_name, vn1_net)
-            vn61_fixture = self.useFixture(VNFixture(
-                project_name=self.inputs.project_name, connections=self.connections,
-                vn_name=vn61_name, inputs=self.inputs, subnets=vn61_net))
-            vn62_name = "test_vnv6dn"
-            vn62_net = ['2001::201:0/120']
-            #vn2_fixture = self.config_vn(vn2_name, vn2_net)
-            vn62_fixture = self.useFixture(VNFixture(
-                project_name=self.inputs.project_name, connections=self.connections,
-                vn_name=vn62_name, inputs=self.inputs, subnets=vn62_net))
-            vm61_name = 'source_vm'
-            vm62_name = 'dest_vm'
-            #vm1_fixture = self.config_vm(vn1_fixture, vm1_name)
-            #vm2_fixture = self.config_vm(vn2_fixture, vm2_name)
-            vm61_fixture = self.useFixture(VMFixture(
-                project_name=self.inputs.project_name, connections=self.connections,
-                vn_obj=vn61_fixture.obj, vm_name=vm61_name, node_name=None,
-                image_name='cirros', flavor='m1.tiny'))
+        vn61_name = "test_vnv6sr"
+        vn61_net = ['2001::101:0/120']
+        #vn1_fixture = self.config_vn(vn1_name, vn1_net)
+        vn61_fixture = self.useFixture(VNFixture(
+            project_name=self.inputs.project_name, connections=self.connections,
+            vn_name=vn61_name, inputs=self.inputs, subnets=vn61_net))
+        vn62_name = "test_vnv6dn"
+        vn62_net = ['2001::201:0/120']
+        #vn2_fixture = self.config_vn(vn2_name, vn2_net)
+        vn62_fixture = self.useFixture(VNFixture(
+            project_name=self.inputs.project_name, connections=self.connections,
+            vn_name=vn62_name, inputs=self.inputs, subnets=vn62_net))
+        vm61_name = 'source_vm'
+        vm62_name = 'dest_vm'
+        #vm1_fixture = self.config_vm(vn1_fixture, vm1_name)
+        #vm2_fixture = self.config_vm(vn2_fixture, vm2_name)
+        vm61_fixture = self.useFixture(VMFixture(
+            project_name=self.inputs.project_name, connections=self.connections,
+            vn_obj=vn61_fixture.obj, vm_name=vm61_name, node_name=None,
+            image_name='cirros', flavor='m1.tiny'))
 
-            vm62_fixture = self.useFixture(VMFixture(
-                project_name=self.inputs.project_name, connections=self.connections,
-                vn_obj=vn62_fixture.obj, vm_name=vm62_name, node_name=None,
-                image_name='cirros', flavor='m1.tiny'))
-            vm61_fixture.wait_till_vm_is_up()
-            vm62_fixture.wait_till_vm_is_up()
+        vm62_fixture = self.useFixture(VMFixture(
+            project_name=self.inputs.project_name, connections=self.connections,
+            vn_obj=vn62_fixture.obj, vm_name=vm62_name, node_name=None,
+            image_name='cirros', flavor='m1.tiny'))
+        vm61_fixture.wait_till_vm_is_up()
+        vm62_fixture.wait_till_vm_is_up()
 
-            rule = [
-                {
-                    'direction': '<>',
-                    'protocol': 'any',
-                    'source_network': vn61_name,
-                    'src_ports': [0, -1],
-                    'dest_network': vn62_name,
-                    'dst_ports': [0, -1],
-                    'simple_action': 'pass',
-                },
-            ]
-            policy_name = 'allow_all'
-            policy_fixture = self.config_policy(policy_name, rule)
+        rule = [
+            {
+                'direction': '<>',
+                'protocol': 'any',
+                'source_network': vn61_name,
+                'src_ports': [0, -1],
+                'dest_network': vn62_name,
+                'dst_ports': [0, -1],
+                'simple_action': 'pass',
+            },
+        ]
+        policy_name = 'allow_all'
+        policy_fixture = self.config_policy(policy_name, rule)
 
-            vn61_policy_fix = self.attach_policy_to_vn(
-                policy_fixture, vn61_fixture)
-            vn62_policy_fix = self.attach_policy_to_vn(
-                policy_fixture, vn62_fixture)
+        self.attach_policy_to_vn(policy_fixture, vn61_fixture)
+        self.attach_policy_to_vn(policy_fixture, vn62_fixture)
 
         vn1 = "vn1"
         vn2 = "vn2"
@@ -161,8 +150,6 @@ class Md5Base(VerifySecGroup, ConfigPolicy):
             },
         ]
         image_name = 'cirros'
-        if self.inputs.orchestrator == 'vcenter':
-            image_name = 'vcenter_tiny_vm'
         self.logger.info("Configure the policy with allow any")
         self.multi_vn_fixture = self.useFixture(MultipleVNFixture(
             connections=self.connections, inputs=self.inputs, subnet_count=2,

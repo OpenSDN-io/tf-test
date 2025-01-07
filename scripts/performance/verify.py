@@ -1,20 +1,14 @@
-from __future__ import absolute_import
-import os
-import fixtures
-import testtools
 import string
 
 from tcutils.parsers.netperfparse import NetPerfParser
 from tcutils.parsers.pingparse import PingParser
-from common.connections import ContrailConnections
-from testresources import ResourcedTestCase
 from .config import ConfigPerformance
 from tcutils.parsers.flow_rate_parse import FlowRateParser
 from .config import ConfigPerformance
 from fabric.context_managers import settings, hide
 from fabric.operations import put, get, local
 from util import fab_put_file_to_vm, run_fab_cmd_on_node
-from fabric.api import env, run
+from fabric.api import run
 from common.servicechain.config import ConfigSvcChain
 
 

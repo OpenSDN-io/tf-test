@@ -1,11 +1,7 @@
 from common.vrouter.base import BaseVrouterTest
 from tcutils.wrappers import preposttest_wrapper
 import test
-from tcutils.util import get_random_name, is_v6
-import random
 from common.neutron.lbaasv2.base import BaseLBaaSTest
-from common.servicechain.config import ConfigSvcChain
-from common.servicechain.verify import VerifySvcChain
 
 AF_TEST = 'v6'
 
@@ -238,8 +234,6 @@ class FatFlowAggrIpv6(FatFlowAggr):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported('ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         if not self.connections.orch.is_feature_supported('ipv6'):
             return(False, 'IPv6 tests not supported in this environment ')
         return (True, None)

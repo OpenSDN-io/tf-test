@@ -1,4 +1,3 @@
-from builtins import object
 import time
 from common.firewall.base import BaseFirewallTest
 

@@ -1,14 +1,9 @@
-from builtins import str
-from builtins import range
 from common.gw_less_fwd.base import *
 from tcutils.wrappers import preposttest_wrapper
-from contrailapi import ContrailVncApi
 from common.svc_firewall.base import BaseSvc_FwTest
 from common.servicechain.firewall.verify import VerifySvcFirewall
-from common.servicechain.mirror.verify import VerifySvcMirror
 import test
 from tcutils.util import *
-from time import sleep
 from copy import copy
 
 class TestGWLessFWD(GWLessFWDTestBase):
@@ -23,7 +18,7 @@ class TestGWLessFWD(GWLessFWDTestBase):
         super(TestGWLessFWD, cls).tearDownClass()
     # end tearDownClass
 
-    @test.attr(type=['cb_sanity', 'sanity', 'vcenter'])
+    @test.attr(type=['cb_sanity', 'sanity'])
     @preposttest_wrapper
     def test_gw_less_fwd_single_vn_ip_fab(self):
         '''

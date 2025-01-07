@@ -5,10 +5,6 @@ protocol header.
 
 This needs to be extended for new protocol streams with new protocol.
 """
-from __future__ import print_function
-
-from builtins import str
-from builtins import object
 import sys
 import inspect
 import random

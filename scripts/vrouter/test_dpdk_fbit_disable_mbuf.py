@@ -2,7 +2,6 @@
 This FT automation implementation will perform to check feature bit negotiation on disable mergebuff dpdk
 Tested on dpdk compute Bonded configuration
 '''
-from builtins import str
 from common.vrouter.base import BaseVrouterTest
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import skip_because
@@ -42,7 +41,7 @@ class TestFbitMergeBuffDisable(BaseVrouterTest):
         return True
     #end check_fbit_with_disable_mbuf
 
-    @test.attr(type=['sanity', 'vcenter_compute', 'dev_reg'])
+    @test.attr(type=['sanity', 'dev_reg'])
     @preposttest_wrapper
     @skip_because(dpdk_cluster=False)
     def test_fbit_disable_mbuf_dpdk(self):

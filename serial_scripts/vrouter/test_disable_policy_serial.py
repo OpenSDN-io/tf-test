@@ -2,10 +2,7 @@
 #PR https://bugs.launchpad.net/juniperopenstack/+bug/1558920 and PR https://bugs.launchpad.net/juniperopenstack/+bug/1566650
 from common.vrouter.base import BaseVrouterTest
 from tcutils.wrappers import preposttest_wrapper
-import test
-from tcutils.util import get_random_cidr, get_random_name
-import random
-from common.servicechain.config import ConfigSvcChain
+from tcutils.util import get_random_name
 from common.servicechain.verify import VerifySvcChain
 
 AF_TEST = 'v6'
@@ -92,6 +89,4 @@ class DisablePolicyEcmpSerialIpv6(DisablePolicyEcmpSerial):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported('ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)

@@ -1,15 +1,7 @@
-from builtins import str
-from builtins import range
-from builtins import object
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoSuchElementException
 import time
-import random
-import fixtures
 from project_test import *
 from tcutils.util import *
 from vnc_api.vnc_api import *

@@ -1,5 +1,3 @@
-from __future__ import print_function
-from builtins import object
 import os
 import sys
 import argparse
@@ -7,9 +5,7 @@ from common.openstack_libs import ks_auth_identity_v2 as v2
 from common.openstack_libs import ks_session as session
 from common.openstack_libs import heat_client as client
 from common.structure import DynamicArgs
-from common.openstack_libs import ks_client as ksclient
 from common import log_orig as contrail_logging
-import functools
 from tcutils.util import *
 
 VERSION = 1

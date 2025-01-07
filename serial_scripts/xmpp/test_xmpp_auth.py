@@ -1,14 +1,6 @@
-from __future__ import absolute_import
 from .base import XmppBase
-from builtins import range
 from tcutils.wrappers import preposttest_wrapper
-from vn_test import MultipleVNFixture
-from vm_test import MultipleVMFixture
 from common.policy.config import ConfigPolicy
-from vn_test import VNFixture
-from vm_test import VMFixture
-import os
-import sys
 import test
 from tcutils.contrail_status_check import *
 from common.base import _GenericTestBaseMethods

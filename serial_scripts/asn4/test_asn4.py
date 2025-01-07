@@ -1,6 +1,3 @@
-from __future__ import absolute_import
-from builtins import str
-from builtins import range
 import test
 import uuid
 import re
@@ -15,7 +12,7 @@ from vm_test import VMFixture
 import control_node
 from common.bgpaas.base import BaseBGPaaS
 from serial_scripts.bgpaas.base import LocalASBase
-from tcutils.util import skip_because,retry
+from tcutils.util import retry
 from common.device_connection import NetconfConnection
 import control_node
 

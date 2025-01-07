@@ -1,9 +1,4 @@
 from analytics import base
-from builtins import str
-from builtins import range
-import os
-import datetime
-import time
 from vn_test import *
 from vm_test import *
 from tcutils.wrappers import preposttest_wrapper
@@ -20,7 +15,7 @@ class AnalyticsBasicTestSanity(base.AnalyticsBaseTest):
         pass
     #end runTest
 
-    @test.attr(type=['sanity', 'ci_sanity', 'vcenter', 'suite1', 'vcenter_compute', 'dev_sanity_dpdk'])
+    @test.attr(type=['sanity', 'ci_sanity', 'suite1', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_verify_object_logs(self):
         '''

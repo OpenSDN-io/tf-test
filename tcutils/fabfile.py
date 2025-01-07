@@ -1,9 +1,6 @@
-from __future__ import print_function
-from builtins import str
-from fabric.operations import sudo, run, get, put, env
+from fabric.operations import sudo, run, put, env
 import paramiko
 import time
-import json
 env.command_timeout = 120
 
 

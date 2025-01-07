@@ -1,8 +1,6 @@
 """Helper module to start/stop traffic.
 """
-from builtins import object
 import re
-from time import sleep
 
 from fabric.api import run
 from fabric.operations import put

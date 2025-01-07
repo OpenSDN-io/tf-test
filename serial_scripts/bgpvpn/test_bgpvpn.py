@@ -1,6 +1,4 @@
-from __future__ import absolute_import
 from .base import BaseBgpvpn
-from common.base import GenericTestBase
 from tcutils.wrappers import preposttest_wrapper
 from bgpvpn_test import BgpvpnFixture
 

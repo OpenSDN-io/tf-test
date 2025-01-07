@@ -1,6 +1,4 @@
 from common.base import GenericTestBase
-from builtins import object
-from common import isolated_creds
 from vn_test import *
 from vm_test import *
 import fixtures

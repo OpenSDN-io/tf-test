@@ -1,4 +1,3 @@
-from builtins import object
 from fabric_test import FabricFixture
 from virtual_port_group import VPGFixture
 from physical_device_fixture import PhysicalDeviceFixture

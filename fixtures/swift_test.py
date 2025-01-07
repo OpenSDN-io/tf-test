@@ -1,14 +1,11 @@
-from future import standard_library
-from builtins import object
 import os
 import openstack
 import hashlib
 from urllib.parse import urlparse
 from common.openstack_libs import swift_client
 from tcutils.util import custom_dict, get_random_name
-from fabric.context_managers import settings, hide, cd, shell_env
-from fabric.api import run, local, env
-from fabric.operations import get, put
+from fabric.context_managers import shell_env
+from fabric.api import local
 from tcutils.cfgparser import parse_cfg_file
 import yaml
 

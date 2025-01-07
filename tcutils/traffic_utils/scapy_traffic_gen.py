@@ -1,10 +1,8 @@
-from __future__ import print_function
-from builtins import object
-import logging as LOG
-
 from collections import OrderedDict
-from tcutils.util import get_random_name, retry
+from tcutils.util import get_random_name
 from string import Template
+
+
 class ScapyTraffic(object):
     '''
     This class help us to create and send scapy traffic from a VM.

@@ -1,22 +1,13 @@
-from builtins import object
-import project_test
-from common.contrail_test_init import ContrailTestInit
-from common.connections import ContrailConnections
 import os
-import fixtures
-from test import BaseTestCase
-import time
 from floating_ip import *
 from vn_test import *
 from control_node import *
-from common import isolated_creds
 from tcutils.util import Singleton
 
 from common import log_orig as contrail_logging
-from future.utils import with_metaclass
 
 
-class PublicVn(with_metaclass(Singleton, object)):
+class PublicVn(metaclass=Singleton):
     def __init__(self, connections,
                        isolated_creds_obj=None,
                        public_vn=None,

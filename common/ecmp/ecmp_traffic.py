@@ -1,6 +1,3 @@
-from builtins import str
-from builtins import range
-import sys
 from time import sleep
 from common.servicechain.verify import VerifySvcChain
 from tcutils.tcpdump_utils import *

@@ -1,12 +1,8 @@
-from builtins import str
-from builtins import range
 import fixtures
 from vnc_api.vnc_api import *
 from vnc_api import exceptions as vncExceptions
 from project_test import *
-import time
 from contrail_fixtures import *
-import ast
 import sys
 from tcutils.util import retry
 try:
@@ -74,10 +70,7 @@ class FloatingIPFixture(fixtures.Fixture):
         if not self.is_fip_pool_present(self.pool_name):
             if self.inputs.is_gui_based_config():
                 self.create_floatingip_pool_webui(self.pool_name, self.vn_name)
-            elif self.inputs.vro_based:
-                self.orch.create_fip_pool(self.pool_name, vn=self.vn_id)
-            else:
-                self.create_floatingip_pool(self.pool_name, self.vn_id)
+            self.create_floatingip_pool(self.pool_name, self.vn_id)
         else:
             self.logger.debug('FIP pool %s already present, not creating it' %
                               (self.pool_name))
@@ -258,12 +251,8 @@ class FloatingIPFixture(fixtures.Fixture):
         try:
             fip_obj = self.create_floatingip(fip_pool_vn_id, project)
             self.logger.debug('Associating FIP %s to %s' %(fip_obj[0], vm_id))
-            if self.inputs.vro_based:
-                self.orch.assoc_floating_ip(fip_obj[0], port_id=port_id)
-                return fip_obj[0]
-            else:
-                self.assoc_floatingip(fip_obj[1], vm_id, port_id=port_id)
-                return fip_obj[1]
+            self.assoc_floatingip(fip_obj[1], vm_id, port_id=port_id)
+            return fip_obj[1]
         except:
             self.logger.error('Failed to create or asscociate FIP. Error: %s' %
                               (sys.exc_info()[0]))
@@ -332,9 +321,6 @@ class FloatingIPFixture(fixtures.Fixture):
 
     @retry(delay=5, tries=3)
     def verify_fip_in_control_node(self, fip, vm_fixture, fip_vn_fixture):
-        if self.inputs.vcenter_gw_setup:
-            return True #To do:Need to fix the control node verification
-                        #for vcenter gateway case.
         self.ctrl_nodes= vm_fixture.get_ctrl_nodes_in_rt_group(fip_vn_fixture.vn_fq_name)
         agent_label = vm_fixture.get_agent_label()
         for cn in self.ctrl_nodes:
@@ -482,10 +468,6 @@ class FloatingIPFixture(fixtures.Fixture):
         ''' Disassociate and then delete the Floating IP .
         Strongly recommeded to call verify_no_fip() after this call
         '''
-        if self.inputs.vro_based:
-            self.orch.disassoc_floating_ip(fip_id, port_id)
-            self.orch.delete_floating_ip(fip_id)
-            return
         self.disassoc_floatingip(fip_id, port_id)
         self.delete_floatingip(fip_id)
 #        time.sleep(10)
@@ -515,11 +497,8 @@ class FloatingIPFixture(fixtures.Fixture):
         '''
         if project_obj is None:
             project_obj = self.get_project_obj()
-        if self.inputs.vro_based:
-            fip_resp = self.orch.create_floating_ip(self.pool_name)
-        else:
-            fip_resp = self.orch.create_floating_ip(pool_vn_id=fip_pool_vn_id,
-                         project_obj=project_obj, pool_obj=self.fip_pool_obj)
+        fip_resp = self.orch.create_floating_ip(pool_vn_id=fip_pool_vn_id,
+                        project_obj=project_obj, pool_obj=self.fip_pool_obj)
         self.logger.debug('Created Floating IP : %s' % str(fip_resp))
         return fip_resp
     # end create_floatingip
@@ -626,10 +605,7 @@ class FloatingIPFixture(fixtures.Fixture):
                              (self.pool_name))
             if self.inputs.is_gui_based_config():
                 self.webui.delete_floatingip_pool(self)
-            elif self.inputs.vro_based:
-                self.orch.delete_fip_pool(self.pool_name)
-            else:
-                self.delete_floatingip_pool()
+            self.delete_floatingip_pool()
             if self.verify_is_run or verify:
                 assert self.verify_fip_pool_not_in_control_node()
             else:

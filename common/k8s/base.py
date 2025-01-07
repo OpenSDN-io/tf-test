@@ -2,14 +2,11 @@ from common.base import GenericTestBase
 from fabric.api import local, settings
 import time
 import re
-import test
-import ipaddress
 import vnc_api_test
 import uuid
 from tcutils.util import get_random_name, retry
 from tcutils.gevent_lib import exec_in_parallel
 from tcutils.verification_util import *
-from lxml import etree
 from k8s.pod import PodFixture
 from k8s.hbs import HbsFixture
 from k8s.service import ServiceFixture
@@ -23,7 +20,6 @@ from common.connections import ContrailConnections
 from common import create_public_vn
 from vn_test import VNFixture
 import gevent
-import os
 
 class BaseK8sTest(GenericTestBase, vnc_api_test.VncLibFixture):
 
@@ -45,14 +41,9 @@ class BaseK8sTest(GenericTestBase, vnc_api_test.VncLibFixture):
         cls.logger = cls.connections.logger
         cls.setup_namespace_isolation = False
         cls.setup_custom_isolation = False
-        if (os.environ.get('TEST_TAGS') == 'openshift_1'):
-            cls.security_context = 'securityContext'
-            cls.image_pull_policy = 'imagePullPolicy'
-            cls.node_selector = 'nodeSelector'
-        else:
-            cls.security_context = 'security_context'
-            cls.image_pull_policy = 'image_pull_policy'
-            cls.node_selector = 'node_selector'
+        cls.security_context = 'security_context'
+        cls.image_pull_policy = 'image_pull_policy'
+        cls.node_selector = 'node_selector'
         cls.public_vn = create_public_vn.PublicVn(connections=cls.connections,
                                                   public_vn=cls.inputs.public_vn,
                                                   public_tenant=cls.inputs.admin_tenant,
@@ -1704,13 +1695,7 @@ class BaseK8sTest(GenericTestBase, vnc_api_test.VncLibFixture):
                 cmd = "sshpass -p Passw0rd scp -o StrictHostKeyChecking=no "\
                         "-o ServerAliveInterval=5 -o ServerAliveCountMax=2 -P %s "\
                         "root@%s:/usr/bin/python3.5 /tmp/%s" % (port, ip, local_name)
-            if not pod:
-                with settings(warn_only=True):
-                    ##New changes .get and count
-                    if (os.environ.get('TEST_TAGS') == 'openshift_1'):
-                       cmd = "scp -l 1 -i ~/.ssh/helper_rsa core@%s:/usr/bin/podman /tmp/%s > /dev/null 2>&1 &" %(ip,local_name)
-                    output = self.inputs.run_cmd_on_server(self.inputs.server_manager, cmd,self.inputs.server_manager_user,self.inputs.server_manager_password)
-            else:
+            if pod:
                 output = pod.run_cmd_on_pod_with_tty(cmd, tty=False)
 
             # Will be needed to validate for the presence of files copied from remote to local

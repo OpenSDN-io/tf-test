@@ -1,8 +1,5 @@
-from __future__ import absolute_import
 from .base import RPBase
-from builtins import str
 from tcutils.wrappers import preposttest_wrapper
-import test
 import time
 from common.bgpaas.base import BaseBGPaaS
 from tcutils.util import *

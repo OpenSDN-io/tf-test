@@ -2,9 +2,9 @@ deployment:
     sku: ocata
     os: centos74
     version: master-1
-    orchestrator: openstack # kubernetes/vcenter/openstack
+    orchestrator: openstack # kubernetes/openstack
     slave_orchestrator: # kubernetes
-    deployer: contrail-ansible-deployer #openshift/helm
+    deployer: contrail-ansible-deployer
 
 provider_config:
   bms:

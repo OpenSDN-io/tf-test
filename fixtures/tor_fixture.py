@@ -1,4 +1,3 @@
-from builtins import object
 import os
 from netaddr import *
 import abc
@@ -6,20 +5,17 @@ import time
 import re
 
 from jnpr.junos.exception import *
-from fabric.operations import get, put, run, local, hide
+from fabric.operations import put, run, hide
 from fabric.context_managers import settings
 
-import vnc_api_test
-from pif_fixture import PhysicalInterfaceFixture
 import physical_device_fixture
 from tcutils.util import retry
-from future.utils import with_metaclass
 try:
     from webui_test import *
 except ImportError:
     pass
 
-class AbstractToR(with_metaclass(abc.ABCMeta, object)):
+class AbstractToR(metaclass=abc.ABCMeta):
     ''' Abstract ToR Switch
     '''
 

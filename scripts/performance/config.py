@@ -1,15 +1,4 @@
-from builtins import str
-from builtins import range
-from builtins import object
-import os
-import fixtures
-import testtools
-
-from vn_test import VNFixture
 from vm_test import VMFixture
-from common.connections import ContrailConnections
-from policy_test import PolicyFixture
-from policy.config import AttachPolicyFixture
 from time import sleep
 from tcutils.commands import ssh, execute_cmd, execute_cmd_out
 

@@ -1,5 +1,4 @@
-from builtins import zip
-from builtins import object
+
 class MultiProjectTopo(object):
 
     def __init__(self, domain='default-domain', compute_node_list=None):

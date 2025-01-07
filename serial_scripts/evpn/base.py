@@ -1,7 +1,4 @@
-from builtins import str
 import test_v1
-import fixtures
-from common import isolated_creds
 
 class BaseEvpnTest(test_v1.BaseTestCase_v1):
 

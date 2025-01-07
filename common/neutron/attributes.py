@@ -1,8 +1,5 @@
-from __future__ import print_function
-from builtins import str
 from common.neutron.neutron_util import *
 from tcutils.util import *
-import string
 
 network = {
     'id': {

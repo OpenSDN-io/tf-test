@@ -1,7 +1,4 @@
-from __future__ import print_function
 import logging as LOG
-from lxml import etree
-import re
 
 from tcutils.verification_util import *
 

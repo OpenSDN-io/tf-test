@@ -1,12 +1,6 @@
-from __future__ import print_function
-from analytics import base
-from builtins import str
-from builtins import range
 import os
+import sys
 import time
-import fixtures
-import testtools
-import re
 from vn_test import *
 from vm_test import *
 from policy_test import *
@@ -16,16 +10,15 @@ from .base import *
 
 sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
 from traffic.core.stream import Stream
-from traffic.core.profile import create, ContinuousProfile, StandardProfile, BurstProfile, ContinuousSportRange
+from traffic.core.profile import StandardProfile
 from traffic.core.helpers import Host
 from traffic.core.helpers import Sender, Receiver
 
 from common.servicechain.verify import VerifySvcChain
-from fabric.api import run, local
-import fixtures
 
 import test
 import pprint
+
 
 class AnalyticsTestSanityWithMin(
         AnalyticsBaseTest,
@@ -44,7 +37,7 @@ class AnalyticsTestSanityWithMin(
         super(AnalyticsTestSanityWithMin, cls).tearDownClass()
     # end tearDownClass
 
-    @test.attr(type=['sanity', 'vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     def test_run_contrail_flows_cli_cmds(self):
         '''1. Test to verify  contrail-flows cli cmd with various optional arguments is not broken..
@@ -144,7 +137,7 @@ class AnalyticsTestSanityWithMin(
 
         return self.check_cmd_output('contrail-flows', cmd_args_list, check_output=True, as_sudo=True, print_output=False)
 
-    @test.attr(type=['sanity', 'vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     def test_run_contrail_logs_cli_cmd_with_multiple_different_optional_args(self):
         '''1.Test to verify contrail-logs cli cmd with multiple different optional type args is not broken
@@ -179,7 +172,7 @@ class AnalyticsTestSanityWithMin(
 
         return self.check_cmd_output('contrail-logs', cmd_args_list, check_output=True, print_output=False)
 
-    @test.attr(type=['sanity', 'vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     def test_run_contrail_stats_cli_cmds(self):
         '''1.Run contrail-stats commands with various options
@@ -1142,10 +1135,10 @@ class AnalyticsTestSanityWithResource(
             'contrail-discovery', 'IfmapServer', 'XmppServer', 'contrail-analytics-nodemgr', 'contrail-control-nodemgr',
             'contrail-config-nodemgr', 'contrail-database-nodemgr', 'Contrail-WebUI-Nodemgr', 'contrail-vrouter-nodemgr',
             'Storage-Stats-mgr', 'Ipmi-Stats-mgr', 'InventoryAgent',
-            'contrail-tor-agent', 'tf-broadview', 'contrail-kube-manager', 'contrail-mesos-manager']
+            'contrail-tor-agent', 'tf-broadview', 'contrail-kube-manager']
 
         module_ = ['IfmapServer', 'XmppServer', 'Contrail-WebUI-Nodemgr', 'Storage-Stats-mgr', 'Storage-Stats-mgr', 'Ipmi-Stats-mgr',
-           'InventoryAgent', 'contrail-tor-agent', 'tf-broadview', 'contrail-kube-manager', 'contrail-mesos-manager']
+           'InventoryAgent', 'contrail-tor-agent', 'tf-broadview', 'contrail-kube-manager']
 
         module = list(set(module) - set(module_))
 
@@ -1311,7 +1304,7 @@ class AnalyticsTestSanityWithResource(
         assert result,'Failed to get expected number of samples'
     #end test_verify_session_series_table_intra_vn
 
-    @test.attr(type=['sanity', 'vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     def test_verify_session_series_table_inter_vn(self):
         '''Verify session series table ,generated stats between different vns
@@ -1349,7 +1342,7 @@ class AnalyticsTestSanityWithResource(
         self.verify_session_series_table(start_time, src_vn, dst_vn)
     #test_verify_session_series_table_inter_vn
 
-    @test.attr(type=['sanity', 'vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     def test_verify_session_record_table_inter_vn(self):
         '''Verify session record table ,generated stats between different vns

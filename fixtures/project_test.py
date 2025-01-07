@@ -1,5 +1,3 @@
-import os
-import fixtures
 from vnc_api.vnc_api import *
 import uuid
 import fixtures
@@ -10,9 +8,7 @@ from contrail_fixtures import *
 from common.connections import ContrailConnections
 from common.contrail_test_init import ContrailTestInit
 from tcutils.util import retry
-from time import sleep
 from openstack import OpenstackAuth
-from vcenter import VcenterAuth
 from vnc_api.exceptions import NoIdError
 
 
@@ -53,10 +49,6 @@ class ProjectFixture(fixtures.Fixture):
                                     self.inputs.admin_password,
                                     self.inputs.admin_tenant, self.inputs, self.logger,
                                     domain_name=self.inputs.admin_domain)
-            elif self.inputs.orchestrator == 'vcenter':
-                self.auth = VcenterAuth(self.inputs.admin_username,
-                              self.inputs.admin_password,
-                              self.inputs.admin_tenant, self.inputs)
             else:
                 # Kubernetes
                 # Set no auth for now
@@ -146,9 +138,6 @@ class ProjectFixture(fixtures.Fixture):
         super(ProjectFixture, self).cleanUp()
 
     def delete(self, verify=False):
-        if self.inputs.orchestrator == 'vcenter':
-            self.logger.debug('No need to verify projects in case of vcenter')
-            return
         do_cleanup = True
         if self.inputs.fixture_cleanup == 'no':
             do_cleanup = False
@@ -234,9 +223,6 @@ class ProjectFixture(fixtures.Fixture):
 
     @retry(delay=2, tries=6)
     def verify_project_in_api_server(self):
-        if self.inputs.orchestrator == 'vcenter':
-            self.logger.debug('No need to verify projects in case of vcenter')
-            return True
         result = True
         for cfgm_ip in self.inputs.cfgm_ips:
             api_s_inspect = self.api_server_inspects[cfgm_ip]
@@ -261,9 +247,6 @@ class ProjectFixture(fixtures.Fixture):
 
     @retry(delay=10, tries=12)
     def verify_project_not_in_api_server(self):
-        if self.inputs.orchestrator == 'vcenter':
-            self.logger.debug('No need to verify projects in case of vcenter')
-            return True
         result = True
         for cfgm_ip in self.inputs.cfgm_ips:
             api_s_inspect = self.api_server_inspects[cfgm_ip]

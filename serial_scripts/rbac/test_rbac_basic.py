@@ -1,6 +1,4 @@
-from __future__ import absolute_import
 from .base import BaseRbac
-import os
 import collections
 import test
 from tcutils.wrappers import preposttest_wrapper

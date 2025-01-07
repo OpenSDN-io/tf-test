@@ -1,8 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from builtins import str
-from builtins import range
-from past.utils import old_div
 from serial_scripts.system_test.flow_tests.base import BaseFlowTest
 from floating_ip import *
 from tcutils.topo.topo_helper import *
@@ -16,7 +11,6 @@ from . import flow_test_utils
 from compute_node_test import ComputeNodeFixture
 from . import system_test_topo
 from . import sdn_flow_test_topo_multiple_projects
-from tcutils.test_lib.test_utils import assertEqual, get_ip_list_from_prefix
 import math
 from .system_flows_config import config_topo_single_proj
 
@@ -197,8 +191,8 @@ class TestFlowSingleProj(BaseFlowTest, flow_test_utils.VerifySvcMirror):
                 AverageFlowSetupRate = FlowRatePerInterval[ind]
             elif ind > 0:
                 FlowRatePerInterval.append(NoOfFlows[ind] - NoOfFlows[ind - 1])
-                AverageFlowSetupRate = old_div((
-                    AverageFlowSetupRate + FlowRatePerInterval[ind]), 2)
+                AverageFlowSetupRate = \
+                    (AverageFlowSetupRate + FlowRatePerInterval[ind]) // 2
             self.logger.info("Flows setup in last %s sec = %s" %
                              (sleep_interval, FlowRatePerInterval[ind]))
             self.logger.info(
@@ -217,7 +211,7 @@ class TestFlowSingleProj(BaseFlowTest, flow_test_utils.VerifySvcMirror):
         # time.sleep(20)
         # Calculate the flow setup rate per second = average flow setup in
         # sleep interval over the above iterations / sleep interval.
-        AverageFlowSetupRate = int(old_div(AverageFlowSetupRate, sleep_interval))
+        AverageFlowSetupRate = AverageFlowSetupRate // sleep_interval
         self.logger.info("Flow setup rate seen in this test is = %s" %
                          (AverageFlowSetupRate))
         if (AverageFlowSetupRate < (0.9 * DefinedSetupRate)):

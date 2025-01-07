@@ -1,10 +1,6 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3
 
-from __future__ import print_function
-from builtins import str
-from builtins import range
 import syslog
-import random
 import time
 import sys
 

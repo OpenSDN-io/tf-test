@@ -1,5 +1,4 @@
 from common.vrouter.base import *
-from builtins import str
 from fabric.api import run
 from tcutils.wrappers import preposttest_wrapper
 

@@ -1,11 +1,7 @@
-from __future__ import print_function
 #
 # Copy certs to tor-agents and restart tor-agent services
 #
-#import os
 import sys
-#import json
-#import ConfigParser
 import logging
 from fabric.context_managers import settings
 from fabric.operations import put

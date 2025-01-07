@@ -6,19 +6,12 @@
 # Set the env variable PARAMS_FILE to point to your ini file. Else it will try to pick params.ini in PWD
 #
 from analytics import base
-from .base import AnalyticsBaseTest
-import os
 import time
-import fixtures
-import testtools
-import re
 from vn_test import *
 from vm_test import *
 from policy_test import *
 from multiple_vn_vm_test import *
 from tcutils.wrappers import preposttest_wrapper
-from fabric.api import run, local
-import fixtures
 
 import test
 
@@ -83,7 +76,7 @@ class AnalyticsTestSanity(base.AnalyticsBaseTest):
                     assert exp in redis_socks, err
         return True
 
-    @test.attr(type=['cb_sanity', 'ci_sanity', 'sanity', 'vcenter', 'vcenter_compute', 'dev_sanity_dpdk'])
+    @test.attr(type=['cb_sanity', 'ci_sanity', 'sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_contrail_status(self):
         ''' Test to verify that all services are running and active
@@ -96,7 +89,7 @@ class AnalyticsTestSanity(base.AnalyticsBaseTest):
             self.logger.info("contrail-status passed")
         return True
 
-    @test.attr(type=['vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     def test_contrail_alarms(self):
         ''' Test to check if alarms are present
@@ -301,7 +294,7 @@ class AnalyticsTestSanity3(base.AnalyticsBaseTest):
     def tearDownClass(cls):
         super(AnalyticsTestSanity3, cls).tearDownClass()
 
-    @test.attr(type=['sanity', 'vcenter', 'vcenter_compute', 'dev_sanity_dpdk'])
+    @test.attr(type=['sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_verify_generator_collector_connections(self):
         '''
@@ -325,7 +318,7 @@ class AnalyticsTestSanity3(base.AnalyticsBaseTest):
         return True
     # end test_remove_policy_with_ref
 
-    @test.attr(type=['cb_sanity', 'sanity', 'vcenter', 'vcenter_compute', 'dev_sanity_dpdk'])
+    @test.attr(type=['cb_sanity', 'sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_verify_process_status_agent(self):
         ''' Test to validate process_status
@@ -333,7 +326,7 @@ class AnalyticsTestSanity3(base.AnalyticsBaseTest):
         '''
         self.analytics_obj.verify_process_and_connection_infos_agent()
 
-    @test.attr(type=['cb_sanity', 'sanity', 'vcenter', 'vcenter_compute', 'dev_sanity_dpdk'])
+    @test.attr(type=['cb_sanity', 'sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_verify_process_status_config(self):
         ''' Test to validate process_status-Config
@@ -341,7 +334,7 @@ class AnalyticsTestSanity3(base.AnalyticsBaseTest):
         '''
         self.analytics_obj.verify_process_and_connection_infos_config()
 
-    @test.attr(type=['cb_sanity', 'sanity', 'vcenter', 'vcenter_compute', 'dev_sanity_dpdk'])
+    @test.attr(type=['cb_sanity', 'sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_verify_process_status_control_node(self):
         ''' Test to validate process_status-Control-Node
@@ -349,7 +342,7 @@ class AnalyticsTestSanity3(base.AnalyticsBaseTest):
         '''
         self.analytics_obj.verify_process_and_connection_infos_control_node()
 
-    @test.attr(type=['cb_sanity', 'sanity', 'vcenter', 'vcenter_compute', 'dev_sanity_dpdk'])
+    @test.attr(type=['cb_sanity', 'sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_verify_process_status_analytics_node(self):
         ''' Test to validate process_status-Analytics-Node
@@ -357,7 +350,7 @@ class AnalyticsTestSanity3(base.AnalyticsBaseTest):
         '''
         self.analytics_obj.verify_process_and_connection_infos_analytics_node()
 
-    @test.attr(type=['sanity', 'vcenter', 'dev_sanity_dpdk'])
+    @test.attr(type=['sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_verify_generator_connections_to_collector_node(self):
         ''' Test to validate generator connections
@@ -365,21 +358,10 @@ class AnalyticsTestSanity3(base.AnalyticsBaseTest):
         '''
         self.analytics_obj.verify_generator_connection_to_collector()
 
-    #stats table StatTable.DatabasePurgeInfo.stats no longer present so disabling testcase
-    #@preposttest_wrapper
-    #def test_db_purge(self):
-    #    ''' Test to db purge
-    #
-    #    '''
-    #    start_time = self.analytics_obj.getstarttime(self.inputs.collector_ip)
-    #    purge_id = self.analytics_obj.get_purge_id(20)
-    #    assert self.analytics_obj.verify_purge_info_in_database_uve(purge_id,start_time)
-
-    @test.attr(type=['sanity', 'vcenter', 'vcenter_compute', 'dev_sanity_dpdk'])
+    @test.attr(type=['sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_db_nodemgr_status(self):
         ''' Test to verify db nodemgr status
 
         '''
         assert self.analytics_obj.verify_database_process_running('contrail-database-nodemgr')
-

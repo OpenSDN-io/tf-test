@@ -1,8 +1,6 @@
-from __future__ import print_function
 import logging
 import subprocess
 import os
-import time
 
 
 class CustomFileHandler(logging.FileHandler):

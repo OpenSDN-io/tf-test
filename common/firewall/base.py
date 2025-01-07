@@ -1,6 +1,5 @@
-from builtins import range
 from common.neutron.base import BaseNeutronTest
-from tcutils.util import get_random_name, retry
+from tcutils.util import get_random_name
 from vn_test import VNFixture
 from vm_test import VMFixture
 from project_test import ProjectFixture

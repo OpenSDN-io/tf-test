@@ -1,9 +1,6 @@
 """Module holding various stream profiles.
 """
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import object
 from pickle import dump, loads
 
 try:

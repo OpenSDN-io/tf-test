@@ -1,11 +1,8 @@
-from __future__ import print_function
 import time
 import re
 import fixtures
 from fabric.api import local
 from fabric.context_managers import shell_env, settings
-
-from common.connections import ContrailConnections
 
 from floating_ip import *
 

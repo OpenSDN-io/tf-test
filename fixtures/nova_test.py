@@ -1,9 +1,3 @@
-from __future__ import print_function
-from builtins import map
-from builtins import next
-from builtins import str
-from builtins import zip
-from builtins import object
 import os
 from common.openstack_libs import nova_client as mynovaclient
 from common.openstack_libs import nova_exception as novaException
@@ -16,7 +10,6 @@ from tcutils.util import *
 from tcutils.cfgparser import parse_cfg_file
 from tcutils.timeout import timeout, TimeoutError
 import re
-from common import vcenter_libs
 import openstack
 import shlex
 import glance_test
@@ -731,9 +724,6 @@ class NovaHelper(object):
                     if hypervisor.hypervisor_type == 'QEMU':
                         host_name = vm_obj.__dict__[_attr]
                         return host_name and self.get_host_name(host_name)
-                    if 'VMware' in hypervisor.hypervisor_type:
-                        host_name = vcenter_libs.get_contrail_vm_by_vm_uuid(self.inputs, vm_obj.id)
-                        return host_name
             else:
                 if vm_obj.__dict__['OS-EXT-STS:vm_state'] == "error":
                     self.logger.error('VM %s has failed to come up' % vm_obj.name)
@@ -840,15 +830,6 @@ class NovaHelper(object):
     def wait_till_vm_is_up(self, vm_obj):
         try:
             vm_obj.get()
-
-            attr = 'OS-EXT-SRV-ATTR:hypervisor_hostname'
-            for hyper in self.obj.hypervisors.list():
-                if (hyper.hypervisor_hostname == getattr(vm_obj, attr) and
-                        (u'VMware' in hyper.hypervisor_type)):
-                    # can't get console logs for VM in VMware nodes
-                    # https://bugs.launchpad.net/nova/+bug/1199754
-                    return self.wait_till_vm_is_active(vm_obj)
-
             if 'login:' in vm_obj.get_console_output():
                 self.logger.debug('VM has booted up..')
                 return True

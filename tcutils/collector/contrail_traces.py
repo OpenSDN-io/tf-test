@@ -1,4 +1,3 @@
-from __future__ import print_function
 #
 # Traces Utils
 #
@@ -9,29 +8,16 @@ from __future__ import print_function
 # Copyright (c) 2013, Contrail Systems, Inc. All rights reserved.
 #
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import object
-import datetime
-import time
 import requests
 import pkg_resources
 import xmltodict
 import json
-import gevent
 from lxml import etree
 import socket
 import sys
 import argparse
 import configparser
 import os
-
-try:
-    from pysandesh.gen_py.sandesh.ttypes import SandeshType
-except:
-    class SandeshType(object):
-        SYSTEM = 1
-        TRACE = 4
 
 
 def enum(**enums):

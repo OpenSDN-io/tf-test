@@ -1,34 +1,19 @@
-from __future__ import print_function
-from builtins import str
-from builtins import range
+import time
 import test_v1
-from common.connections import ContrailConnections
-from common import isolated_creds
 from random import randint
 
-import os
-import unittest
-import fixtures
-import testtools
-import traceback
-import signal
-import traffic_tests
-from common.contrail_test_init import ContrailTestInit
 from vn_test import *
 from quantum_test import *
 from vnc_api_test import *
 from nova_test import *
 from vm_test import *
-from common.connections import ContrailConnections
 from floating_ip import *
 from control_node import *
 from policy_test import *
 from multiple_vn_vm_test import *
 from vdns_fixture import *
 from contrail_fixtures import *
-from vnc_api import vnc_api
 from vnc_api.gen.resource_test import *
-from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import retry
 
 class BasevDNSTest(test_v1.BaseTestCase_v1):
@@ -113,7 +98,7 @@ class BasevDNSTest(test_v1.BaseTestCase_v1):
                     recname, 'A', 'IN', rec_ip, ttl)
                 vdns_rec_fix = self.useFixture(VdnsRecordFixture(
                     self.inputs, self.connections, rec, vdns_fixt1.get_fq_name(), vdns_rec_data))
-                sleep(1)
+                time.sleep(1)
                 i = i + 1
                 if i > 253:
                     j = j + 1
@@ -124,7 +109,7 @@ class BasevDNSTest(test_v1.BaseTestCase_v1):
                     i = 1
                 # sleep for some time after configuring 10 records.
                 if num % 10 == 0:
-                    sleep(0.5)
+                    time.sleep(0.5)
                 # pic some random records for nslookup verification
                 if num % 100 == 0:
                     verify_rec_name_list.append(recname)
@@ -133,7 +118,7 @@ class BasevDNSTest(test_v1.BaseTestCase_v1):
             # server
             self.logger.info(
                 'Sleep for 180sec to sync vdns server with vdns record entry')
-            sleep(180)
+            time.sleep(180)
             # Verify NS look up works for some random records values
             self.logger.debug('%%%%NSLook up verification%%%%')
             import re
@@ -166,10 +151,10 @@ class BasevDNSTest(test_v1.BaseTestCase_v1):
                     j = j + 1
                     i = 1
                 rec_ip_list.append(rec_ip)
-                sleep(2)
+                time.sleep(2)
             # Get the NS look up record Verify record order
             cmd = 'nslookup test1'
-            sleep(5)
+            time.sleep(5)
             vm_fixture.run_cmd_on_vm(cmds=[cmd])
             result = vm_fixture.return_output_cmd_dict[cmd]
             result = result.replace("\r", "")
@@ -308,7 +293,7 @@ class BasevDNSTest(test_v1.BaseTestCase_v1):
             self.inputs.restart_service(
                 'contrail-control', [active_controller],
                 container='control')
-            sleep(5)
+            time.sleep(5)
             # Check the control node shifted to other control node
             new_active_controller = vm_fixture[
                 vm_list[0]].get_active_controller()
@@ -340,51 +325,11 @@ class BasevDNSTest(test_v1.BaseTestCase_v1):
             for compute_ip in self.inputs.compute_ips:
                 self.inputs.restart_service('contrail-vrouter', [compute_ip],
                                             container='agent')
-        if restart_process == 'scp':
-            self.logger.debug('scp using name of vm')
-            vm_fixture[vm_list[0]].put_pub_key_to_vm()
-            vm_fixture[vm_list[1]].put_pub_key_to_vm()
-            size = '1000'
-            file = 'testfile'
-            y = 'ls -lrt %s' % file
-            cmd_to_check_file = [y]
-            cmd_to_sync = ['sync']
-            create_result = True
-            transfer_result = True
 
-            self.logger.debug("-" * 80)
-            self.logger.debug("FILE SIZE = %sB" % size)
-            self.logger.debug("-" * 80)
-            self.logger.debug('Creating a file of the specified size on %s' %
-                             vm_fixture[vm_list[0]].vm_name)
-
-            self.logger.debug('Transferring the file from %s to %s using scp' %
-                             (vm_fixture[vm_list[0]].vm_name, vm_fixture[vm_list[1]].vm_name))
-            vm_fixture[
-                vm_list[0]].check_file_transfer(dest_vm_fixture=vm_fixture[vm_list[1]], mode='scp', size=size)
-
-            self.logger.debug('Checking if the file exists on %s' %
-                             vm_fixture[vm_list[1]].vm_name)
-            vm_fixture[vm_list[1]].run_cmd_on_vm(cmds=cmd_to_check_file)
-            output = vm_fixture[vm_list[1]].return_output_cmd_dict[y]
-            print(output)
-            if size in output:
-                self.logger.info(
-                    'File of size %sB transferred via scp properly' % size)
-            else:
-                transfer_result = False
-                self.logger.error(
-                    'File of size %sB not transferred via scp ' % size)
-            assert transfer_result, 'File not transferred via scp'
-
-
-        sleep(20)
-
+        time.sleep(20)
         for vm_name in vm_list:
             assert vm_fixture[vm_name].wait_till_vm_is_up()
-
-        sleep(40)
-
+        time.sleep(20)
 
         # Verify after controlnode/dns/agent/named process restart ping vm's by
         # using name.

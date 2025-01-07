@@ -1,13 +1,11 @@
-from builtins import str
 import re
 import time
 
-import logging
 import fixtures
 from fabric.api import env
 from fabric.api import run, sudo
 from fabric.contrib.files import exists
-from fabric.context_managers import settings, hide
+from fabric.context_managers import settings
 from common import log_orig as contrail_logging
 
 from tcutils.util import retry, search_arp_entry

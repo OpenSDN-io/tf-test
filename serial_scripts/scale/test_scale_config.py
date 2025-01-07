@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from common.base import GenericTestBase
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import *

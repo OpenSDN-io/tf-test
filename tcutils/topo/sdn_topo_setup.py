@@ -1,23 +1,18 @@
-from __future__ import absolute_import
 import os
 import copy
 import fixtures
-import testtools
 from . import topo_steps
-from common.contrail_test_init import ContrailTestInit
 from vn_test import *
 from vn_policy_test import *
 from quantum_test import *
 from vnc_api_test import *
 from nova_test import *
 from vm_test import *
-from common.connections import ContrailConnections
 from floating_ip import *
 from policy_test import *
 from contrail_fixtures import *
 from tcutils.agent.vna_introspect_utils import *
 from .topo_helper import *
-from vnc_api import vnc_api
 from vnc_api.gen.resource_test import *
 try:
     from webui_test import *
@@ -65,7 +60,6 @@ class sdnTopoSetupFixture(fixtures.Fixture):
            d. VN:      Contrail API
            e. VM:      Nova
         '''
-        config_option = 'contrail' if self.inputs.orchestrator == 'vcenter' else config_option
         self.result = True
         self.err_msg = []
         self.flavor = flavor

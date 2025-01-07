@@ -1,27 +1,16 @@
-from __future__ import absolute_import
-import test
-from common.connections import ContrailConnections
-from common.contrail_test_init import ContrailTestInit
-from common import isolated_creds
 from vn_test import VNFixture
 from vm_test import VMFixture
-import fixtures
 from policy_test import PolicyFixture
 from floating_ip import FloatingIPFixture
 from tcutils.topo.sdn_topo_setup import sdnTopoSetupFixture
 from .sdn_topo_with_multi_project import *
-from common.servicechain.config import ConfigSvcChain
 from common.servicechain.verify import VerifySvcChain
 from common.securitygroup.config import ConfigSecGroup
 from common.neutron.base import BaseNeutronTest
 from common.neutron.lbaas.base import BaseTestLbaas
 from tcutils import get_release
-from contrail_fixtures import *
-from quantum_test import QuantumHelper
-from nova_test import NovaHelper
 from tcutils.commands import *
 from tcutils.util import *
-from fabric.state import connections
 
 class BaseResource(VerifySvcChain, BaseTestLbaas, BaseNeutronTest):
 

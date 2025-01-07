@@ -1,5 +1,3 @@
-from __future__ import print_function
-from builtins import str
 import vnc_api_test
 from compute_node_test import ComputeNodeFixture
 from tcutils.util import get_random_name, retry

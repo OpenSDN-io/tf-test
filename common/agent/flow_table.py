@@ -1,4 +1,3 @@
-from builtins import object
 from tcutils.util import *
 import tabulate
 

@@ -1,17 +1,8 @@
-from future import standard_library
-standard_library.install_aliases()
-import os
 import sys
-import json
-import configparser
-import ast
 import logging
 
 from physical_router_fixture import PhysicalRouterFixture
 from common.contrail_test_init import ContrailTestInit
-from physical_device_fixture import PhysicalDeviceFixture
-from vcpe_router_fixture import VpeRouterFixture
-from virtual_router_fixture import VirtualRouterFixture
 from common.device_connection import NetconfConnection
 
 logging.getLogger('urllib3.connectionpool').setLevel(logging.WARN)
@@ -70,28 +61,4 @@ if __name__ == "__main__":
                 )
         phy_router_obj.setUp()
         phy_router_obj.verify_bgp_peer()
-
-        if device_dict['type'] == 'vcenter_gateway':
-               vrouter_obj = VirtualRouterFixture(device_dict['name'],
-                                      'embedded',
-                                      cfgm_ip=init_obj.cfgm_ip,
-                                      auth_server_ip=init_obj.auth_ip,
-                                       )
-               vrouter_obj.setUp()
-
-               vcpe_router_obj = VpeRouterFixture(
-                   device_dict['name'], device_dict['mgmt_ip'],
-                   ssh_username=device_dict['ssh_username'],
-                   ssh_password=device_dict['ssh_password'],
-                   mgmt_ip=device_dict['mgmt_ip'],
-                   ports=device_dict['ports'],
-                   cfgm_ip=init_obj.cfgm_ip,
-                   auth_server_ip=init_obj.auth_ip,
-                   )
-               vcpe_router_obj.setUp()
-               vcpe_router_obj.vrouter_ref_set(vrouter_obj.vr)
-               vcpe_router_obj.setup_physical_ports()
-               for port in device_dict['ports']:
-                   ifup_cmd = 'ifconfig %s up'%port
-                   init_obj.run_cmd_on_server(device_dict['mgmt_ip'],ifup_cmd )
     # end for

@@ -3,10 +3,7 @@ backports.ssl-match-hostname==3.5.0.1
 #  from setuptools.namespaces import Installer as NameSpaceInstaller # NOQA
 #  ImportError: No module named namespaces
 #ruamel.yaml!=0.16.1
-openshift==0.13.2
-python-ceilometerclient==2.9.0
 python-cinderclient==5.0.0
-python-barbicanclient==4.9.0
 python-glanceclient==2.17.0
 python-heatclient==1.18.0
 python-novaclient==16.0.0

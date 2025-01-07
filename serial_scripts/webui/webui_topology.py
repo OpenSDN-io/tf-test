@@ -1,8 +1,5 @@
 '''*******AUTO-GENERATED TOPOLOGY*********'''
-from __future__ import print_function
 
-
-from builtins import object
 class sdn_webui_config(object):
 
     def __init__(

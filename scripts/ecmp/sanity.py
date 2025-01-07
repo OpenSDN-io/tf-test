@@ -1,4 +1,3 @@
-from __future__ import print_function
 # Need to import path to test/fixtures and test/scripts/
 # Ex : export PYTHONPATH='$PATH:/root/test/fixtures/:/root/test/scripts/'
 #
@@ -6,30 +5,21 @@ from __future__ import print_function
 # You can do 'python -m testtools.run -l tests'
 # Set the env variable PARAMS_FILE to point to your ini file. Else it will
 # try to pick params.ini in PWD
-from builtins import str
-from builtins import range
 import sys
 import os
-from common.openstack_libs import nova_client as mynovaclient
-from common.openstack_libs import nova_exception as novaException
-import unittest
 import fixtures
 import testtools
-import traceback
-import traffic_tests
-from common.contrail_test_init import ContrailTestInit
 from vn_test import *
 from floating_ip import *
 from quantum_test import *
 from vnc_api_test import *
 from nova_test import *
 from vm_test import *
-from common.connections import ContrailConnections
 from contrail_fixtures import *
 from tcutils.wrappers import preposttest_wrapper
 sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
 from traffic.core.stream import Stream
-from traffic.core.profile import create, ContinuousProfile
+from traffic.core.profile import ContinuousProfile
 from traffic.core.helpers import Host
 from traffic.core.helpers import Sender, Receiver
 from testresources import ResourcedTestCase

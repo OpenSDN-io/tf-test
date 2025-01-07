@@ -1,16 +1,11 @@
-from builtins import str
-from builtins import range
 import os
 import sys
 from common.vrouter.base import BaseVrouterTest
 from time import sleep
-from tcutils.util import retry
 sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
 from traffic.core.stream import Stream
 from traffic.core.helpers import Host, Sender, Receiver
-from traffic.core.profile import StandardProfile,\
-                                                    ContinuousProfile
-from tcutils.util import get_random_name
+from traffic.core.profile import StandardProfile, ContinuousProfile
 sys.path.append(os.path.realpath('tcutils/traffic_utils'))
 from base_traffic import *
 from security_group import list_sg_rules

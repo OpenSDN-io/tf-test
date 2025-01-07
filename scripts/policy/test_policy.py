@@ -1,17 +1,11 @@
-from __future__ import absolute_import
 from .base import BasePolicyTest
 from tcutils.wrappers import preposttest_wrapper
 import test
 from vn_test import VNFixture
-from policy_test import PolicyFixture, copy
+from policy_test import PolicyFixture
 from common.policy import policy_test_utils
 from vm_test import VMFixture, time
-from tcutils.topo.sdn_topo_setup import sdnTopoSetupFixture
-from tcutils.util import get_random_name, get_random_cidr
-from common.system.system_verification import system_vna_verify_policy
 from tcutils.test_lib.test_utils import assertEqual
-from . import sdn_basic_topology
-import os
 from . import test_policy_basic
 
 af_test = 'dual'
@@ -600,8 +594,6 @@ class TestBasicPolicyIpv4v6(test_policy_basic.TestBasicPolicy):
         cls.inputs.set_af(af_test)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported('ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         if not self.connections.orch.is_feature_supported('ipv6'):
             return(False, 'IPv6 tests not supported in this environment ')
         return (True, None)
@@ -623,8 +615,6 @@ class TestBasicPolicyNegativeIpv4v6(test_policy_basic.TestBasicPolicyNegative):
         cls.inputs.set_af(af_test)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported('ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         if not self.connections.orch.is_feature_supported('ipv6'):
             return(False, 'IPv6 tests not supported in this environment ')
         return (True, None)
@@ -641,8 +631,6 @@ class TestBasicPolicyModifyIpv4v6(test_policy_basic.TestBasicPolicyModify):
         cls.inputs.set_af(af_test)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported('ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         if not self.connections.orch.is_feature_supported('ipv6'):
             return(False, 'IPv6 tests not supported in this environment ')
         return (True, None)
@@ -659,8 +647,6 @@ class TestBasicPolicyConfigIpv4v6(TestBasicPolicyConfig):
         cls.inputs.set_af(af_test)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported('ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)
 
 class TestBasicPolicyRoutingIpv4v6(TestBasicPolicyRouting):
@@ -670,7 +656,5 @@ class TestBasicPolicyRoutingIpv4v6(TestBasicPolicyRouting):
         cls.inputs.set_af(af_test)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported('ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)
 

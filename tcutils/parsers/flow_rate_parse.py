@@ -1,6 +1,3 @@
-from __future__ import division
-from builtins import object
-from past.utils import old_div
 "parser to parse the 'flow -r' output."""
 
 import re
@@ -27,8 +24,8 @@ class FlowRateParser(object):
         flow_rate_filtered.sort()
         length = len(flow_rate_filtered)
         if length % 2 == 0:
-            mid = old_div(length,2)
-            flow_rate = old_div((flow_rate_filtered[mid] + flow_rate_filtered[mid-1]),2)
+            mid = (length // 2)
+            flow_rate = ((flow_rate_filtered[mid] + flow_rate_filtered[mid-1]) // 2)
         else:
-            flow_rate = flow_rate_filtered[(old_div((length +1),2))-1]
+            flow_rate = flow_rate_filtered[((length +1) // 2)-1]
         return flow_rate

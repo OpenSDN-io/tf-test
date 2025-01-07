@@ -1,15 +1,10 @@
-from __future__ import absolute_import
 #
 # To run tests, you can do 'python -m testtools.run tests'. To run specific tests,
 # You can do 'python -m testtools.run -l tests'
 # Set the env variable PARAMS_FILE to point to your ini file. Else it will try to pick params.ini in PWD
 #
 from .base import BasePolicyTest
-from builtins import str
-import os
-import fixtures
 import tcutils.wrappers
-import time
 from vn_test import VNFixture
 from vm_test import VMFixture
 from ipam_test import IPAMFixture
@@ -117,7 +112,7 @@ class TestPolicyAcl(BasePolicyTest):
 
     # end setup_vm
 
-    @attr(type=['cb_sanity', 'sanity', 'vcenter', 'vrouter_gw', 'vcenter_compute'])
+    @attr(type=['cb_sanity', 'sanity', 'vrouter_gw'])
     @tcutils.wrappers.preposttest_wrapper
     def test_policy_inheritance_src_vn_dst_pol(self):
         """Test cases to test policy inheritance"""
@@ -414,7 +409,7 @@ class TestPolicyAcl(BasePolicyTest):
 
     # end test_policy_inheritance_src_any_dst_pol
 
-    @attr(type=['cb_sanity', 'vcenter'])
+    @attr(type=['cb_sanity'])
     @tcutils.wrappers.preposttest_wrapper
     def test_policy_inheritance_src_pol_dst_any(self):
         """Test cases to test policy inheritance"""
@@ -653,7 +648,7 @@ class TestPolicyAcl(BasePolicyTest):
 
     # end test_policy_cidr_src_policy_dst_cidr
 
-    @attr(type=['cb_sanity', 'vcenter'])
+    @attr(type=['cb_sanity'])
     @tcutils.wrappers.preposttest_wrapper
     def test_policy_cidr_src_vn_dst_cidr(self):
         """Test cases to test policy CIDR"""
@@ -973,7 +968,7 @@ class TestPolicyAcl(BasePolicyTest):
 
     # end test_policy_cidr_src_duplicate_vn_dst_cidr
 
-    @attr(type=['cb_sanity', 'sanity', 'vcenter', 'vcenter_compute'])
+    @attr(type=['cb_sanity', 'sanity'])
     @tcutils.wrappers.preposttest_wrapper
     def test_policy_cidr_src_cidr_dst_any(self):
         """Test cases to test policy CIDR"""
@@ -1436,8 +1431,6 @@ class TestPolicyAclIpv4v6(TestPolicyAcl):
         cls.inputs.set_af(af_test)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported('ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         if not self.connections.orch.is_feature_supported('ipv6'):
             return(False, 'IPv6 tests not supported in this environment ')
         return (True, None)
@@ -1446,7 +1439,7 @@ class TestPolicyAclIpv4v6(TestPolicyAcl):
     def test_policy_cidr_src_cidr_dst_any(self):
         super(TestPolicyAclIpv4v6, self).test_policy_cidr_src_cidr_dst_any()
 
-    @attr(type=['sanity','vcenter_compute'])
+    @attr(type=['sanity'])
     @tcutils.wrappers.preposttest_wrapper
     def test_policy_cidr_src_vn_dst_cidr(self):
         super(TestPolicyAclIpv4v6, self).test_policy_cidr_src_vn_dst_cidr()
@@ -1455,7 +1448,7 @@ class TestPolicyAclIpv4v6(TestPolicyAcl):
     def test_policy_inheritance_src_vn_dst_pol(self):
         super(TestPolicyAclIpv4v6, self).test_policy_inheritance_src_vn_dst_pol()
 
-    @attr(type=['sanity','vcenter_compute'])
+    @attr(type=['sanity'])
     @tcutils.wrappers.preposttest_wrapper
     def test_policy_inheritance_src_pol_dst_any(self):
         super(TestPolicyAclIpv4v6, self).test_policy_inheritance_src_pol_dst_any()

@@ -1,10 +1,5 @@
-import fixtures
-
 from vnc_api.vnc_api import NoIdError
 from vnc_api.gen.cfixture import ContrailFixture
-from vnc_api.gen.resource_xsd import PolicyEntriesType
-from vnc_api.gen.resource_test import SecurityGroupTestFixtureGen,\
-    ProjectTestFixtureGen, DomainTestFixtureGen
 
 from tcutils.util import retry
 try:
@@ -64,15 +59,11 @@ class SecurityGroupFixture(ContrailFixture):
             self.already_present = False
             if self.inputs.is_gui_based_config():
                 self.webui.create_security_group(self)
-            elif self.inputs.vro_based:
-                self.orch.create_security_group(self.secgrp_name, self.secgrp_entries)
-                self.read()
-            else:
-                self.secgrp_id = self.orch.create_security_group(
-                                                 sg_name=self.secgrp_name,
-                                                 parent_fqname=self.project_fq_name,
-                                                 sg_entries=self.secgrp_entries,
-                                                 option=self.option)
+            self.secgrp_id = self.orch.create_security_group(
+                sg_name=self.secgrp_name,
+                parent_fqname=self.project_fq_name,
+                sg_entries=self.secgrp_entries,
+                option=self.option)
 
     @property
     def uuid(self):
@@ -108,10 +99,7 @@ class SecurityGroupFixture(ContrailFixture):
         if do_cleanup:
             if self.inputs.is_gui_based_config():
                 self.webui.delete_security_group(self)
-            elif self.inputs.vro_based:
-                self.orch.delete_security_group(self.secgrp_name)
-            else:
-                self.orch.delete_security_group(sg_id=self.secgrp_id, option=self.option)
+            self.orch.delete_security_group(sg_id=self.secgrp_id, option=self.option)
             if self.verify_is_run or verify:
                 result, msg = self.verify_on_cleanup()
                 assert result, msg
@@ -133,10 +121,7 @@ class SecurityGroupFixture(ContrailFixture):
             "Replace all the rules of this security group %s with the new rules" %
             self.secgrp_name)
         self.logger.debug(rules)
-        if self.inputs.vro_based:
-            self.orch.set_sg_rules(self.secgrp_name, rules)
-        else:
-            self.orch.set_security_group_rules(sg_id=self.secgrp_id, sg_entries=rules, option=self.option)
+        self.orch.set_security_group_rules(sg_id=self.secgrp_id, sg_entries=rules, option=self.option)
 
     @retry(delay=2, tries=5)
     def verify_secgrp_in_api_server(self):

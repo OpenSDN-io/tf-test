@@ -1,5 +1,4 @@
 # Add common test utils, which can be used by all test scripts..
-from builtins import map
 from netaddr import IPNetwork
 
 def assertEqual(a, b, error_msg):

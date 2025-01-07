@@ -1,14 +1,7 @@
-from builtins import str
-from builtins import range
-import test_v1, time
+import time
 from vn_test import VNFixture
-from vm_test import VMFixture
-from policy_test import PolicyFixture
-from floating_ip import FloatingIPFixture
-from tcutils.commands import ssh, execute_cmd, execute_cmd_out
 from tcutils.util import *
-from common.base import GenericTestBase
-from common.policy.config import ConfigPolicy, AttachPolicyFixture
+from common.policy.config import ConfigPolicy
 from common.neutron.base import BaseNeutronTest
 from vnc_api.vnc_api import *
 from tcutils.traffic_utils.iperf3_traffic import Iperf3

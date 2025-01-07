@@ -1,15 +1,11 @@
 from common.vrouter.base import BaseVrouterTest
-from builtins import str
-from builtins import range
 import re
 from vnc_api.vnc_api import *
 from common.device_connection import NetconfConnection
 from common.gw_less_fwd.base import *
 from tcutils.traffic_utils.scapy_traffic_gen import ScapyTraffic
-import random
 from tcutils.tcpdump_utils import *
 from tcutils.util import *
-from netaddr import IPNetwork
 import time
 
 # MVPN specific configuration

@@ -1,23 +1,14 @@
-from __future__ import absolute_import
-from builtins import str
-from builtins import range
 from .base import BaseSerialPolicyTest
 from tcutils.wrappers import preposttest_wrapper
-import test
 from vn_test import *
 from quantum_test import *
 from policy_test import *
 from vm_test import *
 from tcutils.topo.sdn_topo_setup import sdnTopoSetupFixture
-from common.system.system_verification import system_vna_verify_policy
-from common.system.system_verification import all_policy_verify
 from common.policy import policy_test_helper
 from tcutils.test_lib.test_utils import assertEqual
-from vnc_api import vnc_api
 from vnc_api.gen.resource_test import *
-#from . import sdn_single_vm_multiple_policy_topology
 from scripts.policy import sdn_policy_traffic_test_topo
-#from . import test_policy_basic
 
 af_test = 'dual'
 
@@ -344,8 +335,6 @@ class TestScalePolicyIpv4v6(TestScalePolicy):
         cls.inputs.set_af(af_test)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported('ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)
 
 #end class TestScalePolicyIpv4v6

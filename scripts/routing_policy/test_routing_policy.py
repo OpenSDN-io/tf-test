@@ -1,20 +1,16 @@
-from __future__ import absolute_import
 from .base import RPBase
-from builtins import str
 from tcutils.wrappers import preposttest_wrapper
 from common.servicechain.firewall.verify import VerifySvcFirewall
 from common.svc_health_check.base import BaseHC
 import test
 import time
-from common import isolated_creds
 from tcutils.wrappers import preposttest_wrapper
 from common.bgpaas.base import BaseBGPaaS
-from common.neutron.base import BaseNeutronTest
 from tcutils.util import *
 from tcutils.tcpdump_utils import *
 from contrailapi import ContrailVncApi
 from tcutils.util import get_random_cidr
-from random import randint
+
 
 class TestRP(RPBase, BaseBGPaaS, BaseHC, VerifySvcFirewall):
 

@@ -1,21 +1,11 @@
-from __future__ import division
-from builtins import str
-from builtins import range
-from builtins import object
-from past.utils import old_div
-from selenium import webdriver
-from pyvirtualdisplay import Display
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import StaleElementReferenceException
 import os
 import time
 import datetime
-import logging
 from tcutils.util import *
 from vnc_api.vnc_api import *
 from tcutils.verification_util import *
@@ -1040,7 +1030,7 @@ class WebuiCommon(object):
             memory_list = sorted(set(memory_list))
             memory_list = [str(memory) + ' MB' for memory in memory_range]
         else:
-            memory = round(old_div(memory, 1024), 2)
+            memory = round((memory // 1024), 2)
             memory_range = list(range(
                 int(memory * 100) - offset, int(memory * 100) + offset))
             memory_range = [x / 100.0 for x in memory_range]

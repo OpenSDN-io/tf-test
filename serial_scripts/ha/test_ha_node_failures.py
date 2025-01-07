@@ -1,6 +1,4 @@
-from __future__ import absolute_import
 from .base import HABaseTest
-from common import isolated_creds
 import time
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import skip_because

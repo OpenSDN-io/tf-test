@@ -1,12 +1,7 @@
-from builtins import input
-from builtins import str
 import vnc_api_test
-from compute_node_test import ComputeNodeFixture
 from tcutils.util import get_random_name, retry
-from contrailapi import ContrailVncApi
 from port_fixture import PortFixture
 from vnc_api.vnc_api import *
-import copy
 
 class LogicalRouterFixture(vnc_api_test.VncLibFixture):
 

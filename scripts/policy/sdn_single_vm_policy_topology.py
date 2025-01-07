@@ -1,8 +1,4 @@
 '''*******AUTO-GENERATED TOPOLOGY*********'''
-from __future__ import print_function
-
-from builtins import range
-from builtins import object
 import sys
 from tcutils.util import get_random_name,get_random_cidr
 

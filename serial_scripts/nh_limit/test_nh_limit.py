@@ -1,6 +1,4 @@
-from __future__ import absolute_import
 from tcutils.wrappers import preposttest_wrapper
-import os
 import test
 from .base import TestNHLimit
 from common.base import *

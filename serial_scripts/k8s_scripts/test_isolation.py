@@ -85,33 +85,7 @@ class TestNSIsolationSerial(BaseK8sTest):
         return (client1, client2, client3)
     #end setup_common_namespaces_pods
 
-    @test.attr(type=['openshift_1'])
-    @preposttest_wrapper
-    def test_pods_isolation_post_kube_manager_restart(self):
-        """
-        This test case verifies the connectivity between pods of different namespaces with
-        namespace isolation enabled post restart of contrail-kube-manager
-        Verify:
-        1. Pods in other namespaces in the Kubernetes cluster will NOT be able to reach pods in the isolated namespace.
-        2. Pods created in isolated namespace can reach pods in other namespaces.
-        Restart contrail-kube-manager and verify both the points again
-        """
-        self.addCleanup(self.invalidate_kube_manager_inspect)
-        client1, client2, client3 = self.setup_common_namespaces_pods()
-        #Check 1:
-        assert client1[2].ping_to_ip(client2[0].pod_ip, expectation=False)
-        assert client3[2].ping_to_ip(client2[0].pod_ip, expectation=False)
-        #Check 2
-        assert client1[2].ping_to_ip(client3[0].pod_ip, expectation=False)
-        self.restart_kube_manager()
-        #Check 1:
-        assert client1[2].ping_to_ip(client2[0].pod_ip, expectation=False)
-        assert client3[2].ping_to_ip(client2[0].pod_ip, expectation=False)
-        #Check 2
-        assert client1[2].ping_to_ip(client3[0].pod_ip, expectation=False)
-    #end test_pods_isolation_post_kube_manager_restart
-
-    @test.attr(type=['k8s_sanity','openshift_1'])
+    @test.attr(type=['k8s_sanity'])
     @preposttest_wrapper
     def test_service_isolation_post_kube_manager_restart(self):
         """
@@ -256,7 +230,7 @@ class TestCustomIsolationSerial(BaseK8sTest):
         return (client1, client2)
     #end setup_common_namespaces_pods
 
-    @test.attr(type=['k8s_sanity','openshift_1'])
+    @test.attr(type=['k8s_sanity'])
     @preposttest_wrapper
     def test_pods_custom_isolation_post_kube_manager_restart(self):
         """
@@ -288,7 +262,7 @@ class TestCustomIsolationSerial(BaseK8sTest):
         assert client2[5].ping_to_ip(client1[5].pod_ip)
     #end test_pods_custom_isolation_post_kube_manager_restart
 
-    @test.attr(type=['k8s_sanity','openshift_1'])
+    @test.attr(type=['k8s_sanity'])
     @preposttest_wrapper
     def test_services_custom_isolation_post_kube_manager_restart(self):
         """
@@ -405,18 +379,6 @@ class TestProjectIsolationSerial(BaseK8sTest):
         return (client1, client2)
     #end setup_common_namespaces_pods
 
-    @test.attr(type=['openshift_1'])
-    @preposttest_wrapper
-    def test_pod_reachability_across_projects(self):
-        """
-        Check reachability of Pods of different namespaces across different projects
-        """
-        client1, client2 = self.setup_common_namespaces_pods()
-        assert client1[2].ping_to_ip(client1[0].pod_ip)
-        assert client1[2].ping_to_ip(client2[0].pod_ip)
-        assert client2[2].ping_to_ip(client1[0].pod_ip)
-    # end  test_pod_reachability_across_ns
-
     @skip_because(mx_gw = False)
     @preposttest_wrapper
     def test_service_reachability_across_projects(self):
@@ -451,32 +413,6 @@ class TestProjectIsolationSerial(BaseK8sTest):
         # Ingress reachability across namespace/project
         assert self.validate_nginx_lb([client2[0], client2[1]], client2[5].external_ips[0])
     # end  test_ingress_reachability_across_ns
-
-    @test.attr(type=['openshift_1'])
-    @preposttest_wrapper
-    def test_reachability_across_projects_with_isolated_namespace(self):
-        """
-        Check reachability between Pods and services created in isolated namespace.
-        Note that the namespace should have seperate Project.
-        1. Create 2 namespaces. 1 as non isolated and other as isolated.
-        2. Create Pods and service under both the namespaces.
-        3. Verify reachability
-        """
-        client1, client2 = self.setup_common_namespaces_pods(prov_service = True,
-                                                             isolation = True)
-        # Reachability of Pods
-        assert client1[2].ping_to_ip(client1[0].pod_ip)
-        assert client2[2].ping_to_ip(client2[0].pod_ip)
-        assert client2[2].ping_to_ip(client1[0].pod_ip, expectation = False)
-        assert client1[2].ping_to_ip(client2[0].pod_ip, expectation = False)
-        # Reachability of Services
-        assert self.validate_nginx_lb([client2[0], client2[1]], client2[3].cluster_ip,
-                                      test_pod=client2[2])
-        assert self.validate_nginx_lb([client1[0], client1[1]], client1[3].cluster_ip,
-                                      test_pod=client2[2])
-        assert self.validate_nginx_lb([client2[0], client2[1]], client2[3].cluster_ip,
-                                      test_pod=client1[2], expectation = False)
-    # end  test_reachability_across_projects_with_isolated_namespace
 
     @test.attr(type=['k8s_sanity'])
     @preposttest_wrapper

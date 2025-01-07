@@ -1,17 +1,10 @@
+import time
 from common.neutron.lbaas.base import BaseTestLbaas
-import os
-import fixtures
-import testtools
-import datetime
-
-from vn_test import *
-from vm_test import *
-from common.connections import ContrailConnections
 from tcutils.wrappers import preposttest_wrapper
-from tcutils.util import run_fab_cmd_on_node
+from tcutils.util import *
+
 
 from common.openstack_libs import neutron_client_exception as NeutronClientException
-import test
 
 
 class TestLbaas(BaseTestLbaas):
@@ -92,7 +85,7 @@ class TestLbaas(BaseTestLbaas):
         assert vip_name in vip_names, "vip %s is not present in the vip list" % (vip_name)
 
         #sleep for 10 sec netns to get created
-        sleep(10)
+        time.sleep(10)
 
         #Check if nets ns got created and haproxy running in compute nodes after vip creation
         result,errmsg = self.verify_active_standby(self.inputs.compute_ips, pool_uuid)
@@ -178,7 +171,7 @@ class TestLbaas(BaseTestLbaas):
         #TODO : agent verification
 
         #sleep for 10 sec netns to get created
-        sleep(10)
+        time.sleep(10)
 
         #verify with vip creation netns is created and haproxy is running
         result,errmsg = self.verify_active_standby(self.inputs.compute_ips, pool_uuid)
@@ -419,7 +412,7 @@ class TestLbaas(BaseTestLbaas):
         #TODO : agent verification
 
         #sleep for 10 sec netns to get created
-        sleep(10)
+        time.sleep(10)
 
         #verify with vip creation netns is created and haproxy is running
         result,errmsg = self.verify_active_standby(self.inputs.compute_ips, pool_uuid)

@@ -1,18 +1,11 @@
-from builtins import str
-from builtins import range
 import test_v1
 from vn_test import MultipleVNFixture
 from vnc_api.vnc_api import *
 from vm_test import MultipleVMFixture
-from fabric.api import run, hide, settings
 from vn_test import VNFixture
 from vm_test import VMFixture
-from policy_test import PolicyFixture
-from policy_test import PolicyFixture
 from common.policy.config import ConfigPolicy
-import os
 import re
-from physical_router_fixture import PhysicalRouterFixture
 from time import sleep
 from tcutils.verification_util import *
 from tcutils.contrail_status_check import *

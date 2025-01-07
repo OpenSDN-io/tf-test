@@ -1,9 +1,5 @@
-from __future__ import absolute_import
-import test
-import random
 from netaddr import *
-from builtins import str
-from tcutils.util import skip_because, get_an_ip
+from tcutils.util import get_an_ip
 from tcutils.wrappers import preposttest_wrapper
 from common.contrail_fabric.base import BaseFabricTest
 

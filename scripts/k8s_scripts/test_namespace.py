@@ -1,9 +1,9 @@
-from builtins import range
 import test
 from common.k8s.base import BaseK8sTest
 from k8s.namespace import NamespaceFixture
 from tcutils.util import get_random_name, retry
 from tcutils.wrappers import preposttest_wrapper
+
 
 class TestNamespace(BaseK8sTest):
 
@@ -19,7 +19,7 @@ class TestNamespace(BaseK8sTest):
         parallelCleanupCandidates = ["PodFixture"]
         self.delete_in_parallel(parallelCleanupCandidates)
 
-    @test.attr(type=['openshift_1', 'ci_contrail_go_k8s_sanity'])
+    @test.attr(type=['ci_contrail_go_k8s_sanity'])
     @preposttest_wrapper
     def test_namespace_1(self):
         ''' Create and delete a namespace

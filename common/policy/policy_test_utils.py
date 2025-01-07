@@ -1,10 +1,6 @@
 ''' This module provides utils for Policy tests '''
-from builtins import str
-from builtins import range
-import inspect
 import copy
 import json
-import fixtures
 from tcutils.topo.topo_helper import topology_helper
 from vnc_api.vnc_api import *
 from vnc_api.gen.resource_test import *

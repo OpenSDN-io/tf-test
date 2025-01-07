@@ -1,18 +1,11 @@
-from __future__ import absolute_import
-from builtins import str
-from builtins import range
 from .base import BaseSolutionsTest
-from common.heat.base import BaseHeatTest
 from tcutils.wrappers import preposttest_wrapper
 from common.device_connection import NetconfConnection
-import test
 from ipam_test import *
 from vn_test import *
 from quantum_test import *
 from floating_ip import FloatingIPFixture
 from vm_test import *
-from tcutils.test_lib.test_utils import assertEqual
-from vnc_api import vnc_api
 from vnc_api.gen.resource_test import *
 from heat_test import HeatStackFixture
 from nova_test import *
@@ -22,8 +15,10 @@ import os
 import yaml
 import time
 import glob
+import copy
+import random
 from scripts.analytics.test_analytics import AnalyticsTestSanity
-import pdb
+
 #Set RHOSP_16 env to True for rhosp-16 deployments to use podman.
 DOCKER='podman' if bool(os.getenv('RHOSP_16',False)) == True else 'docker'
 
@@ -371,7 +366,7 @@ class OrangeSolutionTest(BaseSolutionsTest):
         time.sleep(CONVERGENCE_TIME)
         for i in range(10):
             try:
-                assert self.verify_bgp_session_state()
+                assert cls.verify_bgp_session_state()
             except:
                 time.sleep(3)
                 continue

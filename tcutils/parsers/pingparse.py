@@ -1,5 +1,3 @@
-from builtins import zip
-from builtins import object
 "parser to parse the ping output."""
 
 import re

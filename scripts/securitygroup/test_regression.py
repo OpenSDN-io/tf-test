@@ -1,15 +1,9 @@
-from __future__ import absolute_import
-from builtins import range
 from common.securitygroup.base import BaseSGTest
 from tcutils.wrappers import preposttest_wrapper
 from vnc_api.vnc_api import NoIdError
 from common.securitygroup.verify import VerifySecGroup
-from policy_test import PolicyFixture
-from vn_test import MultipleVNFixture
-from vm_test import MultipleVMFixture
 from common.policy.config import ConfigPolicy
-from security_group import SecurityGroupFixture, get_secgrp_id_from_name,\
-    set_default_sg_rules
+from security_group import get_secgrp_id_from_name, set_default_sg_rules
 from vn_test import VNFixture
 from vm_test import VMFixture
 from tcutils.topo.topo_helper import *
@@ -21,7 +15,6 @@ import test
 from common.securitygroup import sdn_sg_test_topo
 from tcutils.tcpdump_utils import *
 from time import sleep
-from tcutils.util import get_random_name
 from base_traffic import *
 from tcutils.util import skip_because
 from . import test_regression_basic
@@ -832,9 +825,8 @@ class SecurityGroupRegressionTests7(BaseSGTest, VerifySecGroup, ConfigPolicy):
         session, pcap = start_tcpdump_for_vm_intf(
             self, src_vm_fix, src_vn_fq_name, filters=filters)
 
-        if sys.version_info > (3,0):
-            self.logger.info("Sleeping for 5 seconds ------------------")
-            sleep(5)
+        self.logger.info("Sleeping for 5 seconds ------------------")
+        sleep(5)
 
         # start traffic
         assert self.send_nc_traffic(
@@ -855,9 +847,8 @@ class SecurityGroupRegressionTests7(BaseSGTest, VerifySecGroup, ConfigPolicy):
         session, pcap = start_tcpdump_for_vm_intf(
             self, src_vm_fix, src_vn_fq_name, filters=filters)
 
-        if sys.version_info > (3,0):
-            self.logger.info("Sleeping for 5 seconds ------------------")
-            sleep(5)
+        self.logger.info("Sleeping for 5 seconds ------------------")
+        sleep(5)
 
         # start traffic
         assert self.send_nc_traffic(
@@ -888,9 +879,8 @@ class SecurityGroupRegressionTests7(BaseSGTest, VerifySecGroup, ConfigPolicy):
         session, pcap = start_tcpdump_for_vm_intf(
             self, src_vm_fix, src_vn_fq_name, filters=filters)
 
-        if sys.version_info > (3,0):
-            self.logger.info("Sleeping for 5 seconds ------------------")
-            sleep(5)
+        self.logger.info("Sleeping for 5 seconds ------------------")
+        sleep(5)
 
         # start traffic
         assert self.send_nc_traffic(
@@ -972,9 +962,8 @@ class SecurityGroupRegressionTests7(BaseSGTest, VerifySecGroup, ConfigPolicy):
         session, pcap = start_tcpdump_for_vm_intf(
             self, src_vm_fix, src_vn_fq_name, filters=filters)
 
-        if sys.version_info > (3,0):
-            self.logger.info("Sleeping for 5 seconds ------------------")
-            sleep(5)
+        self.logger.info("Sleeping for 5 seconds ------------------")
+        sleep(5)
 
         # start traffic
         assert self.send_nc_traffic(
@@ -1603,24 +1592,8 @@ class SecurityGroupRegressionTests8(BaseSGTest, VerifySecGroup, ConfigPolicy):
             sent, recv = traffic_obj_tcp.stop()
 
             # ICMP traffic flow vs SG rule uuid.
-            if sys.version_info > (3,0):
-                assert src_vm_fix.ping_with_certainty(dst_vm_fix.vm_ip, expectation=True)
-            else:
-                sender_icmp, receiver_icmp = self.start_traffic_scapy(
-                    src_vm_fix, dst_vm_fix, 'icmp', port, port, payload="payload")
+            assert src_vm_fix.ping_with_certainty(dst_vm_fix.vm_ip, expectation=True)
             port = 0
-            if sys.version_info < (3,0):
-                assert self.verify_flow_to_sg_rule_mapping(
-                    src_vm_fix,
-                    dst_vm_fix,
-                    src_vn_fix,
-                    dst_vn_fix,
-                    secgrp_id,
-                    'icmp',
-                    port)
-
-            if sys.version_info < (3,0):
-                sent, recv = self.stop_traffic_scapy(sender_icmp, receiver_icmp)
 
         # start udp traffic
         port = 10000
@@ -2099,28 +2072,9 @@ class SecurityGroupBasicRegressionTests1_contrail(
         super(SecurityGroupBasicRegressionTests1_contrail, cls).setUpClass()
         cls.option = 'contrail'
 
-    @test.attr(type=['sanity', 'vcenter', 'suite1'])
+    @test.attr(type=['sanity', 'suite1'])
     def test_sec_group_basic(self):
         super(SecurityGroupBasicRegressionTests1_contrail, self).test_sec_group_basic()
-
-class SecurityGroupBasicRegressionTests1_contrail_vro(
-        test_regression_basic.SecurityGroupBasicRegressionTests1):
-
-    @classmethod
-    def setUpClass(cls):
-        super(SecurityGroupBasicRegressionTests1_contrail_vro, cls).setUpClass()
-        cls.option = 'contrail'
-
-    def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.inputs.vro_based:
-            return(False, 'Skipping Test Vro server not preset on vcenter setup')
-        return (True, None)
-
-    @test.attr(type=['vcenter','vro'])
-    @set_attr('vro_based')
-    def test_sec_group_basic(self):
-        super(SecurityGroupBasicRegressionTests1_contrail_vro, self).test_sec_group_basic()
-
 
 
 class SecurityGroupRegressionTests2_contrail(SecurityGroupRegressionTests2):
@@ -2188,9 +2142,6 @@ class SecurityGroupBasicRegressionTests1Ipv6(
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported(
-                'ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)
 
     @test.attr(type=['sanity','suite1'])
@@ -2205,9 +2156,6 @@ class SecurityGroupRegressionTests2Ipv6(SecurityGroupRegressionTests2):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported(
-                'ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)
 
 
@@ -2219,9 +2167,6 @@ class SecurityGroupRegressionTests3Ipv6(SecurityGroupRegressionTests3):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported(
-                'ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)
 
 class SecurityGroupRegressionTests4Ipv6(SecurityGroupRegressionTests4):
@@ -2232,9 +2177,6 @@ class SecurityGroupRegressionTests4Ipv6(SecurityGroupRegressionTests4):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported(
-                'ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)
 
 class SecurityGroupRegressionTests5Ipv6(SecurityGroupRegressionTests5):
@@ -2245,9 +2187,6 @@ class SecurityGroupRegressionTests5Ipv6(SecurityGroupRegressionTests5):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported(
-                'ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)
 
 class SecurityGroupRegressionTests6Ipv6(SecurityGroupRegressionTests6):
@@ -2258,9 +2197,6 @@ class SecurityGroupRegressionTests6Ipv6(SecurityGroupRegressionTests6):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported(
-                'ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)
 
 class SecurityGroupRegressionTests7Ipv6(SecurityGroupRegressionTests7):
@@ -2271,9 +2207,6 @@ class SecurityGroupRegressionTests7Ipv6(SecurityGroupRegressionTests7):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported(
-                'ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)
 
 
@@ -2285,9 +2218,6 @@ class SecurityGroupRegressionTests8Ipv6(SecurityGroupRegressionTests8):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported(
-                'ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)
 
 class SecurityGroupSynAckTestIpv6(SecurityGroupSynAckTest):
@@ -2298,7 +2228,4 @@ class SecurityGroupSynAckTestIpv6(SecurityGroupSynAckTest):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported(
-                'ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)

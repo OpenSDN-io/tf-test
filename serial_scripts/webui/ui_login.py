@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-from builtins import object
 from selenium import webdriver
 from pyvirtualdisplay import Display
 from .webui_common import *

@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 import logging as LOG
 
 from tcutils.verification_util import *

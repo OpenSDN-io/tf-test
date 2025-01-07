@@ -6,22 +6,8 @@
 # Set the env variable PARAMS_FILE to point to your ini file. Else it will try to pick params.ini in PWD
 #
 from common.neutron.base import BaseNeutronTest
-from builtins import str
-import os
-import fixtures
-import testtools
-import time
-
-from vn_test import *
-from vm_test import *
-from port_fixture import PortFixture
-from common.connections import ContrailConnections
 from tcutils.wrappers import preposttest_wrapper
-
-import test
-from tcutils.util import *
-from netaddr import IPNetwork, IPAddress
-from floating_ip import FloatingIPFixture
+from tcutils.util import get_random_name
 
 
 class TestPorts(BaseNeutronTest):

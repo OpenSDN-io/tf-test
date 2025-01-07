@@ -5,12 +5,9 @@
 # You can do 'python -m testtools.run -l tests'
 # Set the env variable PARAMS_FILE to point to your ini file. Else it will try to pick params.ini in PWD
 #
-from builtins import str
-import os
 from common.vrouter.base import BaseVrouterTest
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import *
-from netaddr import IPNetwork, IPAddress
 import test
 
 CIRROS_IMAGE_NAME='cirros'
@@ -33,7 +30,7 @@ class TestRoutes(BaseVrouterTest):
         return (True, None)
     # end is_test_applicable
 
-    @test.attr(type=['sanity', 'vcenter_compute', 'dev_reg'])
+    @test.attr(type=['sanity', 'dev_reg'])
     @preposttest_wrapper
     def test_rt_table_scenario_1(self):
         '''

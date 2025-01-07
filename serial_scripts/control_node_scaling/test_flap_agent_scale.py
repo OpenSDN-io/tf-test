@@ -1,39 +1,20 @@
-# Pytho libs
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
-from builtins import range
-from builtins import object
-from past.utils import old_div
 import os
 import sys
-import platform
 import re
-import uuid
 import time
-import errno
 import socket
 import subprocess
 import time
 from tcutils.wrappers import preposttest_wrapper
-from time import sleep
 from netaddr import *
-from datetime import datetime, timedelta
+from datetime import datetime
 import multiprocessing
-import traceback
-import logging
-import fixtures
 #
 # Contrail libs
 #
 import argparse
 import configparser
 from vnc_api.vnc_api import *
-import json
-from pprint import pformat
 from common.contrail_test_init import *
 #
 # Contrail scaling libs
@@ -42,8 +23,6 @@ from .ssh_interactive_commnds import *
 from .cn_introspect_bgp import ControlNodeInspect
 from .vn_oper import VnCfg
 from .bgp_scale import *
-#from policy import PolicyCmd
-import test
 from .base import BaseBGPScaleTest
 
 
@@ -1294,7 +1273,7 @@ class FlapAgentScaleInit (object):
         #
         # Get delta time in minutes, rounding ok
         #
-        delta_time_minutes = int(old_div(((datetime.now() - t1).seconds), 60))
+        delta_time_minutes = (datetime.now() - t1).seconds // 60
 
         #
         # See if max time was
@@ -3022,7 +3001,7 @@ class FlapAgentScaleInit (object):
             self._args.num_bidir_policies
             num_bidir_policies = int(self._args.num_bidir_policies)
         except:
-            num_bidir_policies = old_div(int(number_instances), 2)
+            num_bidir_policies = int(number_instances) // 2
 
         if num_bidir_policies == 0:
             self._log_print(
@@ -3172,7 +3151,7 @@ class FlapAgentScaleInit (object):
             return_val = 0
         else:
             return_val = round(
-                (float(old_div(number_of_events, seconds)) * 1000000), decimal_places)
+                (float(number_of_events // seconds) * 1000000), decimal_places)
 
             if decimal_places == 0:
                 return_val = int(return_val)
@@ -3202,8 +3181,7 @@ class FlapAgentScaleInit (object):
         # Get delta time
         #
         self.test_end_time = datetime.now()
-        self.delta_time_minutes = int(
-            old_div(((self.test_end_time - self.test_start_time).seconds), 60))
+        self.delta_time_minutes = (self.test_end_time - self.test_start_time).seconds // 60
 
         #
         # Print headings

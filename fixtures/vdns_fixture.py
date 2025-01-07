@@ -1,9 +1,5 @@
-from __future__ import print_function
-from builtins import str
 import fixtures
 from vnc_api.vnc_api import *
-from vnc_api.gen.cfixture import ContrailFixture
-from vnc_api.gen.resource_test import VirtualDnsRecordTestFixtureGen
 
 from tcutils.util import retry
 

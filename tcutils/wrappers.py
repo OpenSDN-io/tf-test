@@ -1,11 +1,10 @@
 """ Module wrrapers that can be used in the tests."""
-from future import standard_library
-standard_library.install_aliases()
 import traceback, os, signal
 from functools import wraps
 from testtools.testcase import TestSkipped
 import cgitb
 import io
+import sys
 from datetime import datetime
 from tcutils.util import v4OnlyTestException
 from tcutils.test_lib.contrail_utils import check_xmpp_is_stable
@@ -14,7 +13,7 @@ from .cores import *
 
 
 def detailed_traceback():
-    buf = io.BytesIO() if sys.version_info[0] == 2 else io.StringIO()
+    buf = io.StringIO()
     cgitb.Hook(format="text", file=buf).handle(sys.exc_info())
     tb_txt = buf.getvalue()
     buf.close()

@@ -1,23 +1,12 @@
-from __future__ import absolute_import
-from builtins import str
-from builtins import range
 from .base import BaseDM
 import test
 from tcutils.wrappers import preposttest_wrapper
-from vn_test import MultipleVNFixture
-from physical_router_fixture import PhysicalRouterFixture
 from lif_fixture import LogicalInterfaceFixture
-from common import isolated_creds
 from serial_scripts.md5.base import Md5Base
 from common.neutron.base import BaseNeutronTest
 from tcutils.contrail_status_check import *
-import physical_device_fixture
-from jnpr.junos import Device
 from time import sleep
-import os
-import sys
 import re
-from vn_test import VNFixture
 
 class TestDM(BaseDM, Md5Base, BaseNeutronTest):
 

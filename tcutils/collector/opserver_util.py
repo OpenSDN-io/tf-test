@@ -1,4 +1,3 @@
-from __future__ import print_function
 #
 # OpServer Utils
 #
@@ -9,9 +8,6 @@ from __future__ import print_function
 # Copyright (c) 2013, Contrail Systems, Inc. All rights reserved.
 #
 
-from builtins import next
-from builtins import str
-from builtins import object
 import datetime
 import time
 import requests

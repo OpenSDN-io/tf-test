@@ -1,9 +1,7 @@
-from builtins import range
 import test_v1
 import time
 import struct
 import socket
-import fixtures
 
 class BaseSriovTest(test_v1.BaseTestCase_v1):
 

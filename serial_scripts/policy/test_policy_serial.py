@@ -1,15 +1,10 @@
-from __future__ import print_function
-from __future__ import absolute_import
 from .base import BaseSerialPolicyTest
-from builtins import str
-from builtins import range
 from vn_test import VNFixture
 from policy_test import PolicyFixture
 from vm_test import VMFixture
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.topo.sdn_topo_setup import sdnTopoSetupFixture
 from common.system.system_verification import assertEqual
-import common.system.system_verification
 from common.policy import policy_test_utils
 from tcutils.topo.topo_helper import topology_helper
 from traffic_tests import trafficTestFixture
@@ -18,11 +13,11 @@ import json
 import re
 import copy
 import random
+import sys
+import traceback
 from . import sdn_policy_traffic_test_topo
 from common.topo import sdn_policy_topo_with_multi_project
 from tcutils.util import get_random_name, get_random_cidr, gen_str_with_spl_char
-import os
-from tcutils.contrail_status_check import ContrailStatusChecker
 
 class TestSerialPolicy(BaseSerialPolicyTest):
     _interface = 'json'

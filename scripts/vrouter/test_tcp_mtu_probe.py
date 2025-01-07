@@ -4,7 +4,6 @@ This FT automation implementation will check icmp/tcp traffic configuring differ
 
 Tested on dpdk compute Bond configuration 
 '''
-from builtins import str
 from common.vrouter.base import BaseVrouterTest
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import skip_because
@@ -45,7 +44,7 @@ class TestMtuProbe(BaseVrouterTest):
         assert self.send_nc_traffic(client, server, sport, dport, proto), "TCP traffic failed"
         return True
  
-    @test.attr(type=['sanity', 'vcenter_compute', 'dev_reg'])
+    @test.attr(type=['sanity', 'dev_reg'])
     @preposttest_wrapper
     @skip_because(min_nodes=2)
     def test_mtu_probe_inter_node(self):
@@ -87,7 +86,7 @@ class TestMtuProbe(BaseVrouterTest):
             self.verify_tcp_traffic(client,server, value)
         return True
 
-    @test.attr(type=['sanity', 'vcenter_compute', 'dev_reg'])
+    @test.attr(type=['sanity', 'dev_reg'])
     @preposttest_wrapper
     def test_mtu_probe_intra_node(self):
         """ 

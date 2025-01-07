@@ -1,8 +1,4 @@
 """TCP Client module built on top of scapy Automaton"""
-from __future__ import division
-
-from builtins import str
-from past.utils import old_div
 from scapy.all import *
 try:
     # Running from the source repo "test".
@@ -30,7 +26,7 @@ class TCPClient(Automaton):
         l3_hdr = self.gen.creater._l3_hdr()
         l4_hdr = self.gen.creater._l4_hdr()
 
-        self.pkt = old_div(l3_hdr, l4_hdr)
+        self.pkt = (l3_hdr // l4_hdr)
         self.pkt[TCP].flags = 0
         self.pkt[TCP].seq = random.randrange(0, 2 ** 32)
 
@@ -154,8 +150,8 @@ class TCPClient(Automaton):
 
         self.count += 1
         self.pkt[TCP].flags = "PA"
-        log.debug(repr(old_div(self.pkt, d)))
-        self.send(old_div(self.pkt, d))
+        log.debug(repr((self.pkt // d)))
+        self.send((self.pkt // d))
         self.pkt[TCP].seq += len(d)
         self.gen.update_result("Sent=%s\nReceived=%s" %
                                (self.count, self.recv_count))

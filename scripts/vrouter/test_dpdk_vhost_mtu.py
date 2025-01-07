@@ -1,8 +1,6 @@
 '''
 This FT automation implementation will perform mtu config test on vhost0
 '''
-from builtins import str
-import os
 from common.vrouter.base import BaseVrouterTest
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.contrail_status_check import ContrailStatusChecker 
@@ -73,7 +71,7 @@ class TestMtu(BaseVrouterTest):
         return True
     #end configure_vhost_mtu_and_verify
 
-    @test.attr(type=['sanity', 'vcenter_compute', 'dev_reg'])
+    @test.attr(type=['sanity', 'dev_reg'])
     @preposttest_wrapper
     @skip_because(dpdk_cluster=False)
     def test_mtu_config(self):

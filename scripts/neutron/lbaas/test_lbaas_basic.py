@@ -1,8 +1,5 @@
 from common.neutron.lbaas.base import BaseTestLbaas
-from builtins import range
-import os
 import datetime
-from common.connections import ContrailConnections
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import get_random_name
 import test

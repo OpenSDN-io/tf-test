@@ -1,8 +1,4 @@
-from builtins import object
 import re, time
-import string
-import logging
-from collections import OrderedDict
 from tcutils.util import get_random_name, retry
 
 result_file = '/tmp/iper3'

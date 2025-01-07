@@ -1,11 +1,8 @@
-from __future__ import print_function
-
-import sys, os
-import time, re
-#import pdb
 import sys
-# Append paths to python APIs
+import time
+import sys
 
+# Append paths to python APIs
 # sys.path.append('/path/to/hltapi/library/common/ixiangpf/python') 
 # sys.path.append('/path/to/ixnetwork/api/python')
 #sys.path.append('c:/Program Files (x86)/Ixia/hltapi/4.95.117.44/TclScripts/lib/hltapi/library/common/ixiangpf/python')

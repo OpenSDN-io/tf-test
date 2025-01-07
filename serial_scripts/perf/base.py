@@ -1,32 +1,16 @@
 import test_v1
-from builtins import str
-from builtins import range
-import sys
-import os
-import signal
 import re
-import struct
-import socket
 import random
 import inspect
-#from fabric.state import connections as fab_connections
 import re
-from common.connections import ContrailConnections
 from common.device_connection import NetconfConnection
-import traffic_tests
 from common.contrail_test_init import *
-from common import isolated_creds
 from vn_test import *
 from vm_test import *
 from floating_ip import *
 from svc_instance_fixture import SvcInstanceFixture
 from svc_template_fixture import SvcTemplateFixture
-from common.servicechain.config import ConfigSvcChain
-from common.servicechain.verify import VerifySvcChain
 from common.servicechain.mirror.verify import VerifySvcMirror
-from common.servicechain.mirror.config import ConfigSvcMirror
-from fabric.api import local
-#from serial_scripts.perf.base import PerfBase
 from tcutils.commands import *
 import time
 import copy

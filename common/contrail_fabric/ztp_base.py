@@ -1,4 +1,3 @@
-from builtins import str
 import time
 from tcutils.util import *
 from common.contrail_fabric.base import BaseFabricTest

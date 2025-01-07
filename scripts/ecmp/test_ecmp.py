@@ -1,5 +1,3 @@
-from builtins import str
-from builtins import range
 from common.ecmp.base import ECMPTestBase
 from common.base import GenericTestBase
 import sys
@@ -8,7 +6,6 @@ from vn_test import *
 from floating_ip import *
 from quantum_test import *
 from vnc_api_test import *
-from vnc_api import vnc_api as my_vnc_api
 from nova_test import *
 from vm_test import *
 from tcutils.util import skip_because, get_an_ip
@@ -17,7 +14,6 @@ from common.servicechain.firewall.verify import VerifySvcFirewall
 from common.ecmp.ecmp_traffic import ECMPTraffic
 from common.ecmp.ecmp_verify import ECMPVerify
 sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
-from traffic.core.stream import Stream
 from common.ecmp.ecmp_test_resource import ECMPSolnSetup
 import test
 from common.neutron.base import BaseNeutronTest
@@ -67,7 +63,7 @@ class TestECMPSanity(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTraffic
                               **self.common_args)
     #test_ecmp_svc_in_network_with_3_instance
 
-    @test.attr(type=['sanity','vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     def test_ecmp_svc_in_network_with_static_route_no_policy(self):
         """
@@ -231,7 +227,7 @@ class TestECMPFeature(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTraffi
         assert ret, msg
     # end test_ecmp_in_pol_based_svc_pol_update
 
-    @test.attr(type=['cb_sanity', 'sanity','vcenter'])
+    @test.attr(type=['cb_sanity', 'sanity'])
     @preposttest_wrapper
     @skip_because(min_nodes=3)
     def test_ecmp_svc_v2_in_network_nat_with_3_instance(self):
@@ -598,7 +594,7 @@ class TestECMPwithFIP_2(GenericTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPT
         return True
 
 class TestECMPwithSVMChange(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTraffic, ECMPVerify):
-    @test.attr(type=['sanity','vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     @skip_because(min_nodes=3)
     def test_ecmp_with_svm_deletion(self):
@@ -715,7 +711,7 @@ class TestECMPwithSVMChange(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMP
 
 class TestMultiInlineSVC(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTraffic, ECMPVerify):
 
-    @test.attr(type=['sanity','vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     @skip_because(min_nodes=2)
     def test_svc_fate_sharing_basic(self):
@@ -736,12 +732,8 @@ class TestMultiInlineSVC(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTra
         Pass criteria: Ping/Route deletion/Route addition should be successful.
         Maintainer : ankitja@juniper.net
         """
-        if self.inputs.orchestrator == 'vcenter':
-            si_list = [ { 'service_mode' : 'in-network'},
-                        { 'service_mode' : 'in-network'}]
-        else:
-            si_list = [ { 'service_mode' : 'in-network'},
-                        { 'service_mode' : 'in-network'} ]
+        si_list = [ { 'service_mode' : 'in-network'},
+                    { 'service_mode' : 'in-network'} ]
         self.verify_multi_inline_svc_with_fate_share(si_list=si_list, create_svms=True, hc={'si_index':0, 'si_intf_type':'right'},
                                      **self.common_args)
     # end test_svc_fate_sharing_basic
@@ -766,13 +758,8 @@ class TestMultiInlineSVC(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTra
         Pass criteria: Ping/Route deletion/Route addition should be successful.
         Maintainer : ankitja@juniper.net
         """
-        if self.inputs.orchestrator == 'vcenter':
-            si_list = [ { 'service_mode' : 'transparent'},
-                        { 'service_mode' : 'in-network'}]
-        else:
-            si_list = [ { 'service_mode' : 'transparent'},
-                        { 'service_mode' : 'in-network'} ]
-
+        si_list = [ { 'service_mode' : 'transparent'},
+                    { 'service_mode' : 'in-network'} ]
         self.verify_multi_inline_svc_with_fate_share(si_list=si_list, create_svms=True, hc={'si_index':0, 'si_intf_type':'right', 'hc_type':'segment'},
                                      **self.common_args)
     # end test_svc_fate_sharing_basic_with_transparent
@@ -797,13 +784,8 @@ class TestMultiInlineSVC(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTra
         Pass criteria: Ping/Route deletion/Route addition should be successful.
         Maintainer : ankitja@juniper.net
         """
-        if self.inputs.orchestrator == 'vcenter':
-            si_list = [ { 'service_mode' : 'transparent'},
-                        { 'service_mode' : 'in-network-nat'}]
-        else:
-            si_list = [ { 'service_mode' : 'transparent'},
-                        { 'service_mode' : 'in-network-nat'} ]
-
+        si_list = [ { 'service_mode' : 'transparent'},
+                    { 'service_mode' : 'in-network-nat'} ]
         self.verify_multi_inline_svc_with_fate_share(si_list=si_list, create_svms=True, hc={'si_index':1, 'si_intf_type':'left'},
                                      **self.common_args)
     # end test_svc_fate_sharing_basic_with_in_network_net
@@ -831,16 +813,10 @@ class TestMultiInlineSVC(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTra
         Pass criteria: Ping/Route deletion/Route addition should be successful.
         Maintainer : ankitja@juniper.net
         """
-        if self.inputs.orchestrator == 'vcenter':
-            si_list = [ { 'service_mode' : 'in-network', 'max_inst':1},
-                        { 'service_mode' : 'in-network', 'max_inst':1}]
-            si_list1 = [ { 'service_mode' : 'in-network', 'max_inst':1},
-                        { 'service_mode' : 'in-network', 'max_inst':1}]
-        else:
-            si_list = [ { 'service_mode' : 'in-network', 'max_inst':1},
-                        { 'service_mode' : 'in-network','max_inst':1} ]
-            si_list1 = [ { 'service_mode' : 'in-network', 'max_inst':1},
-                        { 'service_mode' : 'in-network', 'max_inst':1}]
+        si_list = [ { 'service_mode' : 'in-network', 'max_inst':1},
+                    { 'service_mode' : 'in-network','max_inst':1} ]
+        si_list1 = [ { 'service_mode' : 'in-network', 'max_inst':1},
+                    { 'service_mode' : 'in-network', 'max_inst':1}]
         self.common_args['proto'] = 'icmp' #icmp for svc chain0, tcp for svc chain 1
         self.verify_multi_inline_svc_with_fate_share(si_list=si_list, si_list1=si_list1, create_svms=True, hc={'si_index':0, 'si_intf_type':'right'},
                                      **self.common_args)
@@ -869,18 +845,11 @@ class TestMultiInlineSVC(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTra
         Pass criteria: Ping/Route deletion/Route addition should be successful.
         Maintainer : ankitja@juniper.net
         """
-        if self.inputs.orchestrator == 'vcenter':
-            si_list = [ { 'service_mode' : 'transparent', 'max_inst':1},
-                        { 'service_mode' : 'in-network', 'max_inst':1},
-                        { 'service_mode' : 'transparent' ,'max_inst':1}]
-            si_list1 = [ { 'service_mode' : 'in-network', 'max_inst':1},
-                        { 'service_mode' : 'in-network', 'max_inst':1}]
-        else:
-            si_list = [ { 'service_mode' : 'transparent', 'max_inst':1},
-                        { 'service_mode' : 'in-network','max_inst':1},
-                        { 'service_mode' : 'transparent' ,'max_inst':1} ]
-            si_list1 = [ { 'service_mode' : 'in-network', 'max_inst':1},
-                        { 'service_mode' : 'in-network', 'max_inst':1}]
+        si_list = [ { 'service_mode' : 'transparent', 'max_inst':1},
+                    { 'service_mode' : 'in-network','max_inst':1},
+                    { 'service_mode' : 'transparent' ,'max_inst':1} ]
+        si_list1 = [ { 'service_mode' : 'in-network', 'max_inst':1},
+                    { 'service_mode' : 'in-network', 'max_inst':1}]
         self.common_args['proto'] = 'icmp' #icmp for svc chain0, tcp for svc chain 1
         self.verify_multi_inline_svc_with_fate_share(si_list=si_list, si_list1=si_list1, create_svms=True, hc={'si_index':2, 'si_intf_type':'left', 'hc_type':'segment'},
                                      **self.common_args)
@@ -910,18 +879,11 @@ class TestMultiInlineSVC(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTra
         Pass criteria: Ping/Route deletion/Route addition should be successful.
         Maintainer : ankitja@juniper.net
         """
-        if self.inputs.orchestrator == 'vcenter':
-            si_list = [ { 'service_mode' : 'transparent', 'max_inst':1},
-                        { 'service_mode' : 'in-network', 'max_inst':1},
-                        { 'service_mode' : 'in-network-nat', 'max_inst':1}]
-            si_list1 = [ { 'service_mode' : 'in-network', 'max_inst':1},
-                        { 'service_mode' : 'in-network', 'max_inst':1}]
-        else:
-            si_list = [ { 'service_mode' : 'transparent', 'max_inst':1},
-                        { 'service_mode' : 'in-network','max_inst':1},
-                        { 'service_mode' : 'in-network-nat' ,'max_inst':1} ]
-            si_list1 = [ { 'service_mode' : 'in-network', 'max_inst':1},
-                        { 'service_mode' : 'in-network', 'max_inst':1}]
+        si_list = [ { 'service_mode' : 'transparent', 'max_inst':1},
+                    { 'service_mode' : 'in-network','max_inst':1},
+                    { 'service_mode' : 'in-network-nat' ,'max_inst':1} ]
+        si_list1 = [ { 'service_mode' : 'in-network', 'max_inst':1},
+                    { 'service_mode' : 'in-network', 'max_inst':1}]
         self.common_args['proto'] = 'icmp' #icmp for svc chain0, tcp for svc chain 1
         self.verify_multi_inline_svc_with_fate_share(si_list=si_list, si_list1=si_list1, create_svms=True, hc={'si_index':0, 'si_intf_type':'right', 'hc_type':'segment'},
                                      **self.common_args)
@@ -948,14 +910,8 @@ class TestMultiInlineSVC(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTra
         Pass criteria: Ping/Route deletion/Route addition should be successful.
         Maintainer : ankitja@juniper.net
         """
-
-        if self.inputs.orchestrator == 'vcenter':
-            si_list = [ { 'service_mode' : 'in-network', 'max_inst':2},
-                        { 'service_mode' : 'in-network', 'max_inst':2}]
-        else:
-            si_list = [ { 'service_mode' : 'in-network', 'max_inst':2},
-                        { 'service_mode' : 'in-network', 'max_inst':2} ]
-
+        si_list = [ { 'service_mode' : 'in-network', 'max_inst':2},
+                    { 'service_mode' : 'in-network', 'max_inst':2} ]
         self.verify_multi_inline_svc_with_fate_share(si_list=si_list, create_svms=True, hc={'si_index':0, 'si_intf_type':'right'},
                                      **self.common_args)
     # end test_svc_fate_sharing_basic_with_multiple_svm_instances
@@ -982,20 +938,14 @@ class TestMultiInlineSVC(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTra
         Pass criteria: Ping/Route deletion/Route addition should be successful.
         Maintainer : ankitja@juniper.net
         """
-
-        if self.inputs.orchestrator == 'vcenter':
-            si_list = [ { 'service_mode' : 'in-network', 'max_inst':3},
-                        { 'service_mode' : 'in-network', 'max_inst':3}]
-        else:
-            si_list = [ { 'service_mode' : 'in-network', 'max_inst':3},
-                        { 'service_mode' : 'in-network', 'max_inst':3} ]
-
+        si_list = [ { 'service_mode' : 'in-network', 'max_inst':3},
+                    { 'service_mode' : 'in-network', 'max_inst':3} ]
         self.verify_multi_inline_svc_with_fate_share(si_list=si_list, create_svms=True, hc={'si_index':0, 'si_intf_type':'right'},
                                      **self.common_args)
 
     # end test_svc_fate_sharing_basic_with_3_svm_instances
 
-    @test.attr(type=['sanity','vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     @skip_because(min_nodes=3)
     def test_three_stage_v2_SC(self):
@@ -1010,12 +960,8 @@ class TestMultiInlineSVC(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTra
         Pass criteria: Ping between the VMs should be successful.
         Maintainer : ganeshahv@juniper.net
         """
-        if self.inputs.orchestrator == 'vcenter':
-            si_list = [ { 'service_mode' : 'in-network'},
-                        { 'service_mode' : 'in-network-nat'}]
-        else:
-            si_list = [ { 'service_mode' : 'transparent'},
-                        { 'service_mode' : 'in-network-nat'} ]
+        si_list = [ { 'service_mode' : 'transparent'},
+                    { 'service_mode' : 'in-network-nat'} ]
         self.verify_multi_inline_svc(si_list=si_list, create_svms=True,
                                      **self.common_args)
     # end test_three_stage_v2_SC
@@ -1205,22 +1151,6 @@ class TestECMPIPv6Fragments(BaseNeutronTest, TestECMPSanity, VerifyIntfMirror):
                               create_svms=True,
                               **self.common_args)
 
-class TestECMPVro(TestECMPSanity):
-    @classmethod
-    def setUpClass(cls):
-        cls.vro_based = True
-        super(TestECMPVro, cls).setUpClass()
-    
-    def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.inputs.vro_based:
-           return(False, 'Skipping Test Vro server not present on vcenter setup')
-        return (True, None)
-
-    @test.attr(type=['vcenter','vro'])
-    @preposttest_wrapper
-    @skip_because(min_nodes=3)
-    def test_ecmp_svc_in_network_with_3_instance(self):
-        super(TestECMPVro,self).test_ecmp_svc_in_network_with_3_instance()
 
 class TestECMPFeatureIPv6(TestECMPFeature):
 
@@ -1324,7 +1254,7 @@ class TestECMPConfigHashFeature(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, 
         super(TestECMPConfigHashFeature, cls).tearDownClass()
     # end tearDownClass
 
-    @test.attr(type=['sanity','vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     @skip_because(min_nodes=3)
     def test_ecmp_hash_src_ip(self):

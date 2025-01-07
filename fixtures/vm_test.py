@@ -1,32 +1,21 @@
-from builtins import zip
-from builtins import str
-from builtins import range
-from builtins import object
 import re
-import time
-import shlex
 import shutil
 import traceback
 import threading
 import tempfile
 import fixtures
-import socket
-import paramiko
+import pexpect
 from collections import defaultdict
 from fabric.api import env
-from fabric.api import run
 from fabric.state import output
-from fabric.operations import get, put
 from fabric.context_managers import settings, hide
-from subprocess import Popen, PIPE
 
 from ipam_test import *
 from vn_test import *
 from tcutils.util import *
-from tcutils.util import safe_run, safe_sudo
+from tcutils.util import safe_run
 from contrail_fixtures import *
-from tcutils.pkgs.install import PkgHost, build_and_install
-from security_group import get_secgrp_id_from_name, list_sg_rules
+from security_group import get_secgrp_id_from_name
 from tcutils.tcpdump_utils import start_tcpdump_for_intf,\
     stop_tcpdump_for_intf
 from tcutils.agent.vrouter_lib import *
@@ -41,14 +30,6 @@ try:
     from webui_test import *
 except ImportError:
     pass
-
-try:
-    from vcenter_gateway import VcenterGatewayOrch
-except ImportError:
-    pass
-#output.debug= True
-
-#@contrail_fix_ext ()
 
 
 class VMFixture(fixtures.Fixture):
@@ -68,7 +49,8 @@ class VMFixture(fixtures.Fixture):
                  instance_type="virtual-server",
                  flavor=None,
                  node_name=None, sg_ids=[], count=1, userdata=None,
-                 port_ids=[], fixed_ips=[], zone=None, vn_ids=[], uuid=None,*args,**kwargs):
+                 port_ids=[], fixed_ips=[], zone=None, vn_ids=[], uuid=None,
+                 *args, **kwargs):
         self.connections = connections
         self.admin_connections = kwargs.get('admin_connections')
         self.inputs = self.connections.inputs
@@ -91,10 +73,7 @@ class VMFixture(fixtures.Fixture):
         self.port_ids = port_ids
         self.fixed_ips = fixed_ips
         self.subnets = subnets
-        #Getting the image from orchestrator.For vcenter default image will be returned as tiny_core
-        #instead of ubuntu
         self.image_name = self.inputs.get_ci_image(image_name) or self.orch.get_default_image(image_name)
-        #
         self.flavor = self.orch.get_default_image_flavor(self.image_name) or flavor
         self.project_name = connections.project_name
         self.project_id = connections.project_id
@@ -224,48 +203,47 @@ class VMFixture(fixtures.Fixture):
                 self.logger.debug('VM %s already present, not creating it'
                                   % (self.vm_name))
             self.set_image_details(self.vm_obj)
+        elif self.inputs.is_gui_based_config():
+            self.webui.create_vm(self)
         else:
-            if self.inputs.is_gui_based_config():
-                self.webui.create_vm(self)
-            else:
-                if self.inputs.ns_agilio_vrouter_data: #Netronome
-                    binding_vnic_type = 'virtio-forwarder'
-                    if self.vn_objs:
-                        if not self.port_ids:
-                            port_ids = []
-                            for vn_obj in self.vn_objs:
-                                vn_uuid = vn_obj['network']['id']
-                                port_fix = PortFixture(vn_uuid,
-                                                api_type="contrail",
-                                                fixed_ips=self.fixed_ips,
-                                                connections=self.connections, binding_vnic_type=binding_vnic_type,
-                                                security_groups=self.sg_ids)
-                                self.port_fixture_list.append(port_fix)
-                                port_fix.setUp()
-                                assert port_fix.verify_on_setup()
-                                port_ids.append(port_fix.uuid)
-                            self.vn_objs = []
-                            self.port_ids = port_ids
+            if self.inputs.ns_agilio_vrouter_data: #Netronome
+                binding_vnic_type = 'virtio-forwarder'
+                if self.vn_objs:
+                    if not self.port_ids:
+                        port_ids = []
+                        for vn_obj in self.vn_objs:
+                            vn_uuid = vn_obj['network']['id']
+                            port_fix = PortFixture(vn_uuid,
+                                            api_type="contrail",
+                                            fixed_ips=self.fixed_ips,
+                                            connections=self.connections, binding_vnic_type=binding_vnic_type,
+                                            security_groups=self.sg_ids)
+                            self.port_fixture_list.append(port_fix)
+                            port_fix.setUp()
+                            assert port_fix.verify_on_setup()
+                            port_ids.append(port_fix.uuid)
+                        self.vn_objs = []
+                        self.port_ids = port_ids
 
-                objs = self.orch.create_vm(
-                    project_uuid=self.project_id,
-                    image_name=self.image_name,
-                    flavor=self.flavor,
-                    vm_name=self.vm_name,
-                    vn_objs=self.vn_objs,
-                    node_name=self.node_name,
-                    zone=self.zone,
-                    sg_ids=self.sg_ids,
-                    count=self.count,
-                    userdata=self.userdata,
-                    port_ids=self.port_ids,
-                    fixed_ips=self.fixed_ips)
-                self.created = True
-                self.vm_obj = objs[0]
-                self.vm_objs = objs
-                self.vm_id = self.vm_objs[0].id
-                self.shc_id = None
-                self.hc_fix = None
+            objs = self.orch.create_vm(
+                project_uuid=self.project_id,
+                image_name=self.image_name,
+                flavor=self.flavor,
+                vm_name=self.vm_name,
+                vn_objs=self.vn_objs,
+                node_name=self.node_name,
+                zone=self.zone,
+                sg_ids=self.sg_ids,
+                count=self.count,
+                userdata=self.userdata,
+                port_ids=self.port_ids,
+                fixed_ips=self.fixed_ips)
+            self.created = True
+            self.vm_obj = objs[0]
+            self.vm_objs = objs
+            self.vm_id = self.vm_objs[0].id
+            self.shc_id = None
+            self.hc_fix = None
 
     # end setUp
 
@@ -377,11 +355,6 @@ class VMFixture(fixtures.Fixture):
             self.logger.debug('verify_vm_launched is skipped '
                 'since self.vm_launch_flag is set')
             return True
-        #For vcenter sometimes the vm object not updated
-        #properly.It affects the verification in parallel run.
-        #Hence need to read the vm object before verification
-        if isinstance(self.orch,VcenterOrchestrator):
-            self.read(refresh=True)
         for vm_obj in self.vm_objs:
             self.logger.info('VM name : %s' % vm_obj.name)
             if not self.orch.get_vm_detail(vm_obj):
@@ -515,9 +488,6 @@ class VMFixture(fixtures.Fixture):
         return self.vm_ip_dict
 
     def add_security_group(self, secgrp):
-        if self.inputs.vro_based:
-            port_id = self.tap_intf[self.vn_fq_name]['name']
-            return self.orch.add_security_group(port_id, secgrp)
         self.orch.add_security_group(vm_id=self.vm_obj.id, sg_id=secgrp)
 
     def disassociate_security_groups(self):
@@ -527,9 +497,6 @@ class VMFixture(fixtures.Fixture):
             self.vnc_lib_h.virtual_machine_interface_update(vmi_obj)
 
     def remove_security_group(self, secgrp):
-        if self.inputs.vro_based:
-            port_id = self.tap_intf[self.vn_fq_name]['name']
-            return self.orch.remove_security_group(port_id, secgrp)
         self.orch.remove_security_group(vm_id=self.vm_obj.id, sg_id=secgrp)
 
     def verify_security_group(self, secgrp):
@@ -703,9 +670,6 @@ class VMFixture(fixtures.Fixture):
         #TO DO: sandipd - Need adjustments in multiple places to make verification success
         # in vcenter gateway setup.Will do gradually.For now made changes just needed to make few functionality
         #test cases pass
-        if isinstance(self.orch,VcenterGatewayOrch):
-            self.logger.debug('Skipping VM %s verification for vcenter gateway setup' % (self.vm_name))
-            return True
         if not (self.inputs.verify_on_setup or force):
             self.logger.debug('Skipping VM %s verification' % (self.vm_name))
             return True
@@ -1002,11 +966,6 @@ class VMFixture(fixtures.Fixture):
 
         '''
         self.vm_in_agent_flag = True
-
-        # Verification in vcenter plugin introspect
-        # vcenter introspect not working.disabling vcenter verification till.
-        # if getattr(self.orch,'verify_vm_in_vcenter',None):
-        #    assert self.orch.verify_vm_in_vcenter(self.vm_obj)
 
         inspect_h = self.agent_inspect[self.vm_node_ip]
         for vn_fq_name in self.vn_fq_names:
@@ -1475,11 +1434,7 @@ class VMFixture(fixtures.Fixture):
     @retry(delay=2, tries=30)
     def verify_vm_not_in_agent(self):
         '''Verify that the VM is fully removed in all Agents and vrouters
-
         '''
-        # Verification in vcenter plugin introspect
-        # if getattr(self.orch,'verify_vm_not_in_vcenter',None):
-        #    assert self.orch.verify_vm_not_in_vcenter(self.vm_obj)
 
         result = True
         self.verify_vm_not_in_agent_flag = True
@@ -1742,9 +1697,6 @@ class VMFixture(fixtures.Fixture):
     # end verify_vm_in_control_nodes
 
     def verify_l2_routes_in_control_nodes(self):
-        if isinstance(self.orch,VcenterGatewayOrch):
-            self.logger.debug('Skipping VM %s l2 route verification in control nodes for vcenter gateway setup' % (self.vm_name))
-            return True
         for vn_fq_name in self.vn_fq_names:
             if 'l2' in self.vnc_lib_fixture.get_active_forwarding_mode(vn_fq_name):
                 for cn in self.get_ctrl_nodes_in_rt_group(vn_fq_name):
@@ -2104,8 +2056,7 @@ class VMFixture(fixtures.Fixture):
         if self.inputs.fixture_cleanup == 'force':
             do_cleanup = True
         if do_cleanup:
-            if self.inputs.orchestrator != 'vcenter' and \
-               not self.inputs.ns_agilio_vrouter_data:
+            if not self.inputs.ns_agilio_vrouter_data:
                 if self.is_vm_active:
                     # detach cannot work for VMs in ERROR state
                     for each_port_id in self.port_ids or []:
@@ -2174,6 +2125,7 @@ class VMFixture(fixtures.Fixture):
         return True
 
     def tftp_file_to_vm(self, file, vm_ip):
+        raise NotImplemented("doens't work")
         '''Do a tftp of the specified file to the specified VM
 
         '''
@@ -2202,12 +2154,10 @@ class VMFixture(fixtures.Fixture):
     # end tftp_file_to_vm
 
     def scp_file_to_vm(self, file, vm_ip, dest_vm_username='ubuntu'):
+        raise NotImplemented("doens't work")
         '''Do a scp of the specified file to the specified VM
 
         '''
-        host = self.inputs.host_data[self.vm_node_ip]
-        output = ''
-
         # We need to retry following section and scale it up if required (for slower VMs
         # TODO: Use @retry annotation instead
         if "TEST_DELAY_FACTOR" in os.environ:
@@ -2228,6 +2178,7 @@ class VMFixture(fixtures.Fixture):
     # end scp_file_to_vm
 
     def put_pub_key_to_vm(self):
+        raise NotImplemented("doens't work")
         self.logger.debug('Copying public key to VM %s' % (self.vm_name))
         self.orch.put_key_file_to_host(self.vm_node_ip)
         auth_file = '.ssh/authorized_keys'
@@ -2310,34 +2261,6 @@ class VMFixture(fixtures.Fixture):
                     return False
         return True
     # end check_file_transfer
-
-    def get_rsa_to_vm(self):
-        '''Get the rsa file to the VM from the agent
-
-        '''
-        host = self.inputs.host_data[self.vm_node_ip]
-        output = ''
-        try:
-            self.orch.put_key_file_to_host(self.vm_node_ip)
-            with hide('everything'):
-                with settings(
-                    host_string='%s@%s' % (
-                        host['username'], self.vm_node_ip),
-                    password=host['password'],
-                        warn_only=True, abort_on_prompts=False):
-                    key_file = self.orch.get_key_file()
-                    fab_put_file_to_vm(host_string='%s@%s' % (
-                        self.vm_username, self.local_ip),
-                        password=self.vm_password,
-                        src=key_file, dest='~/',
-                        logger=self.logger)
-                    self.run_cmd_on_vm(cmds=['chmod 600 id_rsa'])
-
-        except Exception as e:
-            self.logger.exception(
-                'Exception occured while trying to get the rsa file to the \
-                 VM from the agent')
-    # end get_rsa_to_vm
 
     def run_cmd_on_vm(self, cmds=[], as_sudo=False, timeout=120,
                       as_daemon=False, raw=False, warn_only=True, pidfile=None, local_ip=None):
@@ -2459,12 +2382,11 @@ class VMFixture(fixtures.Fixture):
     # end wait_till_vm_up
 
     def scp_file_transfer_cirros(self, dest_vm_fixture, fip=None, size='100'):
+        # NOTE: this works in CI (checked on 2025-01-08)
         '''
         Creates a file of "size" bytes and transfers to the VM in dest_vm_fixture using mode scp/tftp
         '''
         filename = 'testfile'
-        dest_vm_ip = dest_vm_fixture.vm_ip
-        import pexpect
         # Create file
         cmd = 'dd bs=%s count=1 if=/dev/zero of=%s' % (size, filename)
         self.run_cmd_on_vm(cmds=[cmd])
@@ -2700,16 +2622,12 @@ class VMFixture(fixtures.Fixture):
     def install_pkg(self, pkgname="Traffic"):
         if pkgname == "Traffic":
             self.logger.info("Skipping installation of traffic package on VM")
-            return True
-        username = self.inputs.host_data[self.inputs.cfgm_ip]['username']
-        password = self.inputs.host_data[self.inputs.cfgm_ip]['password']
-        pkgsrc = PkgHost(self.inputs.cfgm_ips[0], self.vm_node_ip,
-                         username, password)
-        self.orch.put_key_file_to_host(self.vm_node_ip)
-        key = self.orch.get_key_file()
-        pkgdst = PkgHost(self.local_ip, key=key, user=self.vm_username,
-                         password=self.vm_password)
-        assert build_and_install(pkgname, pkgsrc, pkgdst, self.logger)
+            return
+
+        # NOTE: no one calls it with another pkgname. only with 'Traffic'
+        # NOTE: previous code didn't work
+        # TODO: restore if needed
+        return
 
     @retry(delay=2, tries=15)
     def verify_vm_flows_removed(self):
@@ -3340,7 +3258,7 @@ class MultipleVMFixture(fixtures.Fixture):
         super(MultipleVMFixture, self).setUp()
         self._vm_fixtures = []
         if self.vms:
-            for vm in vms:
+            for vm in self.vms:
                 self.create_vms_in_vn(vm.name, vm.image, vm.flavor, vm.project,
                                       vm.vn_obj)
         elif self.vn_objs:

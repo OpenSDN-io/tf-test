@@ -1,20 +1,8 @@
-from builtins import str
-import test_v1, time
-from vn_test import VNFixture
-from vm_test import VMFixture
 from control_node import CNFixture
 from contrailapi import ContrailVncApi
-from policy_test import PolicyFixture
-from floating_ip import FloatingIPFixture
-from tcutils.commands import ssh, execute_cmd, execute_cmd_out
 from tcutils.util import *
-from common.base import GenericTestBase
-from common.policy.config import ConfigPolicy, AttachPolicyFixture
 from common.neutron.base import BaseNeutronTest
 from vnc_api.vnc_api import *
-from tcutils.traffic_utils.iperf3_traffic import Iperf3
-from collections import OrderedDict
-from compute_node_test import ComputeNodeFixture
 from common.pbb_evpn.base import PbbEvpnTestBase
 from common.device_connection import NetconfConnection
 

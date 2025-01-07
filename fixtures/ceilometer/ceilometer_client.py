@@ -1,5 +1,3 @@
-from __future__ import print_function
-from builtins import object
 import os
 import openstack
 from common.openstack_libs import ceilo_client as client

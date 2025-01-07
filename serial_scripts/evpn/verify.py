@@ -1,11 +1,5 @@
-from __future__ import print_function
-from builtins import hex
-from builtins import str
-from builtins import range
-from builtins import object
 from time import sleep
 import re
-import os
 from vn_test import *
 from vm_test import *
 from quantum_test import *
@@ -14,10 +8,8 @@ from nova_test import *
 from policy_test import *
 from contrail_fixtures import *
 import random
-import socket
 from tcutils.tcpdump_utils import verify_tcpdump_count, search_in_pcap
 from tcutils.commands import ssh, execute_cmd, execute_cmd_out
-from fabric.operations import get, put
 from string import Template
 
 

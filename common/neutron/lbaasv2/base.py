@@ -1,9 +1,7 @@
-from builtins import str
-from builtins import range
 from common.neutron.base import BaseNeutronTest
 from lbaasv2_fixture import LBaasV2Fixture
 from tcutils.util import *
-from security_group import SecurityGroupFixture, get_secgrp_id_from_name
+from security_group import SecurityGroupFixture
 
 class BaseLBaaSTest(BaseNeutronTest):
 

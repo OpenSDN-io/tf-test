@@ -1,22 +1,18 @@
-from builtins import object
 import abc
-import logging
-from fabric.operations import get, put, run, local, sudo
-from fabric.context_managers import settings, hide
+from fabric.operations import run, sudo
+from fabric.context_managers import settings
 from fabric.contrib.files import exists
 from tcutils.verification_util import EtreeToDict
 from tcutils.gevent_lib import *
 
 from jnpr.junos import Device
 from jnpr.junos.utils.config import Config
-from jnpr.junos.exception import LockError
 from jnpr.junos.exception import *
 
 from common import log_orig as contrail_logging
 import gevent
-from future.utils import with_metaclass
 
-class AbstractConnection(with_metaclass(abc.ABCMeta, object)):
+class AbstractConnection(metaclass=abc.ABCMeta):
     ''' Abstract connnection class for ssh/netconf etc
     '''
 

@@ -1,6 +1,3 @@
-from builtins import str
-from builtins import range
-from time import sleep
 from vn_test import *
 from vm_test import *
 from quantum_test import *
@@ -8,15 +5,10 @@ from vnc_api_test import *
 from nova_test import *
 from string import Template
 import re
-from common.device_connection import NetconfConnection
-from common.vrouter.base import BaseVrouterTest
-from tcutils.traffic_utils.scapy_traffic_gen import ScapyTraffic
 
 from tcutils.tcpdump_utils import *
-from tcutils.wrappers import preposttest_wrapper
 
 from bms_fixture import BMSFixture
-from physical_router_fixture import PhysicalRouterFixture
 from common.contrail_fabric.base import BaseFabricTest
 import ipaddress
 

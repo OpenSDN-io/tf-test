@@ -217,10 +217,6 @@ docker_run () {
     if [[ $params_file ]] && [[ $params_file == *.yml || $params_file == *.yaml ]]; then
         arg_params_vol=" -v $params_file:$CONTRAIL_TEST_FOLDER/contrail_test_input.yaml:ro"
     fi
-    if [[ $vcenter_vars ]] && [[ $vcenter_vars == *.yml || $vcenter_vars == *.yaml ]]; then
-        arg_params_vol=" -v $vcenter_vars:$CONTRAIL_TEST_FOLDER/vcenter_vars.yaml:ro \
-                       $arg_params_vol"
-    fi
 
     # Leave shell
     if [[ $shell ]]; then
@@ -317,13 +313,6 @@ prerun () {
             exit 1
         fi
     fi
-    if [[ $vcenter_vars ]] && [[ $vcenter_vars == *.yml || $vcenter_vars == *.yaml ]]; then
-        vcenter_vars=`readlink -f $vcenter_vars`
-        if [ ! -f $vcenter_vars ]; then
-            red "vcenter_vars path ($vcenter_vars) doesn't exist"
-            exit 1
-        fi
-    fi
 }
 
 run () {
@@ -401,9 +390,7 @@ EOF
     #test_runner.sh
     IFS=',' read -ra PARAMS <<< "$params_file"
     contrail_input="${PARAMS[0]}"
-    vcenter_vars="${PARAMS[1]}"
     echo $contrail_input
-    echo $vcenter_vars
     params_file=$contrail_input
     echo $params_file
     #End

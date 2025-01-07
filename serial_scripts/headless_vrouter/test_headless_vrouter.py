@@ -1,12 +1,9 @@
-from __future__ import absolute_import
 #
 # To run tests, you can do 'python -m testtools.run tests'. To run specific tests,
 # You can do 'python -m testtools.run -l tests'
 # Set the env variable PARAMS_FILE to point to your ini file. Else it will try to pick params.ini in PWD
 #
-import fixtures
 from .base import BaseHeadlessVrouterTest
-from tcutils.topo import topo_helper
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.topo.sdn_topo_setup import sdnTopoSetupFixture
 from vn_test import VNFixture
@@ -15,12 +12,11 @@ from ipam_test import IPAMFixture
 from policy_test import PolicyFixture
 from vn_policy_test import VN_Policy_Fixture
 import time
-import traffic_tests
 import os
 import sys
 sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
 from traffic.core.stream import Stream
-from traffic.core.profile import create, ContinuousProfile
+from traffic.core.profile import ContinuousProfile
 from traffic.core.helpers import Host
 from traffic.core.helpers import Sender, Receiver
 from . import headless_vr_utils

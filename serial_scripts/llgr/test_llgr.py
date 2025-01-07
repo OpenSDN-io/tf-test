@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 #
 # To run tests, you can do 'python -m testtools.run tests'. To run specific tests,
 # You can do 'python -m testtools.run -l tests'
@@ -7,16 +6,10 @@ from __future__ import absolute_import
 from .base import TestLlgrBase
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import *
-from common.neutron.lbaasv2.base import BaseLBaaSTest
-import os
-import fixtures
-import tcutils.wrappers
 import time
 from vn_test import VNFixture
-from vm_test import VMFixture
-from test import attr
 from tcutils.tcpdump_utils import start_tcpdump_for_intf,\
-     stop_tcpdump_for_intf, verify_tcpdump_count
+     stop_tcpdump_for_intf
 import test
 
 '''

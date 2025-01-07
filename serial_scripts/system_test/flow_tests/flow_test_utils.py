@@ -1,5 +1,3 @@
-from __future__ import division
-from past.utils import old_div
 from time import sleep
 import math
 from common.servicechain.config import ConfigSvcChain
@@ -151,13 +149,13 @@ def vm_vrouter_flow_count(self):
 def get_max_flow_removal_time(generated_flows, flow_cache_timeout):
     '''Based on total flows in the node & flow_cache_timeout'''
     max_stats_pass_interval = 1000
-    num_entries_inspected_per_stats_pass = old_div((
-        max_stats_pass_interval * generated_flows), (1000 * flow_cache_timeout))
-    num_passes_needed_for_total_flows = old_div(generated_flows, \
+    num_entries_inspected_per_stats_pass = ((
+        max_stats_pass_interval * generated_flows) // (1000 * flow_cache_timeout))
+    num_passes_needed_for_total_flows = (generated_flows // \
         num_entries_inspected_per_stats_pass)
     time_to_complete_all_passes = num_passes_needed_for_total_flows * \
         max_stats_pass_interval
-    flow_removal_time_in_secs = old_div(time_to_complete_all_passes, 1000)
+    flow_removal_time_in_secs = (time_to_complete_all_passes // 1000)
     return flow_removal_time_in_secs
 # end get_max_flow_removal_time
 
@@ -215,7 +213,7 @@ def verify_node_flow_setup(self):
     actual_flows = int(node_flow_data['allowed'])
     retries = 0
     retry_wait_time = 2
-    max_retries = math.ceil(old_div(self.generated_flows, self.flow_gen_rate))
+    max_retries = math.ceil((self.generated_flows // self.flow_gen_rate))
     while retries < max_retries and actual_flows < expected_flows:
         self.logger.info(
             "Wait for flows to be setup completely, flows so far: %s, expected: %s" %

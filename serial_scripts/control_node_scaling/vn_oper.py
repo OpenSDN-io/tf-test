@@ -1,23 +1,11 @@
-from future import standard_library
-standard_library.install_aliases()
-from builtins import object
 import argparse
 import configparser
 
-import os
 import sys
-
-import uuid
-import time
-import errno
-import socket
-import subprocess
 
 from vnc_api.vnc_api import *
 import vnc_api.exceptions
 
-import json
-from pprint import pformat
 from common.openstack_libs import neutron_client as client
 from common.openstack_libs import neutron_http_client as HTTPClient
 

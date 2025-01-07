@@ -1,8 +1,6 @@
-from __future__ import absolute_import
 from tcutils.wrappers import preposttest_wrapper
 from common.contrail_fabric.base import BaseFabricTest
 from common.fabric_utils import DEFAULT_UPGRADE_PARAMS
-import test
 import copy
 from tcutils.util import skip_because
 

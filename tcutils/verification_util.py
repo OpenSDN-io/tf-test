@@ -1,7 +1,3 @@
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
-from builtins import object
 import os
 import re
 import json
@@ -11,7 +7,6 @@ import requests
 import threading
 import logging as LOG
 from lxml import etree
-from tcutils.util import *
 from common import log_orig as contrail_logging
 from vnc_api.exceptions import PermissionDenied
 

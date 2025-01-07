@@ -1,33 +1,21 @@
-from __future__ import absolute_import
 #
 # To run tests, you can do 'python -m testtools.run tests'. To run specific tests,
 # You can do 'python -m testtools.run -l tests'
 # Set the env variable PARAMS_FILE to point to your ini file. Else it will try to pick params.ini in PWD
 #
-from future import standard_library
-standard_library.install_aliases()
 from .base import BaseRsyslogTest
-from builtins import str
-from builtins import range
 import os
-import copy
-import traceback
-import unittest
-import fixtures
-import testtools
 from contrail_fixtures import *
 from tcutils.wrappers import preposttest_wrapper
-from tcutils.commands import ssh, execute_cmd, execute_cmd_out
 from tcutils.util import copy_file_to_server, retry
 from fabric.api import run
 from fabric.context_managers import settings
-import test
 import time
-import subprocess
 import re
 from tcutils.rsyslog_utils import restart_collector_to_listen_on_port
 from tcutils.rsyslog_utils import restart_rsyslog_client_to_send_on_port
 from tcutils.rsyslog_utils import update_rsyslog_client_connection_details
+
 RSYSLOG_CONF_FILE = '/etc/rsyslog.conf'
 COLLECTOR_CONF_FILE = '/etc/contrail/contrail-collector.conf'
 

@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
 # Need to import path to test/fixtures and test/scripts/
 # Ex : export PYTHONPATH='$PATH:/root/test/fixtures/:/root/test/scripts/'
 #
@@ -7,19 +5,14 @@ from __future__ import division
 # You can do 'python -m testtools.run -l tests'
 # Set the env variable PARAMS_FILE to point to your ini file. Else it will try to pick params.ini in PWD
 #
-from builtins import str
-from past.utils import old_div
-import os
-import time
-import fixtures
-import testtools
-import re
 import test
 from tcutils.wrappers import preposttest_wrapper
 from . import base
 from .webui_topology import *
 topo = sdn_webui_config()
+
 global count, mirror_enabled_already
+
 count = 1
 mirror_enabled_already = False
 
@@ -2446,8 +2439,8 @@ class WebuiTestSanity(base.WebuiBaseTest):
         '''
         self.webui.logger.debug("Step 1 : Add the DHCP options")
         expected_dhcp_value = [{'key': 'DHCP_Options', 'value': topo.dhcp_option_code +
-                               " " +  topo.dhcp_option_value + " " + str(old_div(int
-                               (topo.dhcp_option_value),8))}]
+                               " " +  topo.dhcp_option_value + " " + str((int
+                               (topo.dhcp_option_value) // 8))}]
         dhcp_option_list = [topo.dhcp_option_code, topo.dhcp_option_value]
         result = self.webui.edit_port('dhcp', 'Ports', topo.port_list[0],
                                      dhcp_option=dhcp_option_list)

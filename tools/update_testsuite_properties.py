@@ -1,8 +1,3 @@
-from future import standard_library
-standard_library.install_aliases()
-from email.mime.text import MIMEText
-import smtplib
-import subprocess
 import configparser
 import xml.etree.ElementTree as ET
 import sys

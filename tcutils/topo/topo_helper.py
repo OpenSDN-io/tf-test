@@ -1,7 +1,6 @@
 ''' Take logical topology object and provide methods to extend/derive data from user topology to help verifications '''
 
 
-from builtins import object
 class topology_helper(object):
 
     def __init__(self, topology_obj):

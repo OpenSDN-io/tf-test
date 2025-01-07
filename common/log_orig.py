@@ -1,16 +1,9 @@
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
-from builtins import object
-import configparser
 import logging
 import logging.config
 import logging.handlers
 import os
-import sys
 import subprocess
 import time
-import fixtures
 import datetime
 
 cwd = os.path.join(os.path.dirname(__file__), os.pardir)

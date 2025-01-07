@@ -1,9 +1,6 @@
 '''*******AUTO-GENERATED TOPOLOGY*********'''
-from __future__ import print_function
 
 
-from builtins import zip
-from builtins import object
 class sdn_basic_policy_topo_with_3_project(object):
 
     def __init__(self, domain='default-domain'):

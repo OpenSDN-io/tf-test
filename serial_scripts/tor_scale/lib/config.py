@@ -1,17 +1,8 @@
 ''' This module provides utils for setting up scale config'''
-from __future__ import division
-from builtins import str
-from builtins import object
-from past.utils import old_div
-import copy
-import argparse
-import random
 import socket
 import struct
-import sys
 import time
 from netaddr import *
-import fixtures
 from vn_policy_test import *
 from vnc_api_test import *
 from vm_test import *
@@ -21,12 +12,8 @@ import vn_test
 import pif_fixture
 import port_fixture
 import lif_fixture
-from user_test import UserFixture
 from tcutils.agent.vna_introspect_utils import *
-from vnc_api import vnc_api
 from vnc_api.gen.resource_test import *
-from common.policy import policy_test_helper
-from decimal import Decimal
 
 
 class ConfigScale(object):
@@ -193,7 +180,7 @@ class ConfigScale(object):
         lif_per_pif = int(scale_dict[tor_id].get('lif_num', None))
         pif_num = len(self.get_physical_port_list(scale_dict, tor_id))
         vn_num = int(scale_dict[tor_id].get('vn_number', None))
-        lif_per_vn = old_div(lif_per_pif * pif_num, vn_num)
+        lif_per_vn = (lif_per_pif * pif_num) // vn_num
         return lif_per_vn
 
     def get_vxlan_id(self, scale_dict, tor_id, itr):

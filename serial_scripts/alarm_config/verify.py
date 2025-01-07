@@ -1,5 +1,3 @@
-from builtins import range
-from builtins import object
 from tcutils.util import *
 from vn_test import *
 from policy_test import *

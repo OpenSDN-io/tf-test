@@ -1,15 +1,12 @@
 from common.flow_tests.base import *
-from builtins import str
-from builtins import range
 from string import Template
 import time
 
 
 from tcutils.wrappers import preposttest_wrapper
-from tcutils.util import skip_because, is_almost_same
+from tcutils.util import is_almost_same
 from tcutils.traffic_utils.hping_traffic import Hping3
 from compute_node_test import ComputeNodeFixture
-from common.agent.flow_table import FlowTable
 from tcutils.traffic_utils.base_traffic import BaseTraffic
 
 CIRROS_IMAGE_NAME='cirros'

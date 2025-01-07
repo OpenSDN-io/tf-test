@@ -1,37 +1,11 @@
-# Python libs
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
-from builtins import range
-from builtins import object
-from past.utils import old_div
-import os
 import sys
-import platform
 import re
-import uuid
 import time
-import errno
-import socket
 import subprocess
 import time
-from time import sleep
-from datetime import datetime, timedelta
-import traceback
-import logging
-from pprint import pformat
+from datetime import datetime
 from random import randint
 from netaddr import *
-
-#
-# Contrail libs
-#
-import argparse
-import configparser
-import json
 
 #
 # Contrail scaling libs
@@ -421,7 +395,7 @@ class Controller (object):
             else:
                 time_left_sec = int(
                     fl._args.timeout_seconds_server_up_after_reboot) - delta_time
-                time_left_min = int(old_div(time_left_sec, 60))
+                time_left_min = time_left_sec // 60
                 sleep_time = int(
                     fl._args.sleeptime_between_polling_servers_back_up)
                 self._sleep_awhile(
@@ -459,7 +433,7 @@ class Controller (object):
         #
         # Get delta time in minutes, rounding ok
         #
-        delta_time_minutes = int(old_div(((datetime.now() - t1).seconds), 60))
+        delta_time_minutes = (datetime.now() - t1).seconds // 60
 
         #
         # See if max time was
@@ -1002,7 +976,7 @@ class Controller (object):
         #
         # Derive CPU iterations per multiplier
         #
-        num_cpu_iterations = int(old_div(self.num_cpu_threads, self.cpu_mulitplier))
+        num_cpu_iterations = self.num_cpu_threads // self.cpu_mulitplier
 
         cpu_threads = self.cpu_mulitplier
         for i in range(num_cpu_iterations):
@@ -1469,8 +1443,7 @@ class Controller (object):
         # Get delta time
         #
         self.test_end_time = datetime.now()
-        self.delta_time_minutes = int(
-            old_div(((self.test_end_time - self.test_start_time).seconds), 60))
+        self.delta_time_minutes = (self.test_end_time - self.test_start_time).seconds // 60
 
         #
         # Sort results based on testserver ip addr

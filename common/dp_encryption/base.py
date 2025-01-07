@@ -1,8 +1,6 @@
-from __future__ import print_function
 from common.neutron.base import BaseNeutronTest
-from tcutils.util import get_random_name, retry
+from tcutils.util import retry
 from tcutils.traffic_utils.base_traffic import BaseTraffic, SCAPY
-from vnc_api.vnc_api import NoIdError, BadRequest
 import re
 
 class BaseDataPathEncryption(BaseNeutronTest):

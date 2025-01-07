@@ -1,22 +1,9 @@
-import test
 from tcutils.wrappers import preposttest_wrapper
-from tcutils import gevent_lib
-from tcutils.util import get_an_ip
-from vnc_api.vnc_api import BadRequest
-import vnc_api_test
-from contrailapi import ContrailVncApi
-from builtins import str
-from builtins import range
-import uuid
 import random
 from netaddr import *
-from tcutils.util import skip_because, get_random_cidr, get_random_name
+from tcutils.util import skip_because
 from common.contrail_fabric.base import BaseFabricTest
-from common.base import GenericTestBase
-from netaddr import IPNetwork, IPAddress
 from vnc_api.vnc_api import *
-from vm_test import VMFixture
-from bms_fixture import BMSFixture
 from time import sleep
 
 class TestFabricSecurityGroup(BaseFabricTest):

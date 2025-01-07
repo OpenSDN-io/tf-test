@@ -1,16 +1,7 @@
-from builtins import str
-from builtins import range
-import test
-import uuid
-import copy
-import random
 from netaddr import *
 from tcutils.wrappers import preposttest_wrapper
-from tcutils.util import skip_because, get_random_cidr, get_random_name
+from tcutils.util import skip_because
 from common.contrail_fabric.base import BaseFabricTest
-from common.contrail_fabric.base import FabricSingleton
-from common.base import GenericTestBase
-from netaddr import IPNetwork, IPAddress
 from vnc_api.vnc_api import *
 
 '''

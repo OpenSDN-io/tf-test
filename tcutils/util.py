@@ -1,14 +1,3 @@
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from future import standard_library
-standard_library.install_aliases()
-from builtins import map
-from builtins import next
-from builtins import str
-from builtins import range
-from past.utils import old_div
-from builtins import object
 import math
 import subprocess
 import os
@@ -36,12 +25,10 @@ from fabric.contrib.files import exists
 from fabric.context_managers import settings, hide
 from fabric.state import connections as fab_connections
 from paramiko.ssh_exception import ChannelException
-#from tcutils.util import retry
 import configparser
 from testtools.testcase import TestSkipped
 import functools
 import testtools
-from .fabfile import *
 
 
 sku_dict = {
@@ -185,85 +172,6 @@ def _escape_some_chars(text):
     return text
 # end escape_chars
 
-
-def copy_fabfile_to_agent():
-    src = 'tcutils/fabfile.py'
-    dst = '~/fabfile.py'
-    if 'fab_copied_to_hosts' not in list(env.keys()):
-        env.fab_copied_to_hosts = list()
-    if not env.host_string in env.fab_copied_to_hosts:
-        if not exists(dst):
-            put(src, dst)
-        env.fab_copied_to_hosts.append(env.host_string)
-
-def run_fab_cmd_on_node(host_string, password, cmd, as_sudo=False, timeout=120, as_daemon=False, raw=False,
-                        warn_only=True,
-                        logger=None):
-    """
-    Run fab command on a node. Usecase : as part of script running on cfgm node, can run a cmd on VM from compute node
-
-    If raw is True, will return the fab _AttributeString object itself without removing any unwanted output
-    """
-    logger = logger or contrail_logging.getLogger(__name__)
-    cmd = _escape_some_chars(cmd)
-    (username, host_ip) = host_string.split('@')
-    copy_fabfile_to_agent()
-    cmd_args = '-u %s -p "%s" -H %s -D --hide status,user,running' % (username,
-                password, host_ip)
-    if warn_only:
-        cmd_args+= ' -w '
-    cmd_str = 'fab %s ' % (cmd_args)
-    if as_daemon:
-        cmd_str += '--no-pty '
-        cmd = 'nohup ' + cmd + ' &'
-    if username == 'root':
-        as_sudo = False
-    elif username == 'cirros':
-        cmd_str += ' -s "/bin/sh -l -c" '
-    if as_sudo:
-        cmd_str += 'sudo_command:\"%s\"' % (cmd)
-    else:
-        cmd_str += 'command:\"%s\"' % (cmd)
-    # Sometimes, during bootup, there could be some intermittent conn. issue
-    logger.debug(cmd_str)
-    tries = 1
-    output = None
-    while tries > 0:
-        if timeout:
-            try:
-                output = sudo(cmd_str, timeout=timeout)
-                logger.debug(output)
-            except CommandTimeout:
-                return output
-        else:
-            output = run(cmd_str)
-        if ((output) and ('Fatal error' in output)):
-            tries -= 1
-            time.sleep(5)
-        else:
-            break
-    # end while
-
-    if not raw:
-        real_output = remove_unwanted_output(output)
-    else:
-        real_output = output
-    return real_output
-# end run_fab_cmd_on_node
-
-
-def fab_put_file_to_vm(host_string, password, src, dest,
-                       logger=None):
-    logger = logger or contrail_logging.getLogger(__name__)
-    copy_fabfile_to_agent()
-    (username, host_ip) = host_string.split('@')
-    cmd_str = 'fab -u %s -p "%s" -H %s -D -w --hide status,user,running fput:\"%s\",\"%s\"' % (
-        username, password, host_ip, src, dest)
-    logger.debug(cmd_str)
-    output = run(cmd_str)
-    real_output = remove_unwanted_output(output)
-# end fab_put_file_to_vm
-
 @retry(delay=10, tries=120)
 def wait_for_ssh_on_node(host_string, password=None, logger=None):
     logger = logger or contrail_logging.getLogger(__name__)
@@ -329,22 +237,6 @@ def sshable(host_string, password=None, gateway=None, gateway_password=None,
         except CommandTimeout as e:
             logger.debug('Could not ssh to %s ' % (host_string))
             return False
-
-
-def fab_check_ssh(host_string, password,
-                  logger=None):
-    logger = logger or contrail_logging.getLogger(__name__)
-    copy_fabfile_to_agent()
-    (username, host_ip) = host_string.split('@')
-    cmd_str = 'fab -u %s -p "%s" -H %s -D -w --hide status,user,running verify_socket_connection:22' % (
-        username, password, host_ip)
-    logger.debug(cmd_str)
-    output = run(cmd_str)
-    logger.debug(output)
-    if 'True' in output:
-        return True
-    return False
-# end fab_check_ssh
 
 
 def retry_for_value(tries=5, delay=3):
@@ -1005,54 +897,45 @@ def skip_because(*args, **kwargs):
     def decorator(f):
         @functools.wraps(f)
         def wrapper(self, *func_args, **func_kwargs):
-            skip = False
             if "address_family" in kwargs and "orchestrator" not in kwargs:
                 if kwargs["address_family"] in self.inputs.address_family:
-                    skip = True
                     msg = "Skipped as %s not supported for this test" % kwargs["address_family"]
                     raise testtools.TestCase.skipException(msg)
 
             if "orchestrator" in kwargs and 'address_family' in kwargs:
                 if ((kwargs["orchestrator"] in self.inputs.orchestrator)
                         and (kwargs['address_family'] in self.inputs.address_family)):
-                    skip = True
                     msg = "Skipped as not supported in %s orchestration setup" % self.inputs.orchestrator
                     raise testtools.TestCase.skipException(msg)
 
             if "orchestrator" in kwargs and 'address_family' not in kwargs:
                 if kwargs["orchestrator"] in self.inputs.orchestrator:
-                    skip = True
                     msg = "Skipped as not supported in %s orchestration setup" % self.inputs.orchestrator
                     raise testtools.TestCase.skipException(msg)
 
             if "feature" in kwargs:
                 if not self.orch.is_feature_supported(kwargs["feature"]):
-                    skip = True
                     msg = "Skipped as feature %s not supported in this environment"%(
                         kwargs["feature"])
                     raise testtools.TestCase.skipException(msg)
 
             if 'ha_setup' in kwargs:
                 if ((not self.inputs.ha_setup) and (kwargs["ha_setup"] == False)):
-                    skip = True
                     msg = "Skipped as not supported in non-HA setup"
                     raise testtools.TestCase.skipException(msg)
 
             if "mx_gw" in kwargs:
                 if ((not get_os_env('MX_GW_TEST') == '1') and (kwargs["mx_gw"] == False)):
-                    skip = True
                     msg = "Needs MX_GW_TEST to be set"
                     raise testtools.TestCase.skipException(msg)
 
             if "bug" in kwargs:
-                skip = True
                 if not kwargs['bug'].isdigit():
                     raise ValueError('bug must be a valid bug number')
                 msg = "Skipped until Bug: %s is resolved." % kwargs["bug"]
                 raise testtools.TestCase.skipException(msg)
             if 'pt_based_svc' in kwargs:
                 if kwargs['pt_based_svc'] == True and self.pt_based_svc == True:
-                    skip = True
                     msg = "Skipped as testcase is not supported with Service Template v2"
                     raise testtools.TestCase.skipException(msg)
 
@@ -1065,7 +948,6 @@ def skip_because(*args, **kwargs):
                     self.inputs.hypervisors = {x.host_ip: x.hypervisor_type.lower()
                                                    for x in hypervisors}
                 if kwargs["hypervisor"].lower() in list(self.inputs.hypervisors.values()):
-                    skip = True
                     msg = "Skipped as currently test not supported on %s hypervisor." % kwargs["hypervisor"]
                     if "msg" in kwargs:
                         msg = msg + kwargs["msg"]
@@ -1073,7 +955,6 @@ def skip_because(*args, **kwargs):
 
             if "keystone_version" in kwargs:
                 if 'v3' not in self.inputs.auth_url:
-                    skip = True
                     msg = "Skipped as testcase is not supported with keystone version 2"
                     raise testtools.TestCase.skipException(msg)
 
@@ -1087,7 +968,6 @@ def skip_because(*args, **kwargs):
 
             if "slave_orchestrator" in kwargs:
                 if kwargs['slave_orchestrator'] == self.inputs.slave_orchestrator:
-                    skip = True
                     msg = "Skipped as test not supported in nested %s" % self.inputs.slave_orchestrator
                     raise testtools.TestCase.skipException(msg)
 
@@ -1119,21 +999,18 @@ def skip_because(*args, **kwargs):
             if 'dpdk_cluster' in kwargs:
                 val = kwargs['dpdk_cluster']
                 if self.inputs.is_dpdk_cluster == val:
-                    skip = True
                     msg = "Skipped as test is not supported if dpdk_cluster=%s " % val
                     raise testtools.TestCase.skipException(msg)
 
             if 'sriov_cluster' in kwargs:
                 val = kwargs['sriov_cluster']
                 if self.inputs.is_sriov_cluster == val:
-                    skip = True
                     msg = "Skipped as test is not supported if sriov_cluster=%s " % val
                     raise testtools.TestCase.skipException(msg)
 
             if 'ssl_enabled' in kwargs:
                 val = self.inputs.contrail_configs.get('SSL_ENABLE', False)
                 if kwargs['ssl_enabled'] == val:
-                    skip = True
                     msg = "Skipped as test is not supported in ssl_enabled=%s " % val
                     raise testtools.TestCase.skipException(msg)
 
@@ -1146,7 +1023,6 @@ def skip_because(*args, **kwargs):
 
             if "sku" in kwargs:
                 if kwargs['sku'] == self.inputs.get_build_sku().lower():
-                    skip = True
                     msg = "Skipped as test not supported with sku  %s" % kwargs['sku']
                     raise testtools.TestCase.skipException(msg)
 
@@ -1154,28 +1030,14 @@ def skip_because(*args, **kwargs):
                 if ((not self.inputs.config['test_configuration'].get(
                     'remote_compute_setup', False))\
                             and (kwargs["remote_compute_setup"] == False)):
-                    skip = True
                     msg = "Skipped as not supported in non remote compute setup"
                     raise testtools.TestCase.skipException(msg)
 
             if "deploy_path" in kwargs:
                 if 'orange_deployment' not in kwargs['deploy_path']:
-                    skip = True
                     msg = "Skipped as test is only supported in orange solution deployment."
                     raise testtools.TestCase.skipException(msg)
 
-            return f(self, *func_args, **func_kwargs)
-        return wrapper
-    return decorator
-
-def set_attr(*args, **kwargs):
-    def decorator(f):
-        @functools.wraps(f)
-        def wrapper(self, *func_args, **func_kwargs):
-            if 'vro_based' in args:
-                if self.inputs.vro_server:
-                    self.orch = self.connections.orch = self.connections.vro_orch
-                    self.inputs.enable_vro(True)
             return f(self, *func_args, **func_kwargs)
         return wrapper
     return decorator
@@ -1208,7 +1070,7 @@ def is_almost_same(val1, val2, threshold_percent=10, num_type=int):
     val1 = num_type(val1)
     val2 = num_type(val2)
     if val1:
-        if (old_div(abs(float(val1-val2)),val1))*100 < threshold_percent:
+        if (abs(float(val1-val2)) // val1)*100 < threshold_percent:
             return True
         else:
             return False

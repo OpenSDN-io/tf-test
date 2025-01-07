@@ -1,11 +1,9 @@
-from builtins import str
 import vnc_api_test
 from tcutils.util import retry, get_random_name
 import json
 import uuid
 from netaddr import EUI
 from vnc_api.vnc_api import NoIdError
-import netaddr
 import ast
 
 class PortFixture(vnc_api_test.VncLibFixture):
@@ -45,8 +43,6 @@ class PortFixture(vnc_api_test.VncLibFixture):
         self.security_groups = kwargs.get('security_groups') or []
         self.extra_dhcp_opts = kwargs.get('extra_dhcp_opts', [])
         self.api_type = kwargs.get('api_type', 'neutron')
-        if self.inputs.orchestrator == 'vcenter':
-            self.api_type = 'contrail'
         self.project_obj = kwargs.get('project_obj', None)
         self.binding_profile = kwargs.get('binding_profile', None)
         self.port_group_name = kwargs.get('port_group_name', None)

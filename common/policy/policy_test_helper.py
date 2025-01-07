@@ -1,16 +1,10 @@
-from __future__ import print_function
-from builtins import str
-from builtins import range
-import os
 import copy
-import traceback
 from vnc_api.vnc_api import *
 from vnc_api.gen.resource_test import *
 from quantum_test import *
 from nova_test import *
 from policy_test import *
 from vn_test import *
-import string
 
 
 def comp_rules_from_policy_to_system(self):

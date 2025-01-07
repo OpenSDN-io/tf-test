@@ -1,6 +1,5 @@
 #Testcases for disabling policy on VMIs:
 #PR https://bugs.launchpad.net/juniperopenstack/+bug/1558920 and PR https://bugs.launchpad.net/juniperopenstack/+bug/1566650
-from builtins import str
 from common.vrouter.base import BaseVrouterTest
 from tcutils.wrappers import preposttest_wrapper
 import test
@@ -725,8 +724,6 @@ class DisablePolicyEcmpIpv6(DisablePolicyEcmp):
         self.inputs.set_af(AF_TEST)
         self.logger.info('we are setting address family as %s' % self.inputs.get_af())
 
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported('ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         if not self.connections.orch.is_feature_supported('ipv6'):
             return(False, 'IPv6 tests not supported in this environment ')
         return (True, None)
@@ -745,6 +742,4 @@ class DisablePolicyIpv6(DisablePolicy):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported('ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)

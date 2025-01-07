@@ -1,9 +1,6 @@
-from __future__ import print_function
-from builtins import object
-from fabric.api import local, run
+from fabric.api import run
 from fabric.context_managers import shell_env, settings
 import time
-import os
 
 
 class EC2Base(object):

@@ -1,28 +1,17 @@
-from __future__ import absolute_import
+import os
+import sys
 from .base import BaseRRTest,verify_peer_in_control_nodes,\
      get_connection_matrix
-import traffic_tests
 from vn_test import *
 from vm_test import *
 from floating_ip import *
 from policy_test import *
-from compute_node_test import ComputeNodeFixture
-from user_test import UserFixture
 from multiple_vn_vm_test import *
 from tcutils.wrappers import preposttest_wrapper
 sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
-from traffic.core.stream import Stream
-from traffic.core.profile import create, ContinuousProfile
-from traffic.core.helpers import Host
-from traffic.core.helpers import Sender, Receiver
-from common import isolated_creds
-import inspect
-from tcutils.util import skip_because, is_almost_same,ipv4_to_decimal
-from tcutils.tcpdump_utils import start_tcpdump_for_intf,\
-     stop_tcpdump_for_intf, verify_tcpdump_count
+from tcutils.util import ipv4_to_decimal
 import test
 from tcutils.contrail_status_check import ContrailStatusChecker
-from tcutils.traffic_utils.hping_traffic import Hping3
 import control_node
 
 
@@ -39,7 +28,6 @@ class TestBasicRR(BaseRRTest):
     # end test_basic_RR
     @test.attr(type=['sanity'])
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter',address_family = 'v6')
     def test_process_restart_with_rr_set(self):
         ''' Test to validate rr works fine
         with process restarts

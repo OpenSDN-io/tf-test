@@ -1,28 +1,18 @@
-from __future__ import absolute_import, unicode_literals
 from vnc_api.vnc_api import *
-from vcenter import *
 import test
-from tcutils.commands import ssh, execute_cmd, execute_cmd_out
 import time
-import inspect
-from common import isolated_creds
-from builtins import str
-from builtins import range
-import traffic_tests
 from vn_test import *
 from vm_test import *
 from floating_ip import *
 from policy_test import *
-from user_test import UserFixture
 from multiple_vn_vm_test import *
 from tcutils.wrappers import preposttest_wrapper
 sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
-from traffic.core.profile import create, ContinuousProfile
-from common.connections import ContrailConnections
 from common.svc_health_check.base import BaseHC
 from common.vrouter.base import BaseVrouterTest
 from common.maciplearning.base import BaseMacIpLearningTest
 from common.static_route_table.base import StaticRouteTableBase
+
 
 class TestMacIpLearning(BaseVrouterTest, BaseMacIpLearningTest, BaseHC, StaticRouteTableBase):
     @classmethod

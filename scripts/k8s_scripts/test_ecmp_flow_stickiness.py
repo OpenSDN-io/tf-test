@@ -1,14 +1,9 @@
 from common.k8s.base import BaseK8sTest
-from builtins import range
 from tcutils.util import skip_because
-from k8s.namespace import NamespaceFixture
-from k8s.service import ServiceFixture
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import get_lock
-import test
-from tcutils.util import get_random_name
 import time
-import unittest
+
 
 class TestEcmpFlowStickiness(BaseK8sTest):
 
@@ -453,7 +448,6 @@ class TestEcmpFlowStickiness(BaseK8sTest):
         self.logger.info("test_ecmp_remote_scale_up_to_10_and_down_to_2 passed")
     # end test_ecmp_remote_scale_up_to_10_and_down_to_2
 
-    @unittest.skip("Enable when openshift setup is stable")
     @preposttest_wrapper
     def test_ecmp_flow_stickiness_restart_agent(self):
         ''' Create a service with 3 pods in worker_node_2
@@ -503,7 +497,6 @@ class TestEcmpFlowStickiness(BaseK8sTest):
         self.logger.info("test_ecmp_flow_stickiness_restart_agent passed")
     # end test_ecmp_flow_stickiness_restart_agent
 
-    @unittest.skip("Enable when openshift setup is stable")
     @preposttest_wrapper
     def test_ecmp_flow_stickiness_restart_control(self):
         ''' Create a service with 3 pods in worker_node_2

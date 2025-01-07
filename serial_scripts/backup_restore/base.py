@@ -1,7 +1,4 @@
-from builtins import object
 import test_v1
-from common.connections import ContrailConnections
-from common.contrail_test_init import ContrailTestInit
 from upgrade.verify import BaseResource
 
 class BackupRestoreBaseTest(test_v1.BaseTestCase_v1):

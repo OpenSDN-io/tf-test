@@ -1,19 +1,12 @@
 """Service chain firewall regression suite."""
 from common.svc_firewall.base import BaseSvc_FwTest
-from builtins import str
 import os
-import unittest
-import fixtures
-import testtools
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import skip_because, get_random_name
 from common.ecmp.ecmp_verify import ECMPVerify
 from common.servicechain.firewall.verify import VerifySvcFirewall
-from common.servicechain.mirror.verify import VerifySvcMirror
 from netaddr import IPNetwork
 import test
-from common import isolated_creds
-import inspect
 
 
 class TestSvcRegr(BaseSvc_FwTest, VerifySvcFirewall, ECMPVerify):
@@ -26,7 +19,7 @@ class TestSvcRegr(BaseSvc_FwTest, VerifySvcFirewall, ECMPVerify):
         pass
     # end runTest
 
-    @test.attr(type=['ci_sanity', 'vcenter'])
+    @test.attr(type=['ci_sanity'])
     @preposttest_wrapper
     def test_svc_in_network_datapath(self):
         return self.verify_svc_chain(svc_img_name='cirros_in_net', service_mode='in-network',
@@ -40,7 +33,7 @@ class TestSvcRegr(BaseSvc_FwTest, VerifySvcFirewall, ECMPVerify):
         return self.verify_svc_chain(service_mode='transparent',
                                                     create_svms=True)
 
-    @test.attr(type=['sanity','vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     def test_svc_in_net_nat_with_static_routes(self):
         third_vn = self.create_vn(vn_name=get_random_name('third-vn'))

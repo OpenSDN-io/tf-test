@@ -1,6 +1,5 @@
 """Module to hold the test case related utilites.
 """
-from __future__ import print_function
 import platform
 
 try:

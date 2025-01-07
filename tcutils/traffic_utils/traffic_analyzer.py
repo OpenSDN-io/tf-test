@@ -1,16 +1,8 @@
 
-from builtins import map
-from builtins import range
-from builtins import object
-import logging
-import fixtures
 import dpkt
 
 from tcutils.tcpdump_utils import *
-from tcutils.util import retry
-from time import sleep
-from tcutils.commands import ssh, execute_cmd, execute_cmd_out
-from compute_node_test import ComputeNodeFixture
+from tcutils.commands import ssh, execute_cmd_out
 from common import log_orig as contrail_logging
 
 class TrafficAnalyzer(object):

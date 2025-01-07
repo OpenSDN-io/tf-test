@@ -1,5 +1,4 @@
 import test_v1
-from common import isolated_creds
 from common import create_public_vn
 from vn_test import *
 from vm_test import *

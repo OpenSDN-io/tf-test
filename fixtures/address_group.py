@@ -1,7 +1,6 @@
-from builtins import str
 import vnc_api_test
 from vnc_api.exceptions import NoIdError
-from tcutils.util import get_random_name, retry
+from tcutils.util import get_random_name
 from netaddr import IPNetwork
 
 class AddressGroupFixture(vnc_api_test.VncLibFixture):

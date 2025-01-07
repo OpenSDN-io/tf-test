@@ -1,10 +1,6 @@
-from builtins import range
 import re
 from common.base import GenericTestBase
-from common.connections import ContrailConnections
-from common import isolated_creds
-from vm_test import VMFixture
-from vn_test import VNFixture
+
 
 class BaseVnVmTest(GenericTestBase):
 

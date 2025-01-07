@@ -31,14 +31,6 @@ class IsolatedCreds(fixtures.Fixture):
 
         self.input_file = input_file
         self.logger = logger
-        if self.inputs.orchestrator == 'vcenter':
-            self.project_name = self.inputs.stack_tenant
-            self.username = self.inputs.stack_user
-            self.password = self.inputs.stack_password
-        if self.inputs.vcenter_gw_setup:#Fixing tenant as vCenter for vcenter gw setup
-            self.project_name = 'vCenter'
-            self.username = self.inputs.stack_user
-            self.password = self.inputs.stack_password
     # end __init__
 
     def setUp(self):
@@ -75,8 +67,7 @@ class IsolatedCreds(fixtures.Fixture):
     # end create_tenant
 
     def delete_tenant(self, project_fixture):
-        if not self.inputs.vcenter_gw_setup:
-            project_fixture.cleanUp()
+        project_fixture.cleanUp()
 
     def get_inputs(self, project_fixture):
         project_inputs= ContrailTestInit(self.input_file,
@@ -114,10 +105,6 @@ class AdminIsolatedCreds(fixtures.Fixture):
         self.password = password or inputs.admin_password
         self.input_file = input_file
         self.logger = logger
-        if self.inputs.orchestrator == 'vcenter':
-            self.project_name = self.inputs.stack_tenant
-            self.username = self.inputs.stack_user
-            self.password = self.inputs.stack_password
 
     # end __init__
 
@@ -131,8 +118,6 @@ class AdminIsolatedCreds(fixtures.Fixture):
         self.auth = self.connections.auth
 
     def delete_user(self, user):
-        if self.inputs.orchestrator  == 'vcenter' or self.inputs.vcenter_gw_setup:
-            return
         if self.inputs.user_isolation:
             self.auth.delete_user(user)
     # end delete_user
@@ -141,9 +126,6 @@ class AdminIsolatedCreds(fixtures.Fixture):
             username, password):
         project_fixture.set_user_creds(username, password)
         project_name = project_fixture.project_name
-        if self.inputs.orchestrator == 'vcenter'  or \
-           not self.inputs.tenant_isolation:
-            return
         if 'v3' in self.inputs.auth_url:
             if self.inputs.domain_isolation:
                 domain_name = project_fixture.domain_name
@@ -192,13 +174,12 @@ class AdminIsolatedCreds(fixtures.Fixture):
         project_fixture.cleanUp()
 
     def create_domain(self, domain_name):
-        if self.inputs.orchestrator  == 'vcenter' or self.inputs.vcenter_gw_setup:
-            return
         if 'v3' in self.inputs.auth_url:
             try:
-                domain = domain_test.DomainFixture(connections=self.connections,
-                                                       domain_name=domain_name,
-                                                       username=self.username, password=self.password)
+                domain = domain_test.DomainFixture(
+                    connections=self.connections,
+                    domain_name=domain_name,
+                    username=self.username, password=self.password)
                 domain.setUp()
             except Exception as e:
                 self.logger.exception("Exception while creating domain")
@@ -208,8 +189,6 @@ class AdminIsolatedCreds(fixtures.Fixture):
         return domain
 
     def delete_domain(self, domain_obj):
-        if self.inputs.orchestrator  == 'vcenter' or self.inputs.vcenter_gw_setup:
-            return
         if self.inputs.domain_isolation:
             domain_obj.cleanUp()
 

@@ -1,5 +1,3 @@
-from past.builtins import cmp
-from builtins import str
 from common.k8s.base import BaseK8sTest
 from tcutils.wrappers import preposttest_wrapper
 import test
@@ -179,7 +177,7 @@ class TestNetworkAttachment(BaseK8sTest):
         self.verify_default_route(pod1[0])
     #end test_pod_with_multi_intf_defualt_route
 
-    @test.attr(type=['k8s_sanity','openshift_1'])
+    @test.attr(type=['k8s_sanity'])
     @skip_because(slave_orchestrator='kubernetes')
     @preposttest_wrapper
     def test_basic_pod_with_multi_intf(self):
@@ -254,7 +252,7 @@ class TestNetworkAttachment(BaseK8sTest):
         self.verify_rechability_between_multi_intf_pods(pod1, pod2)
     #end test_basic_pod_with_multi_intf_non_default_namespace
 
-    @test.attr(type=['k8s_sanity','openshift_1'])
+    @test.attr(type=['k8s_sanity'])
     @skip_because(slave_orchestrator='kubernetes')
     @preposttest_wrapper
     def test_basic_pod_with_multi_intf_isolated_namespace(self):
@@ -308,7 +306,7 @@ class TestNetworkAttachment(BaseK8sTest):
         #Now restart the kube manager contrainer
         self.restart_kube_manager()
         #cluster_status, error_nodes_after = ContrailStatusChecker(self.inputs).wait_till_contrail_cluster_stable()
-        #assert cmp(error_nodes_before, error_nodes_after) == 0 , "cluster is not stable after kube manager restart"
+        #assert error_nodes_before.viewitems() == error_nodes_after.viewitems(), "cluster is not stable after kube manager restart"
         #check if the default route is intact with pod default network
         self.verify_default_route(pod1[0])
         self.verify_default_route(pod2[0])
@@ -346,7 +344,7 @@ class TestNetworkAttachment(BaseK8sTest):
             self.inputs.restart_service('contrail-vrouter-agent',[compute_ip],
                                          container='agent')
         #cluster_status, error_nodes_after = ContrailStatusChecker(self.inputs).wait_till_contrail_cluster_stable()
-        #assert cmp(error_nodes_before, error_nodes_after) == 0 , "cluster is not stable after kube manager restart"
+        #assert error_nodes_before.viewitems() == error_nodes_after.viewitems() , "cluster is not stable after kube manager restart"
         self.verify_default_route(pod1[0])
         self.verify_default_route(pod2[0])
         self.verify_pod_intf_index(pod1)
@@ -385,7 +383,7 @@ class TestNetworkAttachment(BaseK8sTest):
                                     verify_service = False)
         #Wait till the cluster stabilizes
         cluster_status, error_nodes_after = ContrailStatusChecker(self.inputs).wait_till_contrail_cluster_stable()
-        assert cmp(error_nodes_before, error_nodes_after) == 0 , "cluster is not stable after kube manager restart"
+        assert error_nodes_before.viewitems() == error_nodes_after.viewitems(), "cluster is not stable after kube manager restart"
         self.verify_default_route(pod1[0])
         self.verify_default_route(pod2[0])
         self.verify_pod_intf_index(pod1)
@@ -415,7 +413,7 @@ class TestNetworkAttachment(BaseK8sTest):
         self.inputs.restart_service(service_name = "kubelet",
                                    host_ips = [self.inputs.k8s_master_ip])
         cluster_status, error_nodes_after = ContrailStatusChecker(self.inputs).wait_till_contrail_cluster_stable()
-        assert cmp(error_nodes_before, error_nodes_after) == 0 , "cluster is not stable after kube manager restart"
+        assert error_nodes_before.viewitems() == error_nodes_after.viewitems(), "cluster is not stable after kube manager restart"
         self.verify_default_route(pod1[0])
         self.verify_default_route(pod2[0])
         self.verify_pod_intf_index(pod1)
@@ -447,7 +445,7 @@ class TestNetworkAttachment(BaseK8sTest):
                                     self.inputs.cfgm_ips,
                                     container = "api-server")
         cluster_status, error_nodes_after = ContrailStatusChecker(self.inputs).wait_till_contrail_cluster_stable()
-        assert cmp(error_nodes_before, error_nodes_after) == 0 , "cluster is not stable after kube manager restart"
+        assert error_nodes_before.viewitems() == error_nodes_after.viewitems(), "cluster is not stable after kube manager restart"
         self.verify_default_route(pod1[0])
         self.verify_default_route(pod2[0])
         self.verify_pod_intf_index(pod1)

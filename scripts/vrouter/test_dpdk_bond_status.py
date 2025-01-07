@@ -3,7 +3,6 @@ This FT automation implementation will check the bond configuration status
 
 Tested on dpdk compute Bond configuration 
 '''
-from builtins import str
 from common.vrouter.base import BaseVrouterTest
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import skip_because
@@ -79,7 +78,7 @@ class TestDpdkBondStatus(BaseVrouterTest):
         return True
     #end dpdk_bond_status
 
-    @test.attr(type=['sanity', 'vcenter_compute', 'dev_reg'])
+    @test.attr(type=['sanity', 'dev_reg'])
     @preposttest_wrapper
     @skip_because(dpdk_cluster=False)
     def test_dpdk_bond_status(self):

@@ -1,6 +1,3 @@
-from builtins import object
-import os
-
 from vnc_api_test import *
 from tcutils.config.vnc_introspect_utils import *
 from tcutils.config.svc_mon_introspect_utils import SvcMonInspect
@@ -14,19 +11,12 @@ from tcutils.collector.policy_generator_tests import PolicyGeneratorClient
 from tcutils.kubernetes.k8s_introspect_utils import KubeManagerInspect
 from vnc_api.vnc_api import *
 from tcutils.vdns.dns_introspect_utils import DnsAgentInspect
-from tcutils.util import custom_dict, get_plain_uuid
+from tcutils.util import custom_dict
 from openstack import OpenstackAuth, OpenstackOrchestrator
-from vcenter import VcenterAuth, VcenterOrchestrator
-from vro import VroWorkflows
 from common.contrail_test_init import ContrailTestInit
-from vcenter_gateway import VcenterGatewayOrch
 from tcutils.util import retry
 try:
     from tcutils.kubernetes.api_client import Client as Kubernetes_client
-except ImportError:
-    pass
-try:
-    from tcutils.kubernetes.openshift_client import Client as Openshift_client
 except ImportError:
     pass
 
@@ -95,35 +85,8 @@ class ContrailConnections(object):
             self.swift_h = self.orch.get_swift_handler()
             self.quantum_h = self.orch.get_network_handler()
             self.glance_h = self.orch.get_image_handler()
-        elif self.inputs.orchestrator == 'vcenter':
-            self.orch = VcenterOrchestrator(user=self.inputs.vcenter_username,
-                                            pwd= self.inputs.vcenter_password,
-                                            host=self.inputs.vcenter_server,
-                                            port=self.inputs.vcenter_port,
-                                            dc_name=self.inputs.vcenter_dc,
-                                            vnc=self.vnc_lib,
-                                            inputs=self.inputs,
-                                            logger=self.logger)
-            if self.inputs.vro_server:
-                self.vro_orch = VroWorkflows(user=self.inputs.vcenter_username,
-                            pwd= self.inputs.vcenter_password,
-                            host=self.inputs.vcenter_server,
-                            port=self.inputs.vcenter_port,
-                            dc_name=self.inputs.vcenter_dc,
-                            vnc=self.vnc_lib,
-                            inputs=self.inputs,
-                            logger=self.logger)
         elif self.inputs.orchestrator == 'kubernetes':
             self.orch = None
-        if self.inputs.vcenter_gw_setup: # vcenter_gateway
-            self.slave_orch = VcenterGatewayOrch(user=self.inputs.vcenter_username,
-                                            pwd=self.inputs.vcenter_password,
-                                            host=self.inputs.vcenter_server,
-                                            port=int(self.inputs.vcenter_port),
-                                            dc_name=self.inputs.vcenter_dc,
-                                            vnc=self.vnc_lib,
-                                            inputs=self.inputs,
-                                            logger=self.logger)
         self._kube_manager_inspect = None
 
     # end __init__
@@ -149,9 +112,6 @@ class ContrailConnections(object):
                            project_name, self.inputs, self.logger,
                            domain_name=domain_name or self.orch_domain_name,
                            scope=self.scope)
-            elif self.inputs.orchestrator == 'vcenter':
-                env[attr] = VcenterAuth(username, password,
-                                       project_name, self.inputs)
 #            elif self.inputs.orchestrator == 'kubernetes':
 #                env[attr] = self.get_k8s_api_client_handle()
         return env.get(attr)
@@ -290,10 +250,7 @@ class ContrailConnections(object):
             self.inputs.additional_orchestrator != 'kubernetes':
             return None
         if not getattr(self, 'k8s_client', None):
-            if self.inputs.deployer == 'openshift':
-                self.k8s_client = Openshift_client(self.inputs.kube_config_file,
-                                                self.logger)
-            elif self.inputs.slave_orchestrator == 'kubernetes':
+            if self.inputs.slave_orchestrator == 'kubernetes':
                 if self.k8s_cluster:
                     self.k8s_client = Kubernetes_client(
                                             cluster=self.k8s_cluster,

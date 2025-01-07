@@ -7,14 +7,10 @@
 # Set the env variable MX_GW_TESTto 1 to run the test
 #
 from encap import base
-from builtins import str
 import os
 from time import sleep
-import socket
-import xml.etree.ElementTree as ET
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.commands import ssh, execute_cmd, execute_cmd_out
-from fabric.operations import get, put
 from tcutils.wrappers import preposttest_wrapper
 from vn_test import *
 from vm_test import *
@@ -180,7 +176,7 @@ class TestEncapCases(base.BaseEncapTest):
     # end test_encaps_mx_gateway
 
     @skip_because(dpdk_cluster=True)
-    @test.attr(type=[ 'serial', 'sanity', 'vcenter' ])
+    @test.attr(type=[ 'serial', 'sanity'])
     @preposttest_wrapper
     def test_apply_policy_fip_on_same_vn_gw_mx(self):
         '''A particular VN is configure with policy to talk accross VN's and FIP to access outside'''

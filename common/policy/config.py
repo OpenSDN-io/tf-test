@@ -1,8 +1,6 @@
 """Policy config utilities."""
 
-from builtins import object
 import random
-
 import fixtures
 
 from policy_test import PolicyFixture

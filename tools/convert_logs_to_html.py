@@ -1,4 +1,3 @@
-from __future__ import print_function
 # Converts log files(typically in contrail-test/logs/ folder)
 # to css-based html files
 #
@@ -6,7 +5,6 @@ from __future__ import print_function
 # hash-tagged
 #
 import re
-import os
 import sys
 import glob
 

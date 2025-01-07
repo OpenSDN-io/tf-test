@@ -1,5 +1,3 @@
-from __future__ import print_function
-from __future__ import absolute_import
 from . import base
 # Need to import path to test/fixtures and test/scripts/
 # Ex : export PYTHONPATH='$PATH:/root/test/fixtures/:/root/test/scripts/'
@@ -341,7 +339,7 @@ class TestEvpnCasesRestart(base.BaseEvpnTest, VerifyEvpnCases):
         '''
         return self.verify_epvn_with_agent_restart(encap='udp')
 
-    @test.attr(type=[ 'serial', 'sanity', 'vcenter_compute', 'vcenter'])
+    @test.attr(type=[ 'serial', 'sanity'])
     @preposttest_wrapper
     def test_with_vxlan_encap_agent_restart(self):
         '''

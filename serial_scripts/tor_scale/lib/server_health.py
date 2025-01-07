@@ -1,10 +1,6 @@
 ''' This module provides utils for setting up scale config'''
-from builtins import range
-from builtins import object
 from vnc_api_test import *
-import psutil
 import ast
-from vnc_api import vnc_api
 from vnc_api.gen.resource_test import *
 from collections import defaultdict
 from tcutils.util import copy_file_to_server

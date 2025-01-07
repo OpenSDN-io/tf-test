@@ -1,23 +1,12 @@
 from common.vrouter.base import BaseVrouterTest
 from common.servicechain.config import ConfigSvcChain
-from builtins import str
-from builtins import range
-import vnc_api_test
 from vnc_api.vnc_api import *
 import random
-import socket
-import time
 from netaddr import *
-from tcutils.util import retry, get_random_mac
 from tcutils.tcpdump_utils import *
-from fabric.api import run
 
 from floating_ip import *
-from contrailapi import ContrailVncApi
-from common.base import GenericTestBase
-from fabric.context_managers import settings, hide
-from tcutils.util import safe_run, safe_sudo
-from tcutils.commands import ssh, execute_cmd, execute_cmd_out
+
 
 class GWLessFWDTestBase(BaseVrouterTest, ConfigSvcChain):
 
@@ -251,25 +240,18 @@ class GWLessFWDTestBase(BaseVrouterTest, ConfigSvcChain):
             # Distribute mode, generate the new random index
             # Non Distribute mode, use previously generated index
             # Default mode, Nova takes care of launching
-            if self.inputs.orchestrator == 'vcenter':
+            if launch_mode == 'distribute':
                 index = i%compute_nodes_len
-                node_name = compute_nodes[index]
-                vm_fixture = self.create_vm(vn_objs=vn_fix_obj_list,
+                node_name = self.inputs.compute_names[index]
+            elif launch_mode == 'non-distribute':
+                node_name = self.inputs.compute_names[index]
+            elif launch_mode == 'default':
+                node_name=None
+            if self.inputs.is_dpdk_cluster or self.inputs.ns_agilio_vrouter_data:
+                image_name = 'ubuntu-traffic'
+            vm_fixture = self.create_vm(vn_objs=vn_fix_obj_list,
                                         port_ids=vmi_fix_uuid_list,
-                                        node_name=node_name, image_name='ubuntu')
-            else:
-                if launch_mode == 'distribute':
-                    index = i%compute_nodes_len
-                    node_name = self.inputs.compute_names[index]
-                elif launch_mode == 'non-distribute':
-                    node_name = self.inputs.compute_names[index]
-                elif launch_mode == 'default':
-                    node_name=None
-                if self.inputs.is_dpdk_cluster or self.inputs.ns_agilio_vrouter_data:
-                    image_name = 'ubuntu-traffic'
-                vm_fixture = self.create_vm(vn_objs=vn_fix_obj_list,
-                                            port_ids=vmi_fix_uuid_list,
-                                            node_name=node_name, image_name=image_name)
+                                        node_name=node_name, image_name=image_name)
             vm_fixtures[vm_id] = vm_fixture
 
         for vm_fixture in list(vm_fixtures.values()):

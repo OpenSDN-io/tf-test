@@ -22,8 +22,6 @@ Usual usage in an openstack.common module:
     from tempest.openstack.common.gettextutils import _
 """
 
-from future import standard_library
-standard_library.install_aliases()
 import copy
 import gettext
 import logging

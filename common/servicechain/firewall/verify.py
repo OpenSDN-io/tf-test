@@ -1,6 +1,3 @@
-from builtins import range
-import os
-import re
 from common.servicechain.verify import VerifySvcChain
 from tcutils.util import get_random_cidr
 from tcutils.util import get_random_name

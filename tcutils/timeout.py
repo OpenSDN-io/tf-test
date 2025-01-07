@@ -5,13 +5,8 @@
 # with timeout(seconds=3):
 #    sleep(4)
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import object
 from threading import Timer
-import _thread
 
-from time import sleep
 
 class TimeoutError(Exception):
     pass

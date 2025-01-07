@@ -1,10 +1,6 @@
-from builtins import str
-from builtins import object
-import os
 from tcutils.util import *
 from common import log_orig as contrail_logging
 from common.openstack_libs import neutron_client as client
-from common.openstack_libs import neutron_http_client as HTTPClient
 from common.openstack_libs import neutron_exception as NeutronExceptions
 from common.openstack_libs import neutron_client_exception as CommonNetworkClientException
 

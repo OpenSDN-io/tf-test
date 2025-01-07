@@ -1,7 +1,4 @@
-from builtins import str
 import test_v1
-from common.connections import ContrailConnections
-from common import isolated_creds
 from vm_test import VMFixture
 from vn_test import VNFixture
 from tcutils.util import retry

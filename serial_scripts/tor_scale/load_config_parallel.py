@@ -1,7 +1,4 @@
-from builtins import object
 import multiprocessing as mp
-import random
-import string
 from serial_scripts.tor_scale.load_config import ConfigScaleSetup
 
 

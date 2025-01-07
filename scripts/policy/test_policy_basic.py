@@ -1,17 +1,14 @@
-from __future__ import absolute_import
 from .base import BasePolicyTest
 from tcutils.wrappers import preposttest_wrapper
 import test
-from vn_test import VNFixture
 from policy_test import PolicyFixture, copy
 from common.policy import policy_test_utils
-from vm_test import VMFixture, time
+from vm_test import time
 from tcutils.topo.sdn_topo_setup import sdnTopoSetupFixture
 from tcutils.util import get_random_name, get_random_cidr
 from common.system.system_verification import system_vna_verify_policy
 from tcutils.test_lib.test_utils import assertEqual
 from . import sdn_basic_topology
-import os
 from . import sdn_single_vm_multiple_policy_topology
 from . import sdn_single_vm_policy_topology
 from vnc_api.vnc_api import *
@@ -87,7 +84,7 @@ class TestBasicPolicy(BasePolicyTest):
         return True
     # end test_policy
 
-    @test.attr(type=['cb_sanity', 'sanity', 'ci_sanity', 'quick_sanity','suite1', 'vcenter_compute', 'ci_contrail_go_kolla_ocata_sanity'])
+    @test.attr(type=['cb_sanity', 'sanity', 'ci_sanity', 'quick_sanity','suite1', 'ci_contrail_go_kolla_ocata_sanity'])
     @preposttest_wrapper
     def test_basic_policy_allow_deny(self):
         '''
@@ -198,7 +195,7 @@ class TestBasicPolicyNegative(BasePolicyTest):
     def runTest(self):
         pass
 
-    @test.attr(type=['suite1', 'vcenter'])
+    @test.attr(type=['suite1'])
     @preposttest_wrapper
     def test_remove_policy_with_ref(self):
         ''' This tests the following scenarios.

@@ -7,21 +7,14 @@
 #
 from common.neutron.base import BaseNeutronTest
 import os
-import fixtures
-import testtools
-import time
 
 from vn_test import *
 from vm_test import *
 from user_test import UserFixture
-from control_node import CNFixture
-from common.connections import ContrailConnections
 from tcutils.wrappers import preposttest_wrapper
 
 import test
 from tcutils.util import *
-from testtools import skipIf
-from floating_ip import FloatingIPFixture
 
 
 class TestRouters(BaseNeutronTest):
@@ -34,7 +27,7 @@ class TestRouters(BaseNeutronTest):
     def tearDownClass(cls):
         super(TestRouters, cls).tearDownClass()
 
-    @test.attr(type=['sanity', 'vcenter_compute', 'dev_sanity_dpdk'])
+    @test.attr(type=['sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_basic_router_behavior(self):
         '''Validate a router is able to route packets between two VNs

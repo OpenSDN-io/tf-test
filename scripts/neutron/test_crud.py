@@ -1,19 +1,12 @@
-from __future__ import print_function
 from common.neutron.base import BaseNeutronTest
 from common.neutron.attributes import *
-import testtools
-import json
 
 from tcutils.util import *
 from tcutils.wrappers import preposttest_wrapper
 from common.neutron.neutron_util import combos
 import test
 
-from common.openstack_libs import neutron_client as client
-from common.openstack_libs import neutron_http_client as HTTPClient
 from common.openstack_libs import neutron_exception as NeutronClientException
-from common.openstack_libs import ks_client as ksclient
-from common.openstack_libs import ks_exceptions
 
 class TestCRUD(BaseNeutronTest):
 
@@ -480,7 +473,7 @@ class TestCRUD(BaseNeutronTest):
         # end for attribute_list
     # end update_port_tests
 
-    @test.attr(type=['sanity', 'vcenter_compute','dev_sanity_dpdk'])
+    @test.attr(type=['sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_router_crud(self):
         count = 0

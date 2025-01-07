@@ -3,11 +3,11 @@ This FT automation implementation will perform vif0 statistics check
 
 Tested on dpdk compute Bond configuration
 '''
-from builtins import str
 from common.vrouter.base import BaseVrouterTest
 from tcutils.wrappers import preposttest_wrapper
 import test
-import string
+
+
 class TestvifStats(BaseVrouterTest):
 
     @classmethod
@@ -59,7 +59,7 @@ class TestvifStats(BaseVrouterTest):
         return True
     # end clear_vif_stats
 
-    @test.attr(type=['sanity', 'vcenter_compute', 'dev_reg'])
+    @test.attr(type=['sanity', 'dev_reg'])
     @preposttest_wrapper
     def test_vif_statistics(self):
         """ 

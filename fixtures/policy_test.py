@@ -1,4 +1,3 @@
-from builtins import str
 import fixtures
 import re
 from project_test import *
@@ -14,8 +13,6 @@ try:
     from webui_test import *
 except ImportError:
     pass
-
-#@contrail_fix_ext ()
 
 
 class PolicyFixture(fixtures.Fixture):
@@ -37,9 +34,6 @@ class PolicyFixture(fixtures.Fixture):
         self.logger = self.inputs.logger
         self.already_present = False
         self.verify_is_run = False
-        self.api_flag = api
-        if self.inputs.orchestrator == 'vcenter' or self.inputs.vcenter_gw_setup or self.inputs.ns_agilio_vrouter_data:
-            self.api_flag = True
         if self.inputs.verify_thru_gui():
             self.browser = self.connections.browser
             self.browser_openstack = self.connections.browser_openstack
@@ -51,42 +45,21 @@ class PolicyFixture(fixtures.Fixture):
         self.input_rules_list = rules_list
         self.rules_list = policy_test_utils.update_rules_with_icmpv6(self.inputs.get_af(),
                                                 rules_list)
-        self.api_flag = True
 
     # end __init__
 
     def setUp(self):
         super(PolicyFixture, self).setUp()
-        if self.api_flag is None:
-            self.policy_obj = self.quantum_h.get_policy_if_present(
-                                      self.project_name, self.policy_name)
-            if not self.policy_obj:
-                if self.inputs.is_gui_based_config():
-                    self.webui.create_policy(self)
-                else:
-                    self._create_policy(self.policy_name, self.rules_list)
-            else:
-                self.already_present = True
-                self.logger.debug(
-                    'Policy %s already present, not creating policy' %
-                    (self.policy_name))
-
-            self.policy_fq_name = self.quantum_h.get_policy_fq_name(
-                self.policy_obj)
+        try:
+            self.policy_obj = self.vnc_lib.network_policy_read(fq_name=self.project_fq_name+[str(self.policy_name)])
+        except:
+            self.policy_fq_name = self._set_policy_api(self.policy_name, self.rules_list)
         else:
-            try:
-                self.policy_obj = self.vnc_lib.network_policy_read(fq_name=self.project_fq_name+[str(self.policy_name)])
-            except:
-                if self.inputs.vro_based:
-                    self.policy_fq_name = self.set_policy_vro(self.policy_name, self.rules_list)
-                else:
-                    self.policy_fq_name = self._set_policy_api(self.policy_name, self.rules_list)
-            else:
-                self.already_present = True
-                self.policy_fq_name=self.policy_obj.fq_name
-                self.logger.debug(
-                    'Policy %s already present, not creating any policy' %
-                    (self.policy_name))
+            self.already_present = True
+            self.policy_fq_name=self.policy_obj.fq_name
+            self.logger.debug(
+                'Policy %s already present, not creating any policy' %
+                (self.policy_name))
     # end setUp
 
     def verify_on_setup(self):
@@ -325,15 +298,6 @@ class PolicyFixture(fixtures.Fixture):
         self.policy_obj = policy_rsp
         return policy_rsp
     # end  _create_policy
-
-    def set_policy_vro(self, policy_name, rules_list, policy_obj=None):
-        '''create policy and rules from vro'''
-        self.connections.orch.create_policy(name = policy_name, rules = rules_list)
-        self.policy_obj = self.vnc_lib.network_policy_read(
-                fq_name=self.project_fq_name+[str(self.policy_name)])
-        self._populate_attr()
-        return self.policy_fq_name
-    #end _set_policy_vro
 
     def _set_policy_api(self, policy_name, rules_list, policy_obj=None):
         ''' Create a policy from the supplied rules
@@ -618,22 +582,8 @@ class PolicyFixture(fixtures.Fixture):
     # end get_entries
 
     def _delete_policy(self):
-        if self.api_flag:
-            if self.inputs.vro_based:
-                self.connections.orch.delete_policy(self.policy_name)
-            else:
-                self.vnc_lib.network_policy_delete(id=self.policy_obj.uuid)
-            self.logger.info("Deleted policy %s" % (self.policy_name))
-        elif self.inputs.is_gui_based_config():
-            self.webui.delete_policy(self)
-            self.logger.info("Deleted policy %s" % (self.policy_name))
-        elif self.quantum_h.get_policy_if_present(
-                    project_name=self.project_name,
-                    policy_name=self.policy_name):
-             self.quantum_h.delete_policy(self.policy_obj['policy']['id'])
-             self.logger.info("Deleted policy %s" % (self.policy_name))
-        else:
-             self.logger.debug("No Policy present, to be deleted.")
+        self.vnc_lib.network_policy_delete(id=self.policy_obj.uuid)
+        self.logger.info("Deleted policy %s" % (self.policy_name))
     # end _delete_policy
 
     def update_policy(self, policy_id, policy_data):
@@ -1094,9 +1044,6 @@ class PolicyFixture(fixtures.Fixture):
 
     def refresh_quantum_policy_obj(self):
         # Rebuild the policy object to take care of cases where it takes time to update after instantiating the object
-        if self.api_flag:
-            return self
-        self.policy_obj=self.quantum_h.get_policy_if_present(self.project_name, self.policy_name)
         return self
 
     def verify_policy_in_api_server(self):
@@ -1134,15 +1081,6 @@ class PolicyFixture(fixtures.Fixture):
             logger=self.logger)
         if out:
             err_msg.append(out)
-
-        # compare policy_rules
-        if self.inputs.vro_based:
-            out = policy_test_utils.compare_args(
-                'policy_rules', self.api_s_policy_obj_x[
-                    'network_policy_entries']['policy_rule'], rules['policy_rule'],
-                    logger=self.logger)
-            if out:
-                err_msg.append(out)
 
         if err_msg != []:
             result = False

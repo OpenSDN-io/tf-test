@@ -4,17 +4,11 @@
 # Set the env variable PARAMS_FILE to point to your ini file. Else it will try to pick params.ini in PWD
 #
 from common.neutron.lbaasv2.base import BaseLBaaSTest
-from builtins import range
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import *
 
-from common.neutron.base import BaseNeutronTest
-import os
-import fixtures
-import tcutils.wrappers
 import time
 from vn_test import VNFixture
-from vm_test import VMFixture
 from test import attr
 
 af_test = 'dual'
@@ -199,7 +193,7 @@ class TestLBaaSV2(BaseLBaaSTest):
         assert self.verify_lb_method(client_vm1_fixture, lb_pool_servers, rr_listener.fip_ip),\
             "Verify LB Method failed for ROUND ROBIN"
 
-    @attr(type=['cb_sanity', 'sanity','vcenter'])
+    @attr(type=['cb_sanity', 'sanity'])
     @skip_because(dpdk_cluster=True, sku='train')
     @preposttest_wrapper
     def test_lbaas_with_different_fip(self):

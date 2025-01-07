@@ -1,15 +1,9 @@
 from common.neutron.base import BaseNeutronTest
-from builtins import range
-import random
 from vn_test import MultipleVNFixture
 from floating_ip import FloatingIPFixture
-from common.connections import ContrailConnections
 from tcutils.wrappers import preposttest_wrapper
-from user_test import UserFixture
-from project_test import ProjectFixture
-from test import *
 from common.isolated_creds import IsolatedCreds
-from tcutils.util import *
+from tcutils.util import get_random_name, get_random_cidr
 
 
 class TestQuotaUpdate(BaseNeutronTest):

@@ -1,16 +1,11 @@
-from __future__ import print_function
-from builtins import str
-from builtins import range
 import sys
 import os
 import fixtures
-#from common.contrail_test_init import ContrailTestInit
 from nova_test import *
-from common.connections import ContrailConnections
 trafficdir = os.path.join(os.path.dirname(__file__), '../tcutils/pkgs/Traffic')
 sys.path.append(trafficdir)
 from traffic.core.stream import Stream
-from traffic.core.profile import create, ContinuousProfile, ContinuousSportRange
+from traffic.core.profile import ContinuousProfile, ContinuousSportRange
 from traffic.core.helpers import Host
 from traffic.core.helpers import Sender, Receiver
 

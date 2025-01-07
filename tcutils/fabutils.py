@@ -1,11 +1,10 @@
-from builtins import str
 from fabric.operations import get, put, sudo, local
 from fabric.api import run, env
 from fabric.exceptions import CommandTimeout, NetworkError
 from fabric.contrib.files import exists
 from fabric import sftp
 
-from fabric.context_managers import settings, hide, cd
+from fabric.context_managers import settings
 from fabric import state as fab_state
 from fabric.network import HostConnectionCache, normalize_to_string, connect, normalize
 from paramiko.ssh_exception import SSHException

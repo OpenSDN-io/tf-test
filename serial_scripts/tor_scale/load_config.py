@@ -1,24 +1,9 @@
-from __future__ import absolute_import
-from builtins import range
-import argparse
-import random
-import socket
-import struct
-import os
-import sys
-import time
-import string
-import unicodedata
 from netaddr import *
-from datetime import datetime
 from common.contrail_test_init import ContrailTestInit
-import logging as std_logging
-from neutronclient.neutron import client as neutron_client
 from vnc_api.vnc_api import *
 from common.connections import ContrailConnections
 from . import convertor
 from common import log_orig as logging
-import test
 from serial_scripts.tor_scale.lib.config import ConfigScale
 
 

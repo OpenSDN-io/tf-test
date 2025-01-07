@@ -1,24 +1,7 @@
-from __future__ import print_function
-from __future__ import absolute_import
-# generic
-from future import standard_library
-standard_library.install_aliases()
-from builtins import range
-import json
-import requests
 import re
-import os
-import sys
-import subprocess
 import time
-import datetime
 
-# contrail
-
-import urllib.request, urllib.error, urllib.parse
 from lxml import etree
-import xmltodict
-from .commands import Command
 from tcutils.verification_util import *
 
 

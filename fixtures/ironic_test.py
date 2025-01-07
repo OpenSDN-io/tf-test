@@ -1,5 +1,3 @@
-from builtins import object
-import os
 import openstack
 from ironicclient import exc as ironic_exc
 from common.openstack_libs import ironic_client as client

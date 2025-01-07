@@ -1,4 +1,3 @@
-from __future__ import print_function
 # Need to import path to test/fixtures and test/scripts/
 # Ex : export PYTHONPATH='$PATH:/root/test/fixtures/:/root/test/scripts/'
 #
@@ -8,20 +7,11 @@ from __future__ import print_function
 #
 from common.heat.base import BaseHeatTest
 import os
-import fixtures
-from vm_test import VMFixture
-import testtools
-import time
-import sys
-from common.connections import ContrailConnections
 from tcutils.wrappers import preposttest_wrapper
-import time
 import test
 from tcutils.util import *
-from netaddr import IPNetwork, IPAddress
 from common.ecmp.ecmp_traffic import ECMPTraffic
 from common.ecmp.ecmp_verify import ECMPVerify
-from common.servicechain.verify import VerifySvcChain
 
 try:
     from heat_test import *
@@ -375,7 +365,7 @@ try:
             return self.multi_svc_chain(policys, svcs)
 
 
-        @test.attr(type=['cb_sanity', 'sanity', 'vcenter_compute'])
+        @test.attr(type=['cb_sanity', 'sanity'])
         @preposttest_wrapper
         @skip_because(address_family='v6', min_nodes=3)
         def test_public_access_thru_svc_w_fip(self):

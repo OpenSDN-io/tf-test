@@ -2,8 +2,6 @@
 # Copyright (c) 2016 Juniper Networks, Inc. All rights reserved.
 #
 
-from builtins import str
-from builtins import object
 from vnc_api.vnc_api import *
 import uuid
 from tcutils import util

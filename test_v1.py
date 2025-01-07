@@ -1,6 +1,5 @@
 from test import BaseTestCase
 from common.isolated_creds import *
-import time
 import sys
 
 
@@ -72,7 +71,6 @@ class BaseTestCase_v1(BaseTestCase):
                 cls.isolated_creds.project_name)
         cls.inputs = cls.isolated_creds.get_inputs(cls.project)
         cls.connections = cls.isolated_creds.get_connections(cls.inputs)
-        cls.create_flood_vmi_if_vcenter_gw_setup()
     # end setUpClass
 
     @classmethod
@@ -85,18 +83,6 @@ class BaseTestCase_v1(BaseTestCase):
         super(BaseTestCase_v1, cls).tearDownClass()
     # end tearDownClass
 
-    def if_vcenter_gw_setup_return_gw_orch_class(self):
-        if self.inputs.vcenter_gw_setup:
-            return self.connections.slave_orch
-        else:
-            return self.connections.orch
-
     @property
     def orchestrator(self):
-        return self.if_vcenter_gw_setup_return_gw_orch_class()
-
-    @classmethod
-    def create_flood_vmi_if_vcenter_gw_setup(cls):
-        if cls.inputs.vcenter_gw_setup:  # For vcenter gateway setup
-            cls.vcenter_orch = cls.connections.slave_orch
-            cls.vcenter_orch.create_vn_vmi_for_stp_bpdu_to_be_flooded()
+        return self.connections.orch

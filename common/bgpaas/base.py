@@ -1,15 +1,8 @@
-from builtins import str
-import test_v1
 from bgpaas_fixture import BGPaaSFixture
-from vn_test import VNFixture
-from vm_test import VMFixture
 from control_node_zone import ControlNodeZoneFixture
-from tcutils.commands import ssh, execute_cmd, execute_cmd_out
 from tcutils.util import *
 from tcutils.tcpdump_utils import *
 from tcutils.util import get_random_name, retry
-from contrailapi import ContrailVncApi
-from common.base import GenericTestBase
 from common.neutron.base import BaseNeutronTest
 from common.svc_health_check.base import BaseHC
 from vnc_api.gen.resource_xsd import RouteOriginOverride,BgpFamilyAttributes,BgpPrefixLimit,BGPaaServiceParametersType

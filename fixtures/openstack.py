@@ -1,4 +1,3 @@
-from builtins import str
 import os
 from common import log_orig as contrail_logging
 from orchestrator import Orchestrator, OrchestratorAuth
@@ -8,8 +7,6 @@ import glance_test
 import quantum_test
 import swift_test
 from keystone_tests import KeystoneCommands
-from common.openstack_libs import ks_exceptions
-from vcenter import VcenterAuth, VcenterOrchestrator
 
 class OpenstackOrchestrator(Orchestrator):
 
@@ -25,28 +22,9 @@ class OpenstackOrchestrator(Orchestrator):
        self.swift_h = None
        self.vnc_lib = vnclib
        self.region_name = region_name or inputs.region_name if inputs else None
-       #for vcenter as compute
-       self.vcntr_handle = self.get_vcenter_handle()
 
    def is_feature_supported(self, feature):
-        if self.inputs.vcenter_compute:
-            unsupported_features = ['ipv6', 'trans_svc', 'lbaasv1', 'ceilometer']
-            return feature not in unsupported_features
         return True
-
-   def get_vcenter_handle(self):
-       if self.inputs and self.inputs.vcenter_dc:
-           vcntr = VcenterOrchestrator(user=self.inputs.vcenter_username,
-                                            pwd=self.inputs.vcenter_password,
-                                            host=self.inputs.vcenter_server,
-                                            port=self.inputs.vcenter_port,
-                                            dc_name=self.inputs.vcenter_dc,
-                                            vnc=self.vnc_lib,
-                                            inputs=self.inputs,
-                                            logger=self.logger)
-       else:
-           vcntr = None
-       return vcntr
 
    def get_network_handler(self):
        if not self.quantum_h:

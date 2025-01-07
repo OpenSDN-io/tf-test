@@ -1,10 +1,5 @@
 from analytics import base
-from builtins import str
-from builtins import range
-import os
 import time
-import fixtures
-import testtools
 import re
 from common.base import GenericTestBase
 from vn_test import *
@@ -14,9 +9,6 @@ from alarm_test import *
 from multiple_vn_vm_test import *
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import skip_because, get_random_name
-from fabric.api import run, local
-import fixtures
-import test
 from tcutils.verification_util import VerificationUtilBase, XmlDrv
 
 class AnalyticsTestHA(GenericTestBase):

@@ -1,16 +1,8 @@
-from __future__ import absolute_import
 from .base import LocalASBase
 from tcutils.wrappers import preposttest_wrapper
 import test
-import time
-from common import isolated_creds
-from tcutils.wrappers import preposttest_wrapper
 from common.bgpaas.base import BaseBGPaaS
 from tcutils.util import *
-from contrailapi import ContrailVncApi
-from tcutils.util import get_random_cidr
-from random import randint
-from vm_test import VMFixture
 from time import sleep
 
 

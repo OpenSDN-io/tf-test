@@ -1,22 +1,14 @@
-from builtins import range
 import os
 import sys
 import re
-import time
 from common.base import GenericTestBase
-from common.connections import ContrailConnections
-from common import isolated_creds
-from vm_test import VMFixture
-from vn_test import VNFixture
-from tcutils.util import retry, get_ips_of_host
 from string import Template
-from tcutils.commands import ssh, execute_cmd, execute_cmd_out
+from tcutils.commands import ssh, execute_cmd
 from compute_node_test import ComputeNodeFixture
 from common.vdns.base import BasevDNSTest
 from tcutils.traffic_utils.scapy_traffic_gen import ScapyTraffic
 from router_fixture import LogicalRouterFixture
 from project_test import ProjectFixture
-from time import sleep
 from netaddr import IPNetwork, IPAddress
 trafficdir = os.path.join(os.path.dirname(__file__), '../../tcutils/pkgs/Traffic')
 sys.path.append(trafficdir)

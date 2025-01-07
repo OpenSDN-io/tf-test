@@ -1,9 +1,7 @@
-from netaddr import *
-
 import vnc_api_test
-from pif_fixture import PhysicalInterfaceFixture
 from physical_device_fixture import PhysicalDeviceFixture
 from tcutils.control.cn_introspect_utils import *
+from tcutils.util import retry
 
 class PhysicalRouterFixture(PhysicalDeviceFixture):
 

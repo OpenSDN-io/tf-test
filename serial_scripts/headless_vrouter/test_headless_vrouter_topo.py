@@ -1,7 +1,3 @@
-from __future__ import print_function
-
-from builtins import zip
-from builtins import object
 class sdn_headless_vrouter_topo(object):
 
     def __init__(self, domain='default-domain', compute_node_list=None):

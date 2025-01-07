@@ -1,6 +1,3 @@
-from builtins import str
-from builtins import object
-import os
 import re
 from common.openstack_libs import ks_identity
 from common.openstack_libs import ks_session

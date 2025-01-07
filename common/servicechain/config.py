@@ -1,37 +1,19 @@
-from builtins import str
-from builtins import range
-import os
 import time
 import random
 
-import fixtures
-from fabric.api import run, hide, settings
 from tcutils.commands import ssh, execute_cmd, execute_cmd_out
 from tcutils.util import get_random_cidr
 from tcutils.util import get_random_name
-from tcutils.cfgparser import parse_cfg_file
 from vn_test import VNFixture
 from vm_test import VMFixture
 from policy_test import PolicyFixture
 from floating_ip import FloatingIPFixture
 from svc_instance_fixture import SvcInstanceFixture
 from svc_template_fixture import SvcTemplateFixture
-from common.connections import ContrailConnections
 from common.policy.config import AttachPolicyFixture
 from tcutils.util import retry, is_v6
 import random
 import re
-
-# Default images for vcenter based environments
-VC_SVC_TYPE_PROPS = {
-    'firewall': {'in-network-nat': 'ubuntu-nat-fw',
-                 'in-network': 'ubuntu-in-net',
-                 'transparent': '',
-                 },
-    'analyzer': {'transparent': 'analyzer',
-                 'in-network' : 'analyzer',
-                 }
-}
 
 SVC_TYPE_PROPS = {
     'firewall': {'in-network-nat': 'tiny_nat_fw',
@@ -381,10 +363,7 @@ class ConfigSvcChain(object):
         if self.inputs.is_ci_setup() and self.inputs.get_af() == 'v4':
             image_name = self.inputs.get_ci_image()
         else:
-            if self.inputs.vcenter_dc:
-                image_name = 'ubuntu'
-            else:
-                image_name = image_name or 'ubuntu-traffic'
+            image_name = image_name or 'ubuntu-traffic'
         return image_name
     # end _get_end_vm_image
 
@@ -454,14 +433,7 @@ class ConfigSvcChain(object):
         trans_right_vn_fixture = kwargs.get('trans_right_vn_fixture', None)
 
         image_name = self._get_end_vm_image(image_name)
-
-        if self.inputs.vcenter_compute_ips:
-            svc_img_name = VC_SVC_TYPE_PROPS[service_type][service_mode]
-        elif self.inputs.orchestrator == 'vcenter':#Fixing tinycore image
-                                                   #for vcenter-only mode
-            svc_img_name = SVC_TYPE_PROPS[service_type][service_mode]
-        else:
-            svc_img_name = svc_img_name or SVC_TYPE_PROPS[service_type][service_mode]
+        svc_img_name = svc_img_name or SVC_TYPE_PROPS[service_type][service_mode]
 
         # Mgmt
         (mgmt_vn_name,

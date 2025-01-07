@@ -1,5 +1,3 @@
-from builtins import str
-from builtins import range
 from tcutils.wrappers import preposttest_wrapper
 from common.contrail_fabric.mcast_base import *
 import ipaddress

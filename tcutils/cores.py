@@ -1,12 +1,7 @@
 """ Module to check and collect information about cores during the test."""
 
-from builtins import str
-import sys
-import traceback
-import unittest
 import random
 from time import sleep
-from functools import wraps
 
 from fabric.api import run, cd
 from fabric.contrib.files import exists

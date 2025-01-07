@@ -1,9 +1,6 @@
 from common.slo.base import *
 from tcutils.wrappers import preposttest_wrapper
-import test
-from tcutils.util import get_random_name, is_almost_same, skip_because
 from security_group import get_secgrp_id_from_name, list_sg_rules
-import random
 
 AF_TEST = 'v6'
 
@@ -455,9 +452,6 @@ class SecurityLoggingIpv6(SecurityLogging):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if (self.inputs.orchestrator == 'vcenter') and (
-            not self.orch.is_feature_supported('ipv6')):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)
 
 class SecurityLoggingFwIpv6(SecurityLoggingFw):
@@ -467,7 +461,4 @@ class SecurityLoggingFwIpv6(SecurityLoggingFw):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if (self.inputs.orchestrator == 'vcenter') and (
-            not self.orch.is_feature_supported('ipv6')):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)

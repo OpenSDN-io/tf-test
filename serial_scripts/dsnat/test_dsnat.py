@@ -1,16 +1,7 @@
-from __future__ import division
-from builtins import str
-from builtins import range
-from past.utils import old_div
 from common.dsnat.base import BaseDSNAT
-from common.neutron.base import BaseNeutronTest
-from security_group import SecurityGroupFixture
 from tcutils.wrappers import preposttest_wrapper
-import test
-import time
 from tcutils.util import *
 from tcutils.tcpdump_utils import *
-from common import isolated_creds
 from test import attr
 
 class TestDSNAT(BaseDSNAT):
@@ -209,7 +200,7 @@ class TestDSNAT(BaseDSNAT):
         if len(nat_port_used) > len(port_range) or set(nat_port_used) != set(port_range):
             assert False, ('NAT port allocated, %s, more than the configured'  %nat_port_used)
 
-        port_count = old_div(len(port_range),2)
+        port_count = len(port_range) // 2
         self.logger.info('Reduce the port translation pool range or count for UDP to %d' %port_count)
         pp[0] = (self.define_port_translation_pool(protocol='udp',
              port_count=str(port_count)))
@@ -228,9 +219,9 @@ class TestDSNAT(BaseDSNAT):
 
         self.logger.info("Increase port range, shouldn't affect the existing flows")
         nat_port_used = self.get_nat_port_used_for_flow(vm1_fixture, '17', traffic['port'])
-        if len(nat_port_used) != old_div(port_count,5):
+        if len(nat_port_used) != (port_count // 5):
             assert False, ('After increasing port range, expected flows to be\
-                same as , %d, but actual flows are %d' %(old_div(port_count,5), len(nat_port_used)))
+                same as , %d, but actual flows are %d' %((port_count // 5), len(nat_port_used)))
         ## Repeat UDP traffic multiple times, to exhaust the pool and verify the flow
         for i in range(port_count):
             self.run_iperf_between_vm_host(vm1_fixture, vm2_fixture.vm_node_ip, vm2_fixture.vm_node_data_ip, **traffic)

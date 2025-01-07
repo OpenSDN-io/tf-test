@@ -1,8 +1,6 @@
-from __future__ import print_function
-from builtins import str
-from builtins import range
-from builtins import object
-from tcutils.util import get_random_cidr,get_random_name
+from tcutils.util import get_random_name
+
+
 class sdn_1vn_2vm_config(object):
 
     def __init__(self, domain='default-domain', project='admin', username=None, password=None):
@@ -110,13 +108,8 @@ class sdn_2vn_2vm_config(object):
 
         #
         # Define network info for each VN:
-        if self.project == 'vCenter':
-            # For vcenter, only one subnet per VN is supported
-            self.vn_nets = {self.vnet_list[0]: [get_random_cidr(af='v4')],
-                            self.vnet_list[1]: [get_random_cidr(af='v4')]}
-        else:
-            self.vn_nets = {self.vnet_list[0]: ['10.1.1.0/24', '11.1.1.0/24'],
-                            self.vnet_list[1]: ['12.1.1.0/24', '13.1.1.0/24']}
+        self.vn_nets = {self.vnet_list[0]: ['10.1.1.0/24', '11.1.1.0/24'],
+                        self.vnet_list[1]: ['12.1.1.0/24', '13.1.1.0/24']}
         #
         # Define network policies
         self.policy_list = ['policy0', 'policy1', 'policy2', 'policy3', 'policy100',

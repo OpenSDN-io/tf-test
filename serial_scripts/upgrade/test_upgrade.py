@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 # Need to import path to test/fixtures and test/scripts/
 # Ex : export PYTHONPATH='$PATH:/root/test/fixtures/:/root/test/scripts/'
 #
@@ -10,26 +9,16 @@ from __future__ import absolute_import
 from . import base
 import re
 import time
-import os
-from contrail_fixtures import *
-import fixtures
-import testtools
-import traceback
-from vn_test import VNFixture
-from vm_test import VMFixture
-from quantum_test import QuantumHelper
-from nova_test import NovaHelper
-from floating_ip import FloatingIPFixture
-from policy_test import PolicyFixture
 from tcutils.commands import *
 from fabric.context_managers import settings
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import *
 from fabric.api import run
 from fabric.state import connections
-from common.securitygroup.config import ConfigSecGroup
 import test
 from .verify import VerifyFeatureTestCases
+
+
 class UpgradeTestSanityWithResource(base.UpgradeBaseTest,VerifyFeatureTestCases):
 
     @classmethod

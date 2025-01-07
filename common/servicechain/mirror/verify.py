@@ -1,9 +1,3 @@
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from builtins import str
-from past.utils import old_div
-import os
 from time import sleep
 from tcutils.util import get_random_cidr
 from tcutils.util import get_random_name
@@ -12,7 +6,6 @@ from tcutils.commands import ssh, execute_cmd, execute_cmd_out
 from common.servicechain.mirror.config import ConfigSvcMirror
 from common.ecmp.ecmp_verify import ECMPVerify
 from common.floatingip.config import CreateAssociateFip
-from random import randint
 from tcutils.tcpdump_utils import *
 
 class VerifySvcMirror(ConfigSvcMirror, ECMPVerify):
@@ -72,7 +65,7 @@ class VerifySvcMirror(ConfigSvcMirror, ECMPVerify):
                 left_vm_fixture.vm_node_ip != right_vm_fixture.vm_node_ip:
                 count = count * 2
                 if fip:
-                    count = old_div((count * 3),4)  #Because the ping to FIP involves NAT. 
+                    count = ((count * 3) // 4)  #Because the ping to FIP involves NAT. 
             if proto == 'icmp':
                 if not self.inputs.pcap_on_vm:
                     print(str(svm_name) + ':' + str(count))

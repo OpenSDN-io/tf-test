@@ -1,15 +1,7 @@
-from __future__ import absolute_import
-from builtins import object
 import test_v1
-from common import isolated_creds
 from vn_test import *
 from vm_test import *
 import fixtures
-import testtools
-import os
-import uuid
-from common.connections import ContrailConnections
-from common.contrail_test_init import ContrailTestInit
 from quantum_test import *
 from vnc_api_test import *
 from nova_test import *
@@ -18,9 +10,7 @@ from .webui_topology import *
 from floating_ip import *
 from policy_test import *
 from contrail_fixtures import *
-from tcutils.wrappers import preposttest_wrapper
 import time
-import random
 
 
 class WebuiBaseTest(test_v1.BaseTestCase_v1):

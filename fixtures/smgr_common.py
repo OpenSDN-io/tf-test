@@ -1,35 +1,21 @@
-from __future__ import print_function
-from past.builtins import cmp
-from future import standard_library
-standard_library.install_aliases()
-from builtins import range
 import fixtures
 from contrail_fixtures import *
 import sys
-import pdb
 import json
-import string
-import textwrap
 import tempfile
 import os
 import re
-import fabric
 import configparser
-import argparse
 import sys
 from datetime import datetime as dt
 from fabric.api import settings, run
-from fabric.api import hosts, env, task
-from fabric.api import local, put, get
-from fabric.tasks import execute
+from fabric.api import env
+from fabric.api import local, put
 from os.path import expanduser
 import imp
 from fabric.state import connections
 from time import sleep
-from common.contrail_test_init import ContrailTestInit
 
-from common import log_orig as logging
-import logging as std_logging
 import time
 
 
@@ -1359,7 +1345,7 @@ class SmgrFixture(fixtures.Fixture):
                     continue
             actual_state[server_ip] = status
 
-        if cmp(expected_state,actual_state) != 0:
+        if expected_state.viewitems() != actual_state.viewitems():
            self.logger.error(
                 'Cluster status \"%s\" is incorrectly updated for %s ' %
                 (status, cluster_id))

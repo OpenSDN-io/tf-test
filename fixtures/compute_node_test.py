@@ -1,16 +1,9 @@
-from future import standard_library
-standard_library.install_aliases()
-from future.utils import viewitems
-from builtins import str
 import fixtures
-from tcutils.commands import execute_cmd
 from tcutils.util import retry
-from fabric.api import run, local
 from fabric.operations import put, get
 from fabric.context_managers import settings, hide
 import configparser
 from datetime import datetime
-import re
 import time
 import tempfile
 
@@ -515,7 +508,7 @@ class ComputeNodeFixture(fixtures.Fixture):
             reqd_entries['vrf_id'] = vrf_id
 
         for flow_entry_item in flow_table.items:
-            if viewitems(reqd_entries) <= viewitems(flow_entry_item):
+            if reqd_entries.viewitems() <= flow_entry_item.viewitems():
                 forward_flow_count+= 1
                 if flow_entry_item['rflow'] != '-1':
                     reverse_flow_count+= 1
@@ -567,7 +560,7 @@ class ComputeNodeFixture(fixtures.Fixture):
         if all_flows:
             all_flow_list = []
         for flow_entry_item in flow_table.items:
-            if viewitems(reqd_entries) <= viewitems(flow_entry_item):
+            if reqd_entries.viewitems() <= flow_entry_item.viewitems():
                 forward_flow = FlowEntry(flow_entry_item)
                 if flow_entry_item['rflow'] != '-1':
                     reverse_flow_item = [x for x

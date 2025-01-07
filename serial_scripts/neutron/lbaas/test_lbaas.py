@@ -1,17 +1,8 @@
 from common.neutron.lbaas.base import BaseTestLbaas
-from builtins import range
-import os
-import fixtures
-import testtools
 import datetime
-
-from vn_test import *
-from vm_test import *
-from common.connections import ContrailConnections
+import time
 from tcutils.wrappers import preposttest_wrapper
-from tcutils.util import run_fab_cmd_on_node
-from common.openstack_libs import neutron_client_exception as NeutronClientException
-import test
+from tcutils.util import get_random_name
 
 
 class TestLbaas(BaseTestLbaas):
@@ -102,7 +93,7 @@ class TestLbaas(BaseTestLbaas):
         #TODO : agent verification
 
         #sleep for 10 sec for netns to get created
-        sleep(10)
+        time.sleep(10)
 
         #get the active and standby computes
         obj = self.api_s_inspect.get_lb_pool(pool_id=lb_pool['id'])
@@ -230,7 +221,7 @@ class TestLbaas(BaseTestLbaas):
         #TODO : agent verification
 
         #sleep for 10 sec netns to get created
-        sleep(10)
+        time.sleep(10)
 
         #Check if nets ns got created and haproxy running in compute nodes after vip creation
         result,errmsg = self.verify_active_standby(self.inputs.compute_ips, lb_pool['id'])
@@ -258,7 +249,7 @@ class TestLbaas(BaseTestLbaas):
                                 container='agent')
         self.start_stop_service(self.inputs.compute_info[standby], 'contrail-vrouter-agent', 'stop',
                                 container='agent')
-        sleep(5)
+        time.sleep(5)
         self.start_stop_service(self.inputs.compute_info[active], 'contrail-vrouter-agent', 'start',
                                 container='agent')
         self.start_stop_service(self.inputs.compute_info[standby], 'contrail-vrouter-agent', 'start',
@@ -287,7 +278,7 @@ class TestLbaas(BaseTestLbaas):
         #after agent is started.
         self.start_stop_service(self.inputs.compute_info[active], 'contrail-vrouter-agent', 'stop',
                                 container='agent')
-        sleep(5)
+        time.sleep(5)
 
         #Delete VIP while the agent is stopped
         self.quantum_h.delete_vip(lb_vip['id'])

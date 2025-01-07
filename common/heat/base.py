@@ -1,12 +1,5 @@
-from __future__ import absolute_import
-from future import standard_library
-standard_library.install_aliases()
-from builtins import zip
-from builtins import str
 import time
 from common.base import GenericTestBase
-from common.connections import ContrailConnections
-from common import isolated_creds
 from common import create_public_vn
 from vn_test import VNFixture
 from heat_test import *
@@ -15,14 +8,8 @@ from svc_template_fixture import *
 from svc_instance_fixture import *
 from project_test import ProjectFixture
 from tcutils.util import get_random_name, retry
-from fabric.context_managers import settings
-from fabric.api import run
-from fabric.operations import get, put
-from tcutils.commands import ssh, execute_cmd, execute_cmd_out
 from . import template
 from . import  env
-import configparser
-import re
 import copy
 
 contrail_api_conf = '/etc/contrail/contrail-api.conf'

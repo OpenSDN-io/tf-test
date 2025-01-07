@@ -1,22 +1,11 @@
-from __future__ import print_function
-from __future__ import absolute_import
-from builtins import range
-from builtins import object
-import sys
 import os
-import select
-import socket
 import paramiko
 import threading
 import multiprocessing
 import time
-from . import commands
-import subprocess
 from fabric.api import *
 from fabric.state import connections as fab_connections
-from tcutils.commands import ssh, execute_cmd, execute_cmd_out
 from tcutils.util import *
-from tcutils.fabfile import *
 
 
 class SshConnect(threading.Thread):
@@ -102,17 +91,6 @@ class remoteCmdExecuter(object):
 
         return result
 
-
-def testRemoteCmdExecuter():
-    aD = remoteCmdExecuter()
-    aD.execConnect('10.84.7.250', 'root', 'Embe1mpls')
-#   aD.execConnect( '10.84.7.42', 'root', 'c0ntrail123')
-
-# print aD.execCmd ('ping 39.0.0.1 -I 10.84.7.42 -c 1 -W 1 | grep -i " 0%
-# packet loss"')
-    print(aD.execCmd('cli show bgp summary | display xml'))
-#   print aD.execCmd ('ifsmon -Id | grep ROUTE')
-#   print aD.execCmd ('cli -c "show bgp summary"')
 
 if __name__ == "__main__":
     processList = []

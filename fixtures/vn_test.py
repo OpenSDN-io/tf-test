@@ -1,18 +1,13 @@
-from __future__ import print_function
-from builtins import str
-from builtins import range
 import fixtures
 from ipam_test import *
 from project_test import *
 from tcutils.util import *
 from vnc_api.vnc_api import *
 from netaddr import *
-from time import sleep
 from contrail_fixtures import *
 import inspect
 from common.policy import policy_test_utils
 import threading
-import sys
 from quantum_test import NetworkClientException
 from tcutils.test_lib.contrail_utils import get_interested_computes
 from vnc_api.exceptions import PermissionDenied, RefsExistError
@@ -28,7 +23,6 @@ class NotPossibleToSubnet(Exception):
     """
     pass
 from openstack import OpenstackOrchestrator
-from vcenter import VcenterOrchestrator
 
 #@contrail_fix_ext ()
 class VNFixture(fixtures.Fixture):
@@ -76,8 +70,6 @@ class VNFixture(fixtures.Fixture):
         #Forcing v4 subnet creation incase of v6. Reqd for ssh to host
         if (('v6' in self.af) or ('dual' == self.inputs.get_af())) and (af6_only==False):
             self.af = 'dual'
-        if isinstance(self.orchestrator,VcenterOrchestrator)  and subnets and (len(subnets) != 1):
-           raise Exception('vcenter: Multiple subnets not supported')
         if not subnets and not empty_vn:
             subnets = get_random_cidrs(stack=self.af)
         if subnets and self.get_af_from_subnet(subnets=subnets) == 'v6' and af6_only==False:
@@ -377,8 +369,6 @@ class VNFixture(fixtures.Fixture):
             return uid
 
     def _create_vn_api(self, vn_name, project_obj):
-        if isinstance(self.orchestrator,VcenterOrchestrator) :
-           raise Exception('vcenter: no support for VN creation through VNC-api')
         try:
             self.api_vn_obj = VirtualNetwork(
                 name=vn_name, parent_obj=project_obj)
@@ -519,8 +509,6 @@ class VNFixture(fixtures.Fixture):
     # end setUp
 
     def create_subnet(self, vn_subnet, ipam_fq_name=None):
-        if isinstance(self.orchestrator,VcenterOrchestrator) :
-            raise Exception('vcenter: subnets not supported')
         self.quantum_h.create_subnet(vn_subnet, self.uuid, ipam_fq_name,dns_nameservers_list=self.dns_nameservers_list)
         self.vn_subnets.append(vn_subnet)
         self.vn_subnet_objs = self.get_subnets()
@@ -536,8 +524,6 @@ class VNFixture(fixtures.Fixture):
     def create_port(self, net_id, subnet_id=None, ip_address=None,
                     mac_address=None, no_security_group=False,
                     security_groups=[], extra_dhcp_opts=None, sriov=False, virtio=False):
-        if isinstance(self.orchestrator,VcenterOrchestrator) :
-            raise Exception('vcenter: ports not supported')
         fixed_ips = [{'subnet_id': subnet_id, 'ip_address': ip_address}]
         if self.inputs.ns_agilio_vrouter_data:
             virtio = True
@@ -553,15 +539,11 @@ class VNFixture(fixtures.Fixture):
         return port_rsp
 
     def delete_port(self, port_id, quiet=False):
-        if isinstance(self.orchestrator,VcenterOrchestrator) :
-            raise Exception('vcenter: ports not supported')
         is_port_present=self.quantum_h.get_port(port_id)
         if is_port_present is not None:
             self.quantum_h.delete_port(port_id)
 
     def update_port(self, port_id, port_dict):
-        if isinstance(self.orchestrator,VcenterOrchestrator) :
-            raise Exception('vcenter: ports not supported')
         port_rsp = self.quantum_h.update_port(port_id, port_dict)
         return port_rsp
 
@@ -834,10 +816,6 @@ class VNFixture(fixtures.Fixture):
 
     def verify_vn_policy_in_api_server(self):
         ''' verify VN's policy data in api-server with data in quantum database'''
-        if isinstance(self.orchestrator,VcenterOrchestrator) :
-            self.policy_verification_flag = {'result': True, 'msg': None}
-            return self.policy_verification_flag
-
         me = inspect.getframeinfo(inspect.currentframe())[2]
         result = True
         err_msg = []
@@ -1304,8 +1282,6 @@ class VNFixture(fixtures.Fixture):
     # end  get_rt_info
 
     def add_subnet(self, subnet):
-        if isinstance(self.orchestrator,VcenterOrchestrator) :
-            raise Exception('vcenter: subnets not supported')
         # Get the Quantum details
         quantum_obj = self.quantum_h.get_vn_obj_if_present(self.vn_name,
                                                                  self.project_id)
@@ -1435,7 +1411,7 @@ class VNFixture(fixtures.Fixture):
 
     @retry(delay=2, tries=25)
     def _delete_vn(self):
-        if (self.option == 'contrail'):
+        if self.option == 'contrail':
             try:
                 self.vnc_lib_h.virtual_network_delete(id=self.uuid)
             except RefsExistError as e:
@@ -1496,11 +1472,7 @@ class VNFixture(fixtures.Fixture):
 
     def bind_policies(self, policy_fq_names, vn_id=None, reset=True):
         vn_id = vn_id or self.uuid
-        if  self.inputs.vro_based:
-            self.api_vn_obj = self.vnc_lib_h.virtual_network_read(id=self.uuid)
-            self.orchestrator.add_network_policy_to_vn(self.vn_name, policy_fq_names)
-            net_rsp = self.vnc_lib_h.virtual_network_update(self.api_vn_obj)
-        elif  isinstance(self.orchestrator,VcenterOrchestrator) or self.option == 'contrail':
+        if self.option == 'contrail':
             self.api_vn_obj = self.vnc_lib_h.virtual_network_read(id=self.uuid)
             if reset:
                 self.api_vn_obj.set_network_policy_list([],True)
@@ -1512,9 +1484,7 @@ class VNFixture(fixtures.Fixture):
             net_rsp = self.vnc_lib_h.virtual_network_update(self.api_vn_obj)
         else:
             net_rsp = {}
-            project_name = self.project_name
             if len(policy_fq_names) != 0:
-                project_name = policy_fq_names[0][1]
                 net_req = {'policys': policy_fq_names}
                 net_rsp = self.quantum_h.update_network(
                     vn_id, {'network': net_req})
@@ -1547,9 +1517,7 @@ class VNFixture(fixtures.Fixture):
 
     def unbind_policies(self, vn_id=None, policy_fq_names=[]):
         vn_id = vn_id or self.uuid
-        if  self.inputs.vro_based:
-            self.orchestrator.remove_network_policy_from_vn(self.vn_name, policy_fq_names)
-        if isinstance(self.orchestrator,VcenterOrchestrator) or self.option == 'contrail':
+        if self.option == 'contrail':
             if policy_fq_names == []:
                 self.api_vn_obj.set_network_policy_list([],True)
                 net_rsp = self.vnc_lib_h.virtual_network_update(self.api_vn_obj)
@@ -1581,14 +1549,10 @@ class VNFixture(fixtures.Fixture):
     # end unbind_policy
 
     def update_subnet(self, subnet_id, subnet_dict):
-        if isinstance(self.orchestrator,VcenterOrchestrator):
-           raise Exception('vcenter: subnets not supported')
         self.quantum_h.update_subnet(subnet_id, subnet_dict)
         self.vn_subnet_objs = self.quantum_h.get_subnets_of_vn(self.uuid)
 
     def get_subnets(self):
-        if isinstance(self.orchestrator,VcenterOrchestrator):
-           raise Exception('vcenter: subnets not supported')
         return self.quantum_h.get_subnets_of_vn(self.uuid)
 
     def get_subnet_id_for_af(self, af):

@@ -1,7 +1,4 @@
-from builtins import object
 import re
-import string
-import logging
 from tcutils.util import get_random_name, retry, is_v6
 
 result_file = '/tmp/ping'

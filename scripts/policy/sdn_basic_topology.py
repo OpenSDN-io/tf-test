@@ -1,8 +1,5 @@
-'''*******AUTO-GENERATED TOPOLOGY*********'''
-from __future__ import print_function
-from builtins import range
-from builtins import object
-from tcutils.util import get_random_name,get_random_cidr
+from tcutils.util import get_random_name
+
 
 class sdn_basic_config(object):
 
@@ -20,21 +17,12 @@ class sdn_basic_config(object):
                           get_random_name('vnet2'), get_random_name('vnet3')]
         #
         # Define network info for each VN:
-        if self.project == 'vCenter':
-            # For vcenter, only one subnet per VN is supported
-            self.vn_nets = {
-                self.vnet_list[0]: [get_random_cidr(af='v4')],
-                self.vnet_list[1]: [get_random_cidr(af='v4')],
-                self.vnet_list[2]: [get_random_cidr(af='v4')],
-                self.vnet_list[3]: [get_random_cidr(af='v4')]
-            }
-        else:
-            self.vn_nets = {
-                self.vnet_list[0]: ['10.1.1.0/24', '11.1.1.0/24'],
-                self.vnet_list[1]: ['12.1.1.0/24', '13.1.1.0/24'],
-                self.vnet_list[2]: ['14.1.1.0/24', '15.1.1.0/24'],
-                self.vnet_list[3]: ['16.1.1.0/24', '17.1.1.0/24']
-            }
+        self.vn_nets = {
+            self.vnet_list[0]: ['10.1.1.0/24', '11.1.1.0/24'],
+            self.vnet_list[1]: ['12.1.1.0/24', '13.1.1.0/24'],
+            self.vnet_list[2]: ['14.1.1.0/24', '15.1.1.0/24'],
+            self.vnet_list[3]: ['16.1.1.0/24', '17.1.1.0/24']
+        }
         #
         # Define network policies
         self.policy_list = list()

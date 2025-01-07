@@ -1,6 +1,4 @@
-from __future__ import print_function
 import fixtures
-import testtools
 import os
 from common.connections import ContrailConnections
 from common.contrail_test_init import ContrailTestInit
@@ -9,7 +7,7 @@ from vm_test import *
 from quantum_test import *
 from vnc_api_test import *
 from nova_test import *
-from testresources import OptimisingTestSuite, TestResource
+from testresources import TestResource
 
 
 class SolnSetup(fixtures.Fixture):

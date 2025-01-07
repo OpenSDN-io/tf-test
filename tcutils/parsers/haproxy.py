@@ -1,9 +1,4 @@
-from __future__ import print_function
-from builtins import map
 import re
-from fabric.api import run
-from fabric.context_managers import settings, hide
-from fabric.contrib.files import exists
 from collections import defaultdict
 from tcutils.util import run_cmd_on_server
 

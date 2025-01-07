@@ -1,10 +1,6 @@
-from builtins import str
-from builtins import range
 import fixtures
 from vnc_api.vnc_api import *
 from tcutils.util import retry, get_random_name
-from time import sleep
-from tcutils.services import get_status
 from vm_test import VMFixture
 from svc_hc_fixture import HealthCheckFixture
 try:
@@ -180,17 +176,11 @@ class SvcInstanceFixture(fixtures.Fixture):
             svc_instance.set_service_template(self.svc_template)
             if self.inputs.is_gui_based_config():
                 self.webui.create_svc_instance(self)
-            elif self.inputs.vro_based:
-                self.orch.create_si(self.si_name, self.svc_template, self.if_details)
-            else:
-                self.vnc_lib.service_instance_create(svc_instance)
+            self.vnc_lib.service_instance_create(svc_instance)
             self.si_obj = self.vnc_lib.service_instance_read(
                 fq_name=self.si_fq_name)
             for port_tuple_props in self.port_tuples_props:
-                if self.inputs.vro_based:
-                    self.orch.add_port_tuple(self.si_name, self.if_details, port_tuple_props)
-                else:
-                    self.add_port_tuple(port_tuple_props)
+                self.add_port_tuple(port_tuple_props)
             for hc in self.hc_list:
                 self.associate_hc(hc['uuid'], hc['intf_type'])
             if self.static_route:
@@ -318,10 +308,7 @@ class SvcInstanceFixture(fixtures.Fixture):
         for irt in intf_rt_table_list:
             self.disassociate_static_route_table(irt['uuid'])
         self.logger.debug("Deleting service instance: %s", self.si_fq_name)
-        if self.inputs.vro_based:
-            self.orch.delete_si(self.si_name)
-        else:
-            self.vnc_lib.service_instance_delete(fq_name=self.si_fq_name)
+        self.vnc_lib.service_instance_delete(fq_name=self.si_fq_name)
     # end _delete_si
 
     @property

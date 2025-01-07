@@ -1,6 +1,4 @@
-from common.qos.base import *
-from builtins import str
-from builtins import range
+from common.qos.base import QosTestBase
 from tcutils.wrappers import preposttest_wrapper
 
 class TestQosScaling(QosTestBase):

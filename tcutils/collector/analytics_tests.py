@@ -1,5 +1,3 @@
-from __future__ import print_function
-from __future__ import division
 # Need to import path to test/fixtures and test/scripts/
 # Ex : export PYTHONPATH='$PATH:/root/test/fixtures/:/root/test/scripts/'
 #
@@ -7,16 +5,10 @@ from __future__ import division
 # You can do 'python -m testtools.run -l tests'
 # Set the env variable PARAMS_FILE to point to your ini file. Else it will try to pick params.ini in PWD
 #
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
-from builtins import range
-from past.utils import old_div
 import fixtures
 from tcutils.util import *
 import logging as LOG
 import re
-import json
 import urllib.request, urllib.error, urllib.parse
 import requests
 import time
@@ -30,7 +22,6 @@ from netaddr import *
 import random
 from tcutils.collector.opserver_introspect_utils import VerificationOpsSrvIntrospect
 from physical_router_fixture import PhysicalRouterFixture
-from tcutils.contrail_status_check import ContrailStatusChecker
 from tcutils.collector.opserver_util import OpServerUtils
 
 months = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun':
@@ -990,8 +981,6 @@ class AnalyticsVerification(fixtures.Fixture):
     @retry(delay=5, tries=10)
     def verify_vn_uve_for_vm(self, vn_fq_name=None, vm=None):
         '''Verify  vm in vn uve'''
-        result = False
-        vm_intf_lst = []
         if not vn_fq_name:
             self.logger.debug("vn name not passed")
             return False
@@ -2233,24 +2222,16 @@ class AnalyticsVerification(fixtures.Fixture):
     def verify_alarms(self, role, alarm_type='process-status', service=None, verify_alarm_cleared=False, skip_opservers=None):
         result = True
         analytics = self.inputs.collector_ips[0]
-        underlay = self.inputs.run_cmd_on_server(analytics, 'contrail-status | grep contrail-snmp-collector',
-                                                 container='analytics')
+        self.inputs.run_cmd_on_server(
+            analytics, 'contrail-status | grep contrail-snmp-collector',
+            container='analytics')
         cfgm_processes = ['contrail-config-nodemgr',
             'contrail-device-manager', 'contrail-schema', 'contrail-svc-monitor']
         db_processes = ['contrail-database-nodemgr', 'kafka']
         analytics_processes = ['contrail-query-engine', 'contrail-collector', 'contrail-analytics-nodemgr']
         control_processes = ['contrail-control',
             'contrail-control-nodemgr', 'contrail-dns', 'contrail-named']
-
-        try:
-            #WA for #1718856 vcenter sanity: Broken by other commits
-            if self.inputs.get_build_sku() not in ['kilo', 'liberty', 'mitaka']:
-                vrouter_processes = ['contrail-vrouter-agent']
-            else:
-                vrouter_processes = ['supervisor-vrouter', 'contrail-vrouter-agent']
-        except Exception as e:
-            vrouter_processes = ['contrail-vrouter-agent']
-
+        vrouter_processes = ['contrail-vrouter-agent']
         self.new_ip_addr = '10.1.1.1'
 
         if role == 'config-node':
@@ -2653,7 +2634,7 @@ class AnalyticsVerification(fixtures.Fixture):
                     self.logger.debug('Printing df -h before file creation: \n %s \n' % (status))
                     if diff:
                         self.logger.info('Creating a file of size %s GB(%s MB) to fill 91 percent of the disk space on %s' %
-                            (str(old_div(mb,1024)), str(mb), role))
+                            (str(mb // 1024), str(mb), role))
                         self.inputs.run_cmd_on_server(svc_ip, dd_cmd)
                     else:
                         self.logger.info('Disk usage is already more than 91 percent, disk usage alarm expected')

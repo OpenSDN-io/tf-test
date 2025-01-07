@@ -1,16 +1,5 @@
-from __future__ import absolute_import
 from .base import BaseMultitenancyTest
-from builtins import str
-from builtins import range
-from common.openstack_libs import ks_client as ksclient
 from vnc_api.vnc_api import *
-import uuid
-import argparse
-
-import os
-import unittest
-import fixtures
-import testtools
 import uuid
 
 from common.contrail_test_init import ContrailTestInit
@@ -27,7 +16,6 @@ from contrail_fixtures import *
 from keystone_tests import *
 from tcutils.wrappers import preposttest_wrapper
 import tcutils.util as util
-import test
 
 class TestMultitenancy(BaseMultitenancyTest):
 

@@ -1,7 +1,3 @@
-from __future__ import print_function
-from __future__ import absolute_import
-from builtins import str
-from builtins import range
 import cgitb
 cgitb.enable(format='text')
 
@@ -9,7 +5,6 @@ import logging as LOG
 
 from tcutils.verification_util import *
 from .vna_results import *
-import re
 from netaddr import *
 from tcutils.util import is_v6
 

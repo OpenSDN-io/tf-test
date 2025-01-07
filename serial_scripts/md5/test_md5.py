@@ -1,27 +1,9 @@
-from __future__ import absolute_import
 from .base import Md5Base
-from builtins import str
-import unittest
 from tcutils.wrappers import preposttest_wrapper
-from vnc_api.vnc_api import NoIdError
-from vnc_api.vnc_api import VncApi
 from common.securitygroup.verify import VerifySecGroup
-from policy_test import PolicyFixture
-from vn_test import MultipleVNFixture
-from vm_test import MultipleVMFixture
 from common.policy.config import ConfigPolicy
-from security_group import SecurityGroupFixture,get_secgrp_id_from_name
-from vn_test import VNFixture
-from vm_test import VMFixture
-from tcutils.topo.topo_helper import *
-import os
-import sys
-from tcutils.topo.sdn_topo_setup import *
 import test
-from tcutils.tcpdump_utils import *
-from time import sleep
-from tcutils.util import get_random_name
-from tcutils.contrail_status_check import *
+import re
 
 class TestMd5tests(Md5Base, VerifySecGroup, ConfigPolicy):
 
@@ -163,7 +145,7 @@ class TestMd5testsOnControl(Md5Base, VerifySecGroup, ConfigPolicy):
         else:
             return
 
-    @test.attr(type=['sanity', 'vcenter_compute', 'vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     def test_create_md5_on_control(self):
         """
@@ -191,7 +173,7 @@ class TestMd5testsOnControl(Md5Base, VerifySecGroup, ConfigPolicy):
         assert self.different_keys_md5_config()
     #end different_keys_md5
 
-    @test.attr(type=['sanity', 'vcenter_compute' 'vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     def test_check_per_peer_on_control(self):
         """

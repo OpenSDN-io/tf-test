@@ -1,9 +1,6 @@
 from common.neutron.base import BaseNeutronTest
-from builtins import str
 from vm_test import VMFixture
 from vnc_api.vnc_api import *
-from common import isolated_creds
-import os
 import re
 from contrailapi import ContrailVncApi
 from tcutils.util import get_random_name

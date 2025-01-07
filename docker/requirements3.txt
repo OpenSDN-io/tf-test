@@ -59,7 +59,6 @@ ncclient==0.6.6
 netaddr==0.7.19
 netifaces==0.10.9
 oauthlib==3.1.0
-openshift==0.13.2
 openstacksdk==0.43.0
 os-client-config==2.0.0
 os-service-types==1.7.0

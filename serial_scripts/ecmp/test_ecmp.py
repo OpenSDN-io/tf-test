@@ -1,10 +1,4 @@
 from common.base import GenericTestBase
-from builtins import range
-import os
-import fixtures
-import testtools
-import unittest
-import time
 from vn_test import *
 from floating_ip import *
 from quantum_test import *
@@ -13,15 +7,12 @@ from nova_test import *
 from vm_test import *
 from tcutils.contrail_status_check import ContrailStatusChecker
 from tcutils.wrappers import preposttest_wrapper
-from tcutils.commands import ssh, execute_cmd, execute_cmd_out
 from common.servicechain.firewall.verify import VerifySvcFirewall
 from common.ecmp.base import ECMPTestBase
 from common.ecmp.ecmp_traffic import ECMPTraffic
 from common.ecmp.ecmp_verify import ECMPVerify
 from fabric.state import connections as fab_connections
 from common.ecmp.ecmp_test_resource import ECMPSolnSetup
-from common import isolated_creds
-import inspect
 
 class TestECMPMultipleSC(GenericTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTraffic, ECMPVerify):
 

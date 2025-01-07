@@ -27,8 +27,6 @@ It also allows setting of formatting information through conf.
 
 """
 
-from builtins import str
-from builtins import object
 import inspect
 import itertools
 import logging

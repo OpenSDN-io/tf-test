@@ -110,7 +110,6 @@ upgrade=0
 upload=0
 logging=0
 logging_config=logging.conf
-send_mail=0
 concurrency=""
 parallel=0
 failure_threshold=''
@@ -146,7 +145,6 @@ while [ $# -gt 0 ]; do
     -t|--parallel) parallel=1;;
     -l|--logging) logging=1;;
     -L|--logging-config) logging_config=$2; shift;;
-    -m|--send-mail) send_mail=1;;
     -c|--concurrency) concurrency=$2; shift;;
     --contrail-fab-path) contrail_fab_path=$2; shift;;
     --test-failure-threshold) failure_threshold=$2; shift;;
@@ -187,15 +185,6 @@ function testr_init {
   if [ ! -d .testrepository ]; then
       ${wrapper} ${TESTR} init
   fi
-}
-
-function send_mail {
-  if [ $send_mail -eq 1 ] ; then
-     if [ -f report/junit-noframes.html ]; then
-        ${wrapper} ${PYTHON} tools/send_mail.py $1 $2 $3
-     fi
-  fi
-  echo "Sent mail to interested parties"
 }
 
 function run_tests_serial {
@@ -328,13 +317,6 @@ function collect_tracebacks {
     ${PYTHON} tools/collect_bts.py $TEST_CONFIG_FILE
 }
 
-function upload_to_web_server {
-  if [ $upload -eq 1 ] ; then
-      ${wrapper} ${PYTHON} tools/upload_to_webserver.py $TEST_CONFIG_FILE $REPORT_DETAILS_FILE $REPORT_FILE
-  fi
-  echo "Uploaded reports"
-}
-
 if [ $never_venv -eq 0 ]
 then
   # Remove the virtual environment if --force used
@@ -365,22 +347,7 @@ then
   fi
 fi
 
-function find_python_version {
-output="$(python --version | grep python)"
-output="$(python -c 'import sys; print(sys.version_info[:])')"
-substring='2, 6, 6'
-
-if echo "$output" | grep -q "$substring"; then
-    echo "matched";
-    return 0
-else
-    echo "no match";
-    return 1
-fi
-}
-
 function apply_patches { 
-    apply_testtools_patch_for_centos
     apply_junitxml_patch
     apply_subunitfilters_patch
 }
@@ -435,48 +402,9 @@ ${PYTHON} tools/setup_physical_routers.py $TEST_CONFIG_FILE
 )
 }
 
-function apply_testtools_patch_for_centos {
-
-find_python_version
-if [ $? -eq 0 ];then
-    patch_path=$PWD/tools/patches
-    src_path=/usr/lib/python2.6/site-packages
-    patch -p0 -N --dry-run --silent $src_path/discover.py < $patch_path/unittest2-discover.patch 2>/dev/null
-    #If the patch has not been applied then the $? which is the exit status 
-    #for last command would have a success status code = 0
-    if [ $? -eq 0 ];
-    then
-        #apply the patch
-        echo 'Applied patch'
-        patch -p0 -N $src_path/discover.py < $patch_path/unittest2-discover.patch
-    fi
-fi
-}
-
 function parse_results {
     ${PYTHON} tools/parse_result.py $result_xml $REPORT_DETAILS_FILE
     ${PYTHON} tools/parse_result.py $serial_result_xml $REPORT_DETAILS_FILE
-}
-
-function load_vcenter_templates {
-(
-export PYTHONPATH=$PATH:$PWD:$PWD/fixtures;
-${PYTHON} tools/vcenter/load_vcenter_templates.py $TEST_CONFIG_FILE
-)
-}
-
-function create_vcenter_nas_datastore {
-( 
-export PYTHONPATH=$PATH:$PWD:$PWD/fixtures;
-${PYTHON} tools/vcenter/manage_vcenter_datastore.py $TEST_CONFIG_FILE create
-)
-}
- 
-function delete_vcenter_nas_datastore {
-( 
-export PYTHONPATH=$PATH:$PWD:$PWD/fixtures;
-${PYTHON} tools/vcenter/manage_vcenter_datastore.py $TEST_CONFIG_FILE delete
-)
 }
 
 export PYTHONPATH=$PATH:$PWD/fixtures:$PWD/scripts:$PWD
@@ -496,10 +424,6 @@ fi
 check_test_discovery
 
 setup_physical_routers || die "BGP peering is not up."
-#To delete nfs datastore in case of
-create_vcenter_nas_datastore
-#load vcenter templates
-load_vcenter_templates
 
 if [[ -n $JENKINS_TRIGGERED && $JENKINS_TRIGGERED -eq 1 ]]; then
     export REPORT_DETAILS_FILE=report_details_${SCRIPT_TS}_$(date +"%Y_%m_%d_%H_%M_%S").ini
@@ -524,9 +448,7 @@ if [[ ! -z $path ]];then
             parse_results
             generate_html 
             collect_tracebacks
-            upload_to_web_server
             sleep 2
-            send_mail $TEST_CONFIG_FILE $REPORT_FILE $REPORT_DETAILS_FILE
         done
         
     retval=$?
@@ -555,18 +477,12 @@ if [[ -z $path ]] && [[ -z $testrargs ]];then
 fi
 sleep 2
 
-#To delete nfs datastore in case of
-#vrouter gateway sanity
-delete_vcenter_nas_datastore
-
 ${PYTHON} tools/report_gen.py $TEST_CONFIG_FILE $REPORT_DETAILS_FILE
 echo "Generated report_details* file: $REPORT_DETAILS_FILE"
 parse_results
 generate_html
 collect_tracebacks
-upload_to_web_server
 sleep 2
-send_mail $TEST_CONFIG_FILE $REPORT_FILE $REPORT_DETAILS_FILE
 retval=$?
 # exit value more than 300 or so will revert the exit value in bash to a lower number, so checking that.
 if [ $retval -lt 101 ]; then

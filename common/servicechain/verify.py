@@ -1,24 +1,16 @@
-from __future__ import print_function
 import os
 import sys
 from time import sleep
 
-from tcutils.util import get_random_cidr
 from tcutils.util import get_random_name
-import fixtures
-import testtools
-import unittest
-import types
-import time
 trafficdir = os.path.join(os.path.dirname(__file__), '../../tcutils/pkgs/Traffic')
 sys.path.append(trafficdir)
 from tcutils.util import retry
 from tcutils.commands import ssh
 from traffic.core.stream import Stream
-from traffic.core.profile import StandardProfile, ContinuousProfile, ContinuousSportRange
+from traffic.core.profile import StandardProfile, ContinuousProfile
 from traffic.core.helpers import Host, Sender, Receiver
 from common.servicechain.config import ConfigSvcChain
-from common.neutron.base import BaseNeutronTest
 from tcutils.util import *
 from tcutils.traffic_utils.iperf3_traffic import Iperf3
 from collections import OrderedDict

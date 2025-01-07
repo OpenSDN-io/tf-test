@@ -1,12 +1,7 @@
-from __future__ import absolute_import
-from tcutils.wrappers import preposttest_wrapper
-import os
 import time
-import test
 from vn_test import *
 from vm_test import *
 from tcutils.util import *
-from vcenter import *
 from common.contrail_test_init import *
 from common.base import *
 from common.device_connection import NetconfConnection

@@ -1,6 +1,3 @@
-from builtins import str
-from builtins import object
-import re
 import test_v1
 from netaddr import *
 from vnc_api.vnc_api import *
@@ -13,7 +10,7 @@ from project_test import ProjectFixture
 from security_group import SecurityGroupFixture
 from floating_ip import FloatingIPFixture
 from interface_route_table_fixture import InterfaceRouteTableFixture
-from tcutils.util import get_random_name, get_random_cidr, is_v6, get_random_vxlan_id
+from tcutils.util import get_random_name, get_random_cidr, get_random_vxlan_id
 from tcutils.contrail_status_check import ContrailStatusChecker
 from physical_device_fixture import PhysicalDeviceFixture
 from pif_fixture import PhysicalInterfaceFixture
@@ -135,17 +132,9 @@ class GenericTestBase(test_v1.BaseTestCase_v1, _GenericTestBaseMethods):
         cls.api_s_inspect = cls.connections.api_server_inspect
         cls.orch = cls.connections.orch
         try:
-            address_family = cls.address_family or 'v4'
+            _ = cls.address_family or 'v4'
         except AttributeError:
             cls.address_family = 'v4'
-        try:
-            vro_based = cls.vro_based or False
-            if vro_based:
-                if cls.inputs.vro_server:
-                    cls.orch = cls.connections.orch = cls.connections.vro_orch
-                    cls.inputs.enable_vro(True)
-        except:
-            pass
     # end setUpClass
 
     @classmethod
@@ -831,16 +820,6 @@ class GenericTestBase(test_v1.BaseTestCase_v1, _GenericTestBaseMethods):
     @classmethod
     def get_af(cls):
         return cls.address_family
-    @classmethod
-    def set_vro(cls, flag=False):
-        cls.vro_based = flag
-
-    @classmethod
-    def is_vro_based(cls):
-        try:
-            return cls.vro_based
-        except:
-            return False
 
     @classmethod
     def safe_cleanup(cls, obj_name):

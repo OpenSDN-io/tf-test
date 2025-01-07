@@ -1,26 +1,17 @@
 ''' This module provides utils for setting up sdn topology given the topo inputs'''
-from __future__ import print_function
-from __future__ import absolute_import
-from builtins import str
-from builtins import range
 import os
-import copy
-import fixtures
-from common.contrail_test_init import ContrailTestInit
 from vn_test import *
 from vn_policy_test import *
 from quantum_test import *
 from vnc_api_test import *
 from nova_test import *
 from vm_test import *
-from common.connections import ContrailConnections
 from floating_ip import *
 from policy_test import *
 from contrail_fixtures import *
 from user_test import UserFixture
 from tcutils.agent.vna_introspect_utils import *
 from .topo_helper import *
-from vnc_api import vnc_api
 from vnc_api.gen.resource_test import *
 from netaddr import *
 from common.policy import policy_test_helper
@@ -144,7 +135,7 @@ def create_sg_contrail(self):
 
 
 def createPolicy(self, option='openstack'):
-    if option == 'openstack' or self.inputs.orchestrator == 'vcenter':
+    if option == 'openstack':
         createPolicyFixtures(self)
     elif option == 'contrail':
         createPolicyContrail(self)
@@ -274,7 +265,7 @@ def createVN_Policy(self, option='openstack'):
 
 
 def createVN(self, option='openstack'):
-    if option == 'openstack' or self.inputs.orchestrator == 'vcenter':
+    if option == 'openstack':
         createVNOrch(self)
     elif option == 'contrail':
         createVNContrail(self)

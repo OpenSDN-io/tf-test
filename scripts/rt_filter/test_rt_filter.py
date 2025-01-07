@@ -1,7 +1,4 @@
-from __future__ import absolute_import
 from .base import BaseRtFilterTest
-import os
-import sys
 from vn_test import *
 from vm_test import *
 from floating_ip import *
@@ -9,14 +6,6 @@ from policy_test import *
 from user_test import UserFixture
 from multiple_vn_vm_test import *
 from tcutils.wrappers import preposttest_wrapper
-sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
-from tcutils.pkgs.Traffic.traffic.core.stream import Stream
-from tcutils.pkgs.Traffic.traffic.core.profile import create, ContinuousProfile
-from tcutils.pkgs.Traffic.traffic.core.helpers import Host
-from tcutils.pkgs.Traffic.traffic.core.helpers import Sender, Receiver
-from common import isolated_creds
-import inspect
-
 import test
 
 
@@ -59,7 +48,7 @@ class TestBasicRTFilter(BaseRtFilterTest):
         return True
     # end test_vn_rt_entry
 
-    @test.attr(type=['cb_sanity', 'sanity', 'vcenter_compute', 'vcenter'])
+    @test.attr(type=['cb_sanity', 'sanity'])
     @preposttest_wrapper
     def test_user_def_rt_entry(self):
         '''
@@ -171,7 +160,7 @@ class TestBasicRTFilter(BaseRtFilterTest):
         return True
     # end test_dep_routes_two_vns_with_same_rt
 
-    @test.attr(type=['cb_sanity', 'sanity', 'vcenter_compute', 'vcenter'])
+    @test.attr(type=['cb_sanity', 'sanity'])
     @preposttest_wrapper
     def test_rt_CEM_22032(self):
         '''

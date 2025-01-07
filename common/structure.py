@@ -1,5 +1,3 @@
-from builtins import zip
-from builtins import object
 class DynamicArgs(object):
     """ Class variable that specifies expected fields
         This class helps initialiazing the __init__() for

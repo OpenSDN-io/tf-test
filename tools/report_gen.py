@@ -1,7 +1,3 @@
-from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
 import os
 import re
 import sys
@@ -10,9 +6,8 @@ import configparser
 import datetime
 import logging
 
-from fabric.api import env, run, cd, local
-from fabric.operations import get, put
-from fabric.contrib.files import exists
+from fabric.api import run, local
+from fabric.operations import put
 from fabric.context_managers import settings, hide
 from fabric.exceptions import NetworkError
 from tcutils.util import *
@@ -175,7 +170,7 @@ class ContrailReportInit(TestInputs):
     def get_build_id(self):
         if self.build_id:
             return self.build_id
-        cmd = "rpm -q --queryformat '%{VERSION}-' python3-contrail; rpm -q --queryformat '%{RELEASE}' python3-contrail | awk -F'.' '{print $1}'"
+        cmd = "rpm -q --queryformat '%{VERSION}-' contrail-lib; rpm -q --queryformat '%{RELEASE}' contrail-lib | awk -F'.' '{print $1}'"
         build_id = self.get_os_env("BUILD_ID")
         if not build_id:
             build_id = local(cmd, capture=True)

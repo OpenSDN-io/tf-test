@@ -1,8 +1,5 @@
 '''*******AUTO-GENERATED TOPOLOGY*********'''
 
-
-from builtins import zip
-from builtins import object
 class SystestTopoSingleProject(object):
 
     def __init__(

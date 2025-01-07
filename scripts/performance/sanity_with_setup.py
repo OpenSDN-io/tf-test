@@ -1,11 +1,7 @@
-from __future__ import print_function
 import os
-import fixtures
 import testtools
 
-from common.contrail_test_init import ContrailTestInit
 from contrail_fixtures import *
-from common.connections import ContrailConnections
 from testresources import ResourcedTestCase
 from sanity_resource import SolnSetupResource
 from tcutils.wrappers import preposttest_wrapper

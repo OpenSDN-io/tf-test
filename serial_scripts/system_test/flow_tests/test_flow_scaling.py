@@ -1,19 +1,12 @@
-from __future__ import absolute_import
-from __future__ import division
-from builtins import range
-from past.utils import old_div
 from serial_scripts.system_test.flow_tests.base import BaseFlowTest
 from tcutils.topo.topo_helper import *
 from tcutils.wrappers import preposttest_wrapper
 import time
-import datetime
 import threading
-import socket
 from . import flow_test_utils
 from compute_node_test import ComputeNodeFixture
 from . import flow_scale_topo
-from tcutils.test_lib.test_utils import assertEqual, get_ip_list_from_prefix
-import math
+from tcutils.test_lib.test_utils import assertEqual
 from tcutils.topo.sdn_topo_setup import *
 
 
@@ -156,7 +149,7 @@ class TestFlowScaling(BaseFlowTest):
                 if src_vm == vm_name:
                     src_vm_obj = config_topo['vm'][vm_name]
 
-            forward_flows = int(old_div(data['num_flows'], fwd_flow_factor))
+            forward_flows = data['num_flows'] // fwd_flow_factor
             dst_max_port = dst_min_port + forward_flows
             traffic_scenarios[profile] = [src_vm_obj,
                                          src_vm_obj.vm_ip,  # src_ip_min

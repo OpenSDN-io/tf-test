@@ -1,24 +1,15 @@
-from __future__ import absolute_import, unicode_literals
 from vnc_api.vnc_api import *
-from vcenter import *
 from tcutils.util import *
 import test
 import time
-from builtins import str
-from builtins import range
 from vn_test import *
 from vm_test import *
 from floating_ip import *
 from policy_test import *
-from user_test import UserFixture
 from multiple_vn_vm_test import *
 from tcutils.wrappers import preposttest_wrapper
-sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
-from common.connections import ContrailConnections
-from common.device_connection import NetconfConnection, SSHConnection
-from common.svc_health_check.base import BaseHC
+from common.device_connection import NetconfConnection
 from common.vrouter.base import BaseVrouterTest
-from physical_router_fixture import PhysicalRouterFixture
 from common.maciplearning.base import BaseMacIpLearningTest
 from common.bgpaas.base import BaseBGPaaS
 from common.static_route_table.base import StaticRouteTableBase

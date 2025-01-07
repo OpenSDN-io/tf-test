@@ -1,14 +1,9 @@
-from builtins import str
-from builtins import range
-import test_v1
-from common.connections import ContrailConnections
 from tcutils.util import *
 from tcutils.tcpdump_utils import *
 from compute_node_test import ComputeNodeFixture
 from vnc_api.vnc_api import *
 from tcutils.traffic_utils.base_traffic import *
 from tcutils.traffic_utils.hping_traffic import Hping3
-from tcutils.traffic_utils.ping_traffic import Ping
 from common.neutron.base import BaseNeutronTest
 import random
 from security_group import get_secgrp_id_from_name, SecurityGroupFixture
@@ -17,8 +12,6 @@ from policy_test import PolicyFixture
 from vn_policy_test import VN_Policy_Fixture
 from port_fixture import PortFixture
 import ipaddress
-from common.servicechain.config import ConfigSvcChain
-from common.servicechain.verify import VerifySvcChain
 from svc_hc_fixture import HealthCheckFixture
 from common.servicechain.mirror.verify import VerifySvcMirror
 

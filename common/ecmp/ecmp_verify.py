@@ -1,18 +1,9 @@
-from builtins import object
-import os
-import fixtures
-import testtools
-import unittest
-import time
-from common.connections import ContrailConnections
-from common.contrail_test_init import ContrailTestInit
 from vn_test import *
 from floating_ip import *
 from quantum_test import *
 from vnc_api_test import *
 from nova_test import *
 from vm_test import *
-from tcutils.wrappers import preposttest_wrapper
 
 
 class ECMPVerify(object):
@@ -53,7 +44,7 @@ class ECMPVerify(object):
                 self.logger.info('%s has %s as left_ip and %s as right_ip' %
                              (svc_obj.name, left_ip[svm_id], right_ip[svm_id]))
             except Exception as e:
-                #For vcenter only setup, nova not present
+                #For ?vcenter? only setup, nova not present
                 #derive ips from orchestrator get_vm_by_id
                 orch=src_vm.orch
                 svc_obj=orch.get_vm_by_id(svm_id)

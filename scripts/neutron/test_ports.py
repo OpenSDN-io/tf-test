@@ -6,16 +6,11 @@
 # Set the env variable PARAMS_FILE to point to your ini file. Else it will try to pick params.ini in PWD
 #
 from common.neutron.base import BaseNeutronTest
-from builtins import str
-import os
-import fixtures
-import testtools
 import time
 
 from vn_test import *
 from vm_test import *
 from port_fixture import PortFixture
-from common.connections import ContrailConnections
 from tcutils.wrappers import preposttest_wrapper
 
 import test
@@ -146,7 +141,7 @@ class TestPorts(BaseNeutronTest):
                                                 vm2_fixture.vm_ip)
     # end test_ports_specific_subnet
 
-    @test.attr(type=['sanity', 'vcenter_compute','dev_sanity_dpdk'])
+    @test.attr(type=['sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_ports_specific_subnet_ip(self):
         '''Create ports with specific Subnet and IP
@@ -1196,7 +1191,7 @@ class TestPorts(BaseNeutronTest):
                                                 vm_test_fixture.vm_ip)
     # end test_aap_with_zero_mac
 
-    @test.attr(type=['sanity', 'vcenter_compute','dev_sanity_dpdk'])
+    @test.attr(type=['sanity','dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_ports_bindings(self):
         '''

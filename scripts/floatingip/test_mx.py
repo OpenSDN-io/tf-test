@@ -1,5 +1,3 @@
-from __future__ import print_function
-from __future__ import absolute_import
 # Need to import path to test/fixtures and test/scripts/
 # Ex : export PYTHONPATH='$PATH:/root/test/fixtures/:/root/test/scripts/'
 #
@@ -9,23 +7,13 @@ from __future__ import absolute_import
 # Set the env variable MX_GW_TESTto 1 to run the test
 #
 from . import base
-from builtins import str
-from builtins import range
 import os
-from common.openstack_libs import nova_client as mynovaclient
-from common.openstack_libs import nova_exception as novaException
-import unittest
-import fixtures
-import testtools
-import socket
 import test
-from common.contrail_test_init import ContrailTestInit
 from vn_test import *
 from quantum_test import *
 from vnc_api_test import *
 from nova_test import *
 from vm_test import *
-from common.connections import ContrailConnections
 from floating_ip import *
 from policy_test import *
 from contrail_fixtures import *
@@ -48,7 +36,7 @@ class TestSanity_MX(base.FloatingIpBaseTest):
             return (False, 'Skipping Test. Env variable MX_GW_TEST is not set')
         return (True, None)
 
-    @test.attr(type=['mx_test', 'sanity', 'vcenter', 'vcenter_compute'])
+    @test.attr(type=['mx_test', 'sanity'])
     @preposttest_wrapper
     def test_mx_gateway(self):
         '''

@@ -1,17 +1,10 @@
-from builtins import str
-from builtins import object
-import fixtures
-import testtools
-import os
-from common.connections import ContrailConnections
-from common.contrail_test_init import ContrailTestInit
 from vn_test import *
 from vm_test import *
 from quantum_test import *
 from vnc_api_test import *
 from nova_test import *
 from floating_ip import *
-from testresources import OptimisingTestSuite, TestResource
+from testresources import TestResource
 
 
 class ECMPSolnSetup(object):

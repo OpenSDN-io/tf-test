@@ -692,7 +692,4 @@ class SecurityGroupMultiProjectIpv6(SecurityGroupMultiProject):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported(
-                'ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)

@@ -1,26 +1,15 @@
-from __future__ import absolute_import, unicode_literals
+import os
+import sys
 from .base import BaseVnVmTest
-from builtins import str
-from builtins import range
-import traffic_tests
 from vn_test import *
 from vm_test import *
 from floating_ip import *
 from policy_test import *
-from user_test import UserFixture
 from multiple_vn_vm_test import *
 from tcutils.wrappers import preposttest_wrapper
 sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
-from traffic.core.stream import Stream
-from traffic.core.profile import create, ContinuousProfile
-from traffic.core.helpers import Host
-from traffic.core.helpers import Sender, Receiver
-from common import isolated_creds
-import inspect
 import time
-from tcutils.commands import ssh, execute_cmd, execute_cmd_out
 from tcutils.util import get_subnet_broadcast
-from tcutils.util import skip_because
 import test
 
 class TestBasicVMVN(BaseVnVmTest):
@@ -37,11 +26,8 @@ class TestBasicVMVN(BaseVnVmTest):
         pass
     #end runTes
 
-    @skip_because(orchestrator = 'vcenter', hypervisor='docker',msg='Bug 1455944:VM image with cloud-init package needed')
-    # Removing ci_sanity tag till microservice provisioning supports the same
-    @test.attr(type=['cb_sanity', 'sanity', 'suite1'])
+    @test.attr(type=['ci_sanity', 'cb_sanity', 'sanity', 'suite1'])
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter')
     def test_metadata_service(self):
         '''
         Description: Test to validate metadata service on VM creation.
@@ -86,7 +72,6 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
 
     @test.attr(type=['suite1'])
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter', address_family = 'v6')
     def test_ipam_add_delete(self):
         '''
          Description: Test to validate IPAM creation, association of a VN and creating VMs in the VN. Ping b/w the VMs should be successful.
@@ -116,10 +101,8 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
         return True
 
 
-    @test.attr(type=['sanity', 'suite1', 'ci_sanity', 'vcenter_compute', 'ci_contrail_go_kolla_ocata_sanity'])
+    @test.attr(type=['sanity', 'suite1', 'ci_sanity', 'ci_contrail_go_kolla_ocata_sanity'])
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter',address_family = 'v6',
-        hypervisor='docker',msg='Bug 1461423:Need privileged access')
     def test_ping_within_vn_two_vms_two_different_subnets(self):
         '''
         Description:  Validate Ping between 2 VMs in the same VN, 2 VMs in different VN
@@ -229,7 +212,7 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
         return True
     # end test_vm_add_delete
 
-    @test.attr(type=['suite1', 'upgrade','vrouter_gw', 'vcenter_compute', 'ci_contrail_go_kolla_ocata_sanity'])
+    @test.attr(type=['suite1', 'upgrade','vrouter_gw', 'ci_contrail_go_kolla_ocata_sanity'])
     @preposttest_wrapper
     def test_ping_within_vn(self):
         '''
@@ -269,11 +252,10 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
         return True
     # end test_ping_within_vn
 
-    @test.attr(type=['cb_sanity', 'sanity', 'ci_sanity', 'vcenter',
-                     'suite1', 'vcenter_compute', 'ci_contrail_go_kolla_ocata_sanity',
+    @test.attr(type=['cb_sanity', 'sanity', 'ci_sanity',
+                     'suite1', 'ci_contrail_go_kolla_ocata_sanity',
                      'dev_sanity_dpdk'])
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter',address_family = 'v6')
     def test_generic_link_local_service(self):
         '''
         Description: Test to validate generic linklocal service - running nova list from vm.

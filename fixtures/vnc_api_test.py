@@ -1,17 +1,10 @@
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
 import fixtures
 import os
-import uuid
 
 from vnc_api.vnc_api import *
-from vnc_api.exceptions import NoIdError
 
 from contrailapi import ContrailVncApi
-from tcutils.util import get_dashed_uuid
 from openstack import OpenstackAuth, OpenstackOrchestrator
-from vcenter import VcenterAuth, VcenterOrchestrator
 from common import log_orig as contrail_logging
 from configparser import ConfigParser, DuplicateSectionError
 
@@ -176,12 +169,6 @@ class VncLibFixture(fixtures.Fixture):
                                     insecure=self.insecure,
                                     logger=self.logger,
                                     scope='project')
-            elif self.orchestrator == 'vcenter':
-                self.auth_client = VcenterAuth(self.username,
-                                                self.password,
-                                                self.project_name,
-                                                self.inputs
-                                                )
         if self.orch:
             self.vnc_h = self.orch.vnc_h
         else:
@@ -253,25 +240,13 @@ class VncLibFixture(fixtures.Fixture):
     def get_orch_h(self):
         if self.connections:
             return self.connections.orch
-        else:
-            if self.orchestrator == 'openstack':
-                return OpenstackOrchestrator(
-                    vnclib=self.vnc_api_h,
-                    logger=self.logger,
-                    auth_h=self.auth_client,
-                    inputs=self.inputs)
-            elif self.orchestrator == 'vcenter':
-                vcenter_dc = self.inputs.vcenter_dc if self.inputs else \
-                             os.getenv('VCENTER_DC', None)
-                return VcenterOrchestrator(user=self.username,
-                    pwd=self.password,
-                    host=self.inputs.vcenter_server,
-                    port=self.inputs.vcenter_port,
-                    dc_name=vcenter_dc,
-                    vnc=self.vnc_api_h,
-                    inputs=self.inputs,
-                    logger=self.logger)
-        return
+        if self.orchestrator == 'openstack':
+            return OpenstackOrchestrator(
+                vnclib=self.vnc_api_h,
+                logger=self.logger,
+                auth_h=self.auth_client,
+                inputs=self.inputs)
+        return None
 
     def get_neutron_handle(self):
         if self.neutron_handle:

@@ -1,7 +1,3 @@
-
-
-from builtins import zip
-from builtins import object
 class FlowScaleTopology(object):
 
     def __init__(

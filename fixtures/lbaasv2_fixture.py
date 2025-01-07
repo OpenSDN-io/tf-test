@@ -1,5 +1,3 @@
-from builtins import zip
-from builtins import str
 import vnc_api_test
 from compute_node_test import ComputeNodeFixture
 from tcutils.util import get_random_name, retry
@@ -28,11 +26,7 @@ class LBBaseFixture(vnc_api_test.VncLibFixture):
         self.vip_ip = kwargs.get('vip_ip', None)
         self.fip_id = kwargs.get('fip_id', None)
         self.fip_net_id = kwargs.get('fip_net_id', None)
-        orch = kwargs.get('orchestrator',None)
-        if orch == 'vcenter':
-            self.api_type = 'contrail'
-        else:
-            self.api_type = kwargs.get('api_type', 'neutron')
+        self.api_type = kwargs.get('api_type', 'neutron')
         self.fip_ip = None
         self.lb_present = False
         self.is_fip_active = False

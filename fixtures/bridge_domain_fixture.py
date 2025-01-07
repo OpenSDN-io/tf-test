@@ -1,4 +1,3 @@
-from builtins import str
 from tcutils.util import *
 from vnc_api.vnc_api import *
 import vnc_api_test

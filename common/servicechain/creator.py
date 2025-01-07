@@ -1,7 +1,4 @@
-from builtins import range
-from builtins import object
 import copy
-import pprint
 import itertools
 
 from common.servicechain.config import *

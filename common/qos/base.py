@@ -1,7 +1,3 @@
-from builtins import hex
-from builtins import str
-from builtins import range
-from builtins import object
 import testtools
 import re
 from common.neutron.base import BaseNeutronTest

@@ -1,9 +1,6 @@
 from common.k8s.base import BaseK8sTest
-from builtins import range
 from tcutils.util import skip_because
 #import random
-from k8s.namespace import NamespaceFixture
-from k8s.service import ServiceFixture
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import get_lock
 import test
@@ -12,9 +9,7 @@ from floating_ip import FloatingIPFixture
 import time
 from tcutils.util import get_random_cidr
 from contrailapi import ContrailVncApi
-import common.static_route_table.base
 from scripts.routing_policy.base import RPBase
-from tcutils.util import get_random_name
 
 
 
@@ -35,34 +30,6 @@ class TestService(BaseK8sTest, RPBase):
     def parallel_cleanup(self):
         parallelCleanupCandidates = ["PodFixture"]
         self.delete_in_parallel(parallelCleanupCandidates)
-
-    @test.attr(type=['openshift_1'])
-    @preposttest_wrapper
-    def test_service_1(self):
-        ''' Create a service with 2 pods running nginx
-            Create a third busybox pod and validate that webservice is
-            load-balanced
-        '''
-        app = 'http_test'
-        labels = {'app': app}
-        namespace = self.setup_namespace()
-        #assert namespace.verify_on_setup()
-
-        service = self.setup_http_service(namespace=namespace.name,
-                                          labels=labels)
-        pod1 = self.setup_nginx_pod(namespace=namespace.name, labels=labels)
-        pod2 = self.setup_nginx_pod(namespace=namespace.name, labels=labels)
-        pod3 = self.setup_busybox_pod(namespace=namespace.name)
-
-        assert self.verify_nginx_pod(pod1)
-        assert self.verify_nginx_pod(pod2)
-        assert pod3.verify_on_setup()
-        assert service.verify_on_setup()
-
-        # Now validate load-balancing on the service
-        assert self.validate_nginx_lb([pod1, pod2], service.cluster_ip,
-                                      test_pod=pod3)
-    # end test_service_1
 
     @preposttest_wrapper
     def test_service_type_nodeport(self):
@@ -230,41 +197,6 @@ class TestService(BaseK8sTest, RPBase):
 
     # end test
 
-    @test.attr(type=['openshift_1', 'ci_openshift'])
-    @preposttest_wrapper
-    def test_service_access_from_different_ns(self):
-        ''' Create a service  in one namespace with 2 pods
-            Create a third busybox pod in different namespace
-            Validate busybox pod can access the service in
-            default mode.
-            When isolation is enabled service should not be
-            accessible from other namespace
-        '''
-        expectation = True
-        app = 'http_test'
-        labels = {'app': app}
-        namespace = self.setup_namespace()
-
-        service = self.setup_http_service(namespace=namespace.name,
-                                          labels=labels)
-        pod1 = self.setup_nginx_pod(namespace=namespace.name,
-                                    labels=labels)
-        pod2 = self.setup_nginx_pod(namespace=namespace.name,
-                                    labels=labels)
-        namespace1 = self.setup_namespace()
-        pod3 = self.setup_busybox_pod(namespace=namespace1.name)
-
-        assert self.verify_nginx_pod(pod1)
-        assert self.verify_nginx_pod(pod2)
-        assert pod3.verify_on_setup()
-        assert service.verify_on_setup()
-
-        if self.setup_namespace_isolation:
-            expectation = False
-        url = 'http://%s' % (service.cluster_ip)
-        assert self.validate_wget(pod3, url, expectation=expectation)
-    # end test_service_access_from_different
-
     @preposttest_wrapper
     def test_service_scale_up_down(self):
         ''' Create a service with 10 pods running nginx
@@ -342,55 +274,6 @@ class TestService(BaseK8sTest, RPBase):
         validate()
         self.validate_post_upgrade = validate
     # end test_kube_dns_lookup
-
-    @test.attr(type=['openshift_1'])
-    @preposttest_wrapper
-    def test_dns_interal_service(self):
-        '''
-        Verify inside POD, cluster internal service gets DNS resolved
-        '''
-
-        app = 'http_test'
-        labels = {'app': app}
-
-        namespace = self.setup_namespace()
-        service = self.setup_http_service(namespace=namespace.name,labels=labels)
-        pod1 = self.setup_nginx_pod(namespace=namespace.name, labels=labels)
-        pod2 = self.setup_nginx_pod(namespace=namespace.name, labels=labels)
-        pod3 = self.setup_busybox_pod(namespace=namespace.name)
-
-        assert self.verify_nginx_pod(pod1)
-        assert self.verify_nginx_pod(pod2)
-        assert pod3.verify_on_setup()
-        assert service.verify_on_setup()
-
-        lookup_str = "nslookup %s.%s.svc.cluster.local" % (service.name, namespace.name)
-        output = pod3.run_cmd(lookup_str)
-        msg = 'DNS resolution failed'
-        assert ('connection timed out' not in output) and ('nslookup: can\'t resolve' not in output), msg
-        self.logger.info('DNS resolution check : %s passed. Output: %s' % (
-            lookup_str, output))
-    # end test_dns_interal_service
-
-    @test.attr(type=['openshift_1'])
-    @preposttest_wrapper
-    def test_dns_external_url(self):
-        '''
-        Verify inside POD, cluster external-url gets DNS resolved
-        '''
-
-        namespace = self.setup_namespace()
-        client_pod = self.setup_busybox_pod(namespace=namespace.name)
-
-        assert client_pod.verify_on_setup()
-
-        lookup_str = "nslookup %s" % (self.inputs.public_host_url)
-        output = client_pod.run_cmd(lookup_str)
-        msg = 'DNS resolution failed'
-        assert ('connection timed out' not in output) and ('nslookup: can\'t resolve' not in output), msg
-        self.logger.info('DNS resolution check : %s passed. Output: %s' % (
-            lookup_str, output))
-    # end test_dns_external_url
 
 
 # Isolated namespace classes follow

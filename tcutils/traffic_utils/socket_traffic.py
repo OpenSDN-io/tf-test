@@ -1,10 +1,8 @@
-from builtins import object
 import re
 import os
-import sys
 from tcutils.util import get_random_name
 from vm_test import VMFixture
-from bms_fixture import BMSFixture
+
 dir_path = os.path.dirname(os.path.realpath(__file__))
 TCPSERVER = dir_path+'/../tcpechoserver.py'
 TCPCLIENT = dir_path+'/../tcpechoclient.py'

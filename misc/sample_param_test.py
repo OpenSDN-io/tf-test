@@ -24,13 +24,11 @@ from floating_ip import *
 from policy_test import *
 from multiple_vn_vm_test import *
 from contrail_fixtures import *
-from tcutils.wrappers import prepost_wrapper
-from tcutils.poc import (TemplateTestCase, template, Call)
+from tcutils.poc import TemplateTestCase, template
 from test_arguments import *
-from future.utils import with_metaclass
 
 
-class TestSanityFixture(with_metaclass(TemplateTestCase, type('NewBase', (testtools.TestCase, fixtures.TestWithFixtures), {}))):
+class TestSanityFixture(type('NewBase', (testtools.TestCase, fixtures.TestWithFixtures), {}), metaclass=TemplateTestCase):
 
     def setUp(self):
         super(TestSanityFixture, self).setUp()

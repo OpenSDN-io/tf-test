@@ -3,13 +3,13 @@ from common.servicechain.firewall.verify import VerifySvcFirewall
 from tcutils.wrappers import preposttest_wrapper
 import test
 import time
-from common import isolated_creds
 from tcutils.util import get_random_cidr
 from tcutils.util import get_random_name
 
+
 class TestSvcHC(BaseHC, VerifySvcFirewall):
 
-    @test.attr(type=['sanity','vcenter'])
+    @test.attr(type=['sanity'])
     @preposttest_wrapper
     def test_svc_hc_basic(self):
         ret_dict = self.verify_svc_chain(service_mode='in-network-nat',

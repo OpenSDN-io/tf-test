@@ -1,7 +1,3 @@
-from __future__ import division
-from builtins import range
-from builtins import object
-from past.utils import old_div
 from webui.webui_common import *
 import re
 
@@ -177,7 +173,7 @@ class WebuiEdit(object):
                                   elements=True, index=3)
                 self.ui.send_keys(dhcp_option[0], 'dhcp_option_name', 'name', clear=True)
                 self.ui.send_keys(dhcp_option[1], 'dhcp_option_value', 'name', clear=True)
-                self.ui.send_keys(old_div(int(dhcp_option[1]),8), 'dhcp_option_value_bytes',
+                self.ui.send_keys((int(dhcp_option[1]) // 8), 'dhcp_option_value_bytes',
                               'name', clear=True)
                 self.ui.click_on_create(option.strip('s'),
                                     option.strip('s').lower(), save=True)

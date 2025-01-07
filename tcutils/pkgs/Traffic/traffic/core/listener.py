@@ -1,18 +1,15 @@
 """Module for creating socket to receive packets.
 """
-from builtins import str
-from builtins import object
 import errno
 import socket
 import signal
 import traceback
 from select import select
-from multiprocessing import Process, Queue
+from multiprocessing import Process
 from optparse import OptionParser
 
 from scapy.data import *
 from scapy.config import conf
-from scapy.utils import PcapReader
 from scapy import plist
 from scapy.layers.inet import IP, TCP, UDP, ICMP
 from scapy.layers.inet6 import IPv6, ICMPv6EchoRequest

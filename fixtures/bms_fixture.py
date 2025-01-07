@@ -1,8 +1,6 @@
-from builtins import str
 import re
 import copy
 import time
-import logging
 import fixtures
 import string
 from tcutils.util import retry, search_arp_entry, get_random_name

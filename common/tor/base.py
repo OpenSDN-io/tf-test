@@ -1,18 +1,13 @@
-from builtins import str
-from builtins import range
 import time
 from netaddr import *
 from random import randint
 
 from common.neutron.base import BaseNeutronTest
 
-from policy_test import PolicyFixture, copy
 from pif_fixture import PhysicalInterfaceFixture
 from lif_fixture import LogicalInterfaceFixture
 from physical_router_fixture import PhysicalRouterFixture
 from host_endpoint import HostEndpointFixture
-from tor_fixture import ToRFixtureFactory
-import test
 from tcutils.tcpdump_utils import search_in_pcap, delete_pcap
 from vm_test import VMFixture
 

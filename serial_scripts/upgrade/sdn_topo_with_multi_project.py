@@ -1,8 +1,5 @@
 '''*******AUTO-GENERATED TOPOLOGY*********'''
-from __future__ import print_function
 
-
-from builtins import object
 class sdn_topo_with_multi_project(object):
 
     def __init__(self, domain='default-domain'):

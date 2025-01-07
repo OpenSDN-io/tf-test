@@ -1,17 +1,12 @@
-from __future__ import absolute_import
 from .base import BackupRestoreBaseTest
 #Define environment variable FABRIC_UTILS_PATH and provide path to fabric_utils before running
-import time
 import os
 from contrail_fixtures import *
-import testtools
 from tcutils.commands import *
 from fabric.context_managers import settings
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import *
 from fabric.api import run
-from fabric.state import connections
-import test
 from upgrade.verify import VerifyFeatureTestCases
 
 class TestBackupRestore(BackupRestoreBaseTest,VerifyFeatureTestCases):

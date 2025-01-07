@@ -1,14 +1,8 @@
-from builtins import range
-import os
-import fixtures
-import testtools
 import time
 
-from common.connections import ContrailConnections
 from tcutils.wrappers import preposttest_wrapper
 
 from common.tor.base import *
-import test
 from tcutils.util import *
 
 from vn_test import VNFixture

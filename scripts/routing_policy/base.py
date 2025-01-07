@@ -1,11 +1,7 @@
-from builtins import str
 import test_v1
-import os
 import re
 from tcutils.util import get_random_name, retry
 from vnc_api.vnc_api import *
-from fabric.api import run, hide, settings
-from time import sleep
 from tcutils.util import get_random_cidr
 from random import randint
 

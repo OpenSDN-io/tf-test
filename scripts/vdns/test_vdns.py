@@ -1,4 +1,3 @@
-from __future__ import print_function
 # Need to import path to test/fixtures and test/scripts/
 # Ex : export PYTHONPATH='$PATH:/root/test/fixtures/:/root/test/scripts/'
 #
@@ -7,21 +6,13 @@ from __future__ import print_function
 # Set the env variable PARAMS_FILE to point to your ini file. Else it will try to pick params.ini in PWD
 #
 from common.vdns.base import BasevDNSTest
-from builtins import str
-from builtins import range
 import os
 import unittest
-import fixtures
-import testtools
-import traceback
 
 from policy_test import *
 from multiple_vn_vm_test import *
 from tcutils.wrappers import preposttest_wrapper
 from tcutils.util import skip_because
-from common import isolated_creds
-import inspect
-from vnc_api import vnc_api
 from vnc_api.gen.resource_test import *
 from vdns_fixture import *
 from floating_ip import *
@@ -36,9 +27,6 @@ from tcutils.tcpdump_utils import *
 sys.path.append(os.path.realpath('tcutils/traffic_utils'))
 from base_traffic import *
 sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
-from traffic.core.stream import Stream
-from traffic.core.helpers import Host, Sender, Receiver
-from traffic.core.profile import StandardProfile,ContinuousProfile
 from string import Template
 
 class TestvDNS0(BasevDNSTest):

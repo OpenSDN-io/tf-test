@@ -90,14 +90,6 @@ else
             $run_tests -T k8s_sanity --send-mail -U -t $EXTRA_RUN_TEST_ARGS
             rv_run_test=$?
             ;;
-        openshift)
-            $run_tests -T openshift_1 --send-mail -U -t $EXTRA_RUN_TEST_ARGS
-            rv_run_test=$?
-            ;;
-        ci_openshift)
-            $run_tests -T ci_openshift $EXTRA_RUN_TEST_ARGS
-            rv_run_test=$?
-            ;;
         ci_k8s_sanity)
             $run_tests -T ci_k8s_sanity --send-mail -U -t $EXTRA_RUN_TEST_ARGS
             rv_run_test=$?
@@ -108,10 +100,6 @@ else
             ;;
         ci_contrail_go_kolla_ocata_sanity)
             $run_tests -T ci_contrail_go_kolla_ocata_sanity --send-mail -U -t $EXTRA_RUN_TEST_ARGS
-            rv_run_test=$?
-            ;;
-        vcenter)
-            $run_tests -T vcenter --send-mail -U -t $EXTRA_RUN_TEST_ARGS
             rv_run_test=$?
             ;;
         quick_sanity)

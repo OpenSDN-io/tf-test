@@ -1,23 +1,14 @@
-from __future__ import absolute_import
-from builtins import str
-from builtins import range
+import os
+import sys
 from .base import BaseVnVmTest
-import traffic_tests
 from vn_test import *
 from vm_test import *
 from floating_ip import *
 from policy_test import *
 from compute_node_test import ComputeNodeFixture
-from user_test import UserFixture
 from multiple_vn_vm_test import *
 from tcutils.wrappers import preposttest_wrapper
 sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
-from traffic.core.stream import Stream
-from traffic.core.profile import create, ContinuousProfile
-from traffic.core.helpers import Host
-from traffic.core.helpers import Sender, Receiver
-from common import isolated_creds
-import inspect
 from tcutils.util import skip_because, is_almost_same
 from tcutils.tcpdump_utils import start_tcpdump_for_intf,\
      stop_tcpdump_for_intf, verify_tcpdump_count
@@ -36,7 +27,6 @@ class TestBasicVMVN0(BaseVnVmTest):
         super(TestBasicVMVN0, cls).tearDownClass()
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter',address_family = 'v6')
     def test_bring_up_vm_with_control_node_down(self):
         '''
         Description: Create VM when there is not active control node. Verify VM comes up fine when all control nodes are back
@@ -155,7 +145,6 @@ class TestBasicVMVN0(BaseVnVmTest):
     # end test_bring_up_vm_with_control_node_down
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter',address_family = 'v6')
     def test_ipam_persistence_across_restart_reboots(self):
         '''
         Description: Test to validate IPAM persistence across restarts and reboots of nodes.
@@ -205,7 +194,6 @@ class TestBasicVMVN0(BaseVnVmTest):
         return True
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter',address_family = 'v6')
     def test_multistep_vm_add_delete_with_stop_start_service(self):
         '''
         Description: Test to validate VMs addition deletion after service restarts.
@@ -264,7 +252,6 @@ class TestBasicVMVN0(BaseVnVmTest):
     # end test_multistep_vm_add_delete_with_stop_start_service
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter',address_family = 'v6')
     def test_multistep_vm_delete_with_stop_start_service(self):
         '''
         Description: Test to validate VM's deletion attempt fails when the contrail-vrouter-agent service is down.
@@ -309,7 +296,6 @@ class TestBasicVMVN0(BaseVnVmTest):
     # end test_multistep_vm_delete_with_stop_start_service
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter')
     def test_nova_com_sch_restart_with_multiple_vn_vm(self):
         '''
         Description: Test to validate that multiple VM creation and deletion after service restarts.
@@ -368,7 +354,6 @@ class TestBasicVMVN0(BaseVnVmTest):
 
     @test.attr(type=['cb_sanity', 'sanity'])
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter',address_family = 'v6')
     def test_process_restart_in_policy_between_vns(self):
         ''' Test to validate that with policy having rule to check icmp fwding between VMs on different VNs , ping between VMs should pass
         with process restarts
@@ -479,7 +464,6 @@ class TestBasicVMVN0(BaseVnVmTest):
 # end test_process_restart_in_policy_between_vns
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter',address_family = 'v6')
     def test_process_restart_with_multiple_vn_vm(self):
         '''
         Description: Test to validate that multiple VM creation and deletion after service restarts.
@@ -525,7 +509,6 @@ class TestBasicVMVN0(BaseVnVmTest):
     #end test_process_restart_with_multiple_vn_vm
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter',address_family = 'v6')
     def test_kill_service_verify_core_generation(self):
         '''
         Description: Test to Validate core is generated for services on SIGQUIT
@@ -619,7 +602,6 @@ class TestBasicVMVN0(BaseVnVmTest):
 
     @test.attr(type=['cb_sanity', 'sanity'])
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter',address_family = 'v6')
     def test_control_node_switchover(self):
         ''' Stop the control node and check peering with agent fallback to other control node.
             1. Pick one VN from respource pool which has 2 VM's in it
@@ -731,7 +713,6 @@ class TestBasicVMVN0(BaseVnVmTest):
     # end test_control_node_switchover
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter',address_family = 'v6')
     def test_max_vm_flows(self):
         ''' Test to validate setting up of the max_vm_flows parameter in agent
             config file has expected effect on the flows in the system.
@@ -871,7 +852,7 @@ class TestBasicVMVN0(BaseVnVmTest):
             self.logger.info('On compute %s, %s..OK' % (compute.ip, msg))
     # end test_max_vm_flows
 
-    @test.attr(type=['sanity', 'vcenter_compute', 'vcenter'])
+    @test.attr(type=['sanity'])
     @skip_because(dpdk_cluster=True)
     @preposttest_wrapper
     def test_underlay_broadcast_traffic_handling(self):
@@ -1092,7 +1073,6 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
     #end metadata_service_test
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter', metadata_ssl = 'False')
     def test_metadata_ssl_service_without_ca_cert(self):
         '''
         Description: Test to validate metadata ssl service on VM creation without ca cert.
@@ -1138,7 +1118,6 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
     # end test_metadata_ssl_service_without_ca_cert
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter', metadata_ssl = 'False')
     def test_metadata_failure_with_ssl_disabled_on_nova(self):
         '''
         Description: Test to validate metadata ssl service failure on VM creation without
@@ -1199,7 +1178,6 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
     # end test_metadata_failure_with_ssl_disabled_on_nova
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter', metadata_ssl = 'False')
     def test_metadata_failure_without_cert_key_in_nova(self):
         '''
         Description: Test to validate metadata ssl service failure on VM creation without
@@ -1250,7 +1228,6 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
     # end test_metadata_failure_without_cert_key_in_nova
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter', metadata_ssl = 'False')
     def test_metadata_failure_with_wrong_cert_in_nova(self):
         '''
         Description: Test to validate metadata ssl service failure on VM creation with
@@ -1291,7 +1268,6 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
     # end test_metadata_failure_with_wrong_cert_in_nova
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter', metadata_ssl = 'False')
     def test_metadata_failure_with_wrong_key_in_nova(self):
         '''
         Description: Test to validate metadata ssl service failure on VM creation with
@@ -1332,7 +1308,6 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
     # end test_metadata_failure_with_wrong_key_in_nova
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter', metadata_ssl = 'False')
     def test_metadata_with_ssl_disabled(self):
         '''
         Description: Test to validate metadata service works with ssl configs
@@ -1401,7 +1376,6 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
     # end test_metadata_with_ssl_disabled
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter', metadata_ssl = 'False')
     def test_metadata_with_wrong_cert_in_agent(self):
         '''
         Description: Test to validate metadata service fails with wrong cert
@@ -1435,7 +1409,6 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
     # end test_metadata_with_wrong_cert_in_agent
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter', metadata_ssl = 'False')
     def test_metadata_with_wrong_key_in_agent(self):
         '''
         Description: Test to validate metadata service fails with wrong key
@@ -1469,7 +1442,6 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
     # end test_metadata_with_wrong_key_in_agent
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter', metadata_ssl = 'False')
     def test_metadata_with_ssl_flag_not_set_in_agent(self):
         '''
         Description: Test to validate metadata service fails when metadata_use_ssl flag
@@ -1510,7 +1482,6 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
     # end test_metadata_with_ssl_flag_not_set_in_agent
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter', metadata_ssl = 'False')
     def test_metadata_with_ssl_disabled_only_on_agent(self):
         '''
         Description: Test to validate metadata service fails when agent sends insecure
@@ -1554,7 +1525,6 @@ echo "Hello World.  The time is now $(date -R)!" | tee /tmp/output.txt
     # end test_metadata_with_ssl_disabled_only_on_agent
 
     @preposttest_wrapper
-    @skip_because(orchestrator = 'vcenter', metadata_ssl = 'False')
     def test_metadata_no_ca_cert(self):
         '''
         Description: Test to validate metadata service fails when agent sends insecure

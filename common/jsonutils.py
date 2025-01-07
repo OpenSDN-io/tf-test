@@ -31,22 +31,12 @@ This module provides a few things:
 '''
 
 
-from future import standard_library
-standard_library.install_aliases()
 import datetime
 import functools
 import inspect
 import itertools
 import json
-try:
-    import xmlrpc.client
-except ImportError:
-    # NOTE(jaypipes): xmlrpclib was renamed to xmlrpc.client in Python3
-    #                 however the function and object call signatures
-    #                 remained the same. This whole try/except block should
-    #                 be removed and replaced with a call to six.moves once
-    #                 six 1.4.2 is released. See http://bit.ly/1bqrVzu
-    import xmlrpc.client as xmlrpclib
+import xmlrpc.client
 
 import six
 

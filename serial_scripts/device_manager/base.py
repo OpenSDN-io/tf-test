@@ -1,21 +1,11 @@
-from builtins import str
-from builtins import next
-from builtins import range
-import test_v1
-from common.device_connection import NetconfConnection
-import physical_device_fixture
 from physical_router_fixture import PhysicalRouterFixture
 from tcutils.contrail_status_check import *
-from fabric.api import run, hide, settings
-from common.servicechain.verify import VerifySvcChain
 from vn_test import VNFixture
 from vm_test import VMFixture
 from vnc_api.vnc_api import *
-from tcutils.util import get_random_name
 from common.securitygroup.verify import VerifySecGroup
-from common import isolated_creds, create_public_vn
+from common import create_public_vn
 from time import sleep
-import os
 import re
 
 class BaseDM(VerifySecGroup):

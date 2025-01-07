@@ -7,13 +7,10 @@ from common.contrail_test_init import ContrailTestInit
 import testtools
 import testresources
 import fixtures
-from testtools import content, content_type
+from testtools import content
 import time
 import os
-import functools
-from builtins import object
 
-#from common import config
 
 # License: Apache-2.0
 # Copyright 2012 OpenStack Foundation

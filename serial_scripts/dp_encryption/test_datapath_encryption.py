@@ -1,5 +1,4 @@
 from common.dp_encryption.base import BaseDataPathEncryption
-from builtins import range
 from tcutils.wrappers import preposttest_wrapper
 from common.firewall.base import BaseFirewallTest
 from tcutils.util import get_an_ip

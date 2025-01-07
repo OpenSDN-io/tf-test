@@ -1,12 +1,8 @@
-from builtins import str
-import random
 import time
 from tcutils.tcpdump_utils import *
 from common.base import GenericTestBase
 from router_fixture import LogicalRouterFixture
-import copy
-import re
-from security_group import SecurityGroupFixture, get_secgrp_id_from_name
+from security_group import SecurityGroupFixture
 from common.neutron.base import BaseNeutronTest
 from common.fabric_utils import FabricUtils
 from bms_fixture import BMSFixture
@@ -14,11 +10,10 @@ from vm_test import VMFixture
 from interface_route_table_fixture import InterfaceRouteTableFixture
 from tcutils.util import Singleton, skip_because, get_random_vxlan_id, get_an_ip
 from tcutils.util import create_netns, delete_netns, get_intf_name_from_mac, run_dhcp_server
-from future.utils import with_metaclass
 from netaddr import *
 from string import Template
 
-class FabricSingleton(with_metaclass(Singleton, type('NewBase', (FabricUtils, GenericTestBase), {}))):
+class FabricSingleton(type('NewBase', (FabricUtils, GenericTestBase), {}), metaclass=Singleton):
     def __init__(self, connections):
         self.vnc_h = connections.orch.vnc_h
         self.invoked = False

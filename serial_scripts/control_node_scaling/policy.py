@@ -1,18 +1,7 @@
-from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
-from builtins import object
-import os
 import sys
-import errno
-import subprocess
-import time
 import argparse
 
 from vnc_api.vnc_api import *
-import vnc_api
-from svc_monitor import svc_monitor
-#from svc_monitor.common import network as common_nw_client
 
 
 class PolicyCmd(object):

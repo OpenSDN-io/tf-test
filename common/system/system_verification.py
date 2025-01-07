@@ -1,5 +1,3 @@
-from builtins import str
-from builtins import range
 from tcutils.test_lib.test_utils import assertEqual
 
 def system_vna_verify_policy(self, policy_fixt, topo, state):

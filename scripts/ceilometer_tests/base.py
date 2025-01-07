@@ -1,10 +1,7 @@
-from builtins import object
 import test_v1
-from common import isolated_creds
 from vn_test import *
 from vm_test import *
 import fixtures
-from tcutils.util import Singleton
 from common import create_public_vn
 from openstack import OpenstackAuth
 

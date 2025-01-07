@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-from . import base
 # Need to import path to test/fixtures and test/scripts/
 # Ex : export PYTHONPATH='$PATH:/root/test/fixtures/:/root/test/scripts/'
 #
@@ -7,21 +5,14 @@ from . import base
 # You can do 'python -m testtools.run -l tests'
 # Set the env variable PARAMS_FILE to point to your ini file. Else it will try to pick params.ini in PWD
 #
-from builtins import str
-import re
 import os
-from common.openstack_libs import nova_client as mynovaclient
-from common.openstack_libs import nova_exception as novaException
-import fixtures
-import testtools
-import unittest
-from common.contrail_test_init import ContrailTestInit
+import sys
+from . import base
 from vn_test import *
 from quantum_test import *
 from vnc_api_test import *
 from nova_test import *
 from vm_test import *
-from common.connections import ContrailConnections
 from floating_ip import *
 from policy_test import *
 from multiple_vn_vm_test import *
@@ -29,10 +20,7 @@ from contrail_fixtures import *
 from tcutils.wrappers import preposttest_wrapper
 sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
 from tcutils.commands import *
-from testresources import ResourcedTestCase
 import traffic_tests
-from fabric.context_managers import settings
-from fabric.api import run
 import test
 from compute_node_test import *
 

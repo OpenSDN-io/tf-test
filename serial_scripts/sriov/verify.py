@@ -1,16 +1,9 @@
-from builtins import str
-from builtins import range
-from builtins import object
-import re
-import os
 import time
 from vn_test import *
 from vm_test import *
 from quantum_test import *
 from vnc_api_test import *
 from contrail_fixtures import *
-from tcutils.commands import ssh, execute_cmd, execute_cmd_out
-from fabric.operations import get, put
 
 
 SRIOV_VM_IMAGE = 'ubuntu-sriov'

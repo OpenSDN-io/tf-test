@@ -1,17 +1,11 @@
-from __future__ import print_function
-from builtins import zip
-from builtins import range
 from collections import OrderedDict
 from itertools import repeat
-import re
 import time
 import test
-from common import log_orig as contrail_logging
 from bms_fixture import BMSFixture
 from tcutils.wrappers import preposttest_wrapper
 from common.contrail_fabric.base import BaseFabricTest
 from physical_router_fixture import PhysicalRouterFixture
-from physical_device_fixture import PhysicalDeviceFixture
 from tcutils.agent.vna_introspect_utils import AgentInspect
 
 class TestBmsLcm(BaseFabricTest):

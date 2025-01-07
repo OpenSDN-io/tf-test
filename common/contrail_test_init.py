@@ -1,51 +1,32 @@
-from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
-from builtins import next
-from builtins import range
-from builtins import object
 import os
 import re
 import sys
-import json
 import time
 import socket
-import getpass
-import configparser
-import ast
 from netaddr import *
 
-import fixtures
-from fabric.api import env, run, local, sudo
-from fabric.operations import get, put, reboot
+from fabric.api import run
+from fabric.operations import reboot
 from fabric.context_managers import settings, hide
-from fabric.exceptions import NetworkError
 from fabric.contrib.files import exists
 
 from tcutils.util import *
-from tcutils.util import custom_dict, read_config_option, get_build_sku, retry
+from tcutils.util import custom_dict, get_build_sku, retry
 from tcutils.custom_filehandler import *
 from tcutils.contrail_status_check import ContrailStatusChecker
-from keystone_tests import KeystoneCommands
-from tempfile import NamedTemporaryFile
 import re
 from common import log_orig as contrail_logging
 from common.contrail_services import *
 from common.container_cli_wrapper import get_container_cli_wrapper
 
 import subprocess
-from collections import namedtuple
-import random
 from vnc_api import utils
 import argparse
 import yaml
-from future.utils import with_metaclass
 
 ORCH_DEFAULT_DOMAIN = {
     'openstack' : 'Default',
     'kubernetes': 'default-domain',
-    'vcenter': 'default-domain',
 }
 DEFAULT_CERT = '/etc/contrail/ssl/certs/server.pem'
 DEFAULT_PRIV_KEY = '/etc/contrail/ssl/private/server-privkey.pem'
@@ -54,7 +35,7 @@ DEFAULT_CA = '/etc/contrail/ssl/certs/ca-cert.pem'
 DEFAULT_CI_IMAGE = os.getenv('DEFAULT_CI_IMAGE', 'cirros')
 DEFAULT_CI_SVC_IMAGE = os.getenv('DEFAULT_CI_SVC_IMAGE', 'cirros_in_net')
 CI_IMAGES = [DEFAULT_CI_IMAGE, DEFAULT_CI_SVC_IMAGE]
-OPENSHIFT_CONFIG_FILE = '/root/.kube/config'
+K8S_USER_CONFIG_FILE = '/root/.kube/config'
 K8S_CONFIG_FILE = '/etc/kubernetes/admin.conf'
 
 #Set RHOSP_16 env to True for rhosp-16 deployments to use podman.
@@ -85,7 +66,7 @@ if "check_output" not in dir(subprocess):  # duck punch it in!
     subprocess.check_output = f
 
 
-class TestInputs(with_metaclass(Singleton, object)):
+class TestInputs(metaclass=Singleton):
     '''
        Class that would populate testbedinfo from parsing the
        .ini and .json input files if provided (or)
@@ -328,12 +309,10 @@ class TestInputs(with_metaclass(Singleton, object)):
         self.tor = {}
         self.tor_hosts_data = {}
         self.physical_routers_data = {}
-        self.vcenter_compute_ips= []
         self.qos_queue = []
         self.qos_queue_pg_properties = []
         self.ns_agilio_vrouter_data = {}
         self.virtio = None
-        self.esxi_vm_ips = {}
         self.vgw_data = {}
         self.hypervisors = {}
         self.is_dpdk_cluster = False
@@ -531,14 +510,7 @@ class TestInputs(with_metaclass(Singleton, object)):
         self.introspect_certfile = self.introspect_keyfile = self.introspect_cafile = None
         self.multi_tenancy = True
         self.enable_ceilometer = True
-        self.vcenter_gateway = []
         self.orchs = []
-        self.vcenter_gw_setup = False
-        self.vcenter_present_in_this_setup = False
-        self.vcenter_dc = self.vcenter_server = self.vcenter_port = None
-        self.vcenter_username = self.vcenter_password = None
-        self.vcenter_compute = None
-        self.vro_based = False
         self.test_docker_registry = None
         with open(self.input_file, 'r') as fd:
             self.config = yaml.load(fd, Loader=yaml.FullLoader)
@@ -553,10 +525,8 @@ class TestInputs(with_metaclass(Singleton, object)):
         self.orchestrator = deployment_configs.get('orchestrator') or 'openstack'
         self.slave_orchestrator = deployment_configs.get('slave_orchestrator',None)
         self.additional_orchestrator = deployment_configs.get('additional_orchestrator', None)
-        if self.deployer == 'openshift':
-            kube_config_file = OPENSHIFT_CONFIG_FILE
-        elif self.deployer == 'juju' or self.additional_orchestrator == 'kubernetes':
-            kube_config_file = OPENSHIFT_CONFIG_FILE
+        if self.deployer == 'juju' or self.additional_orchestrator == 'kubernetes':
+            kube_config_file = K8S_USER_CONFIG_FILE
         else:
             kube_config_file = K8S_CONFIG_FILE
         self.kube_config_file = test_configs.get('kube_config_file') or kube_config_file
@@ -755,35 +725,6 @@ class TestInputs(with_metaclass(Singleton, object)):
         self.mailTo = mailserver_configs.get('to')
         self.mailSender = mailserver_configs.get('sender') or 'contrailbuild@juniper.net'
 
-        #vcenter parsing
-        if self.orchestrator == 'vcenter':
-            if os.path.isfile('vcenter_vars.yaml') and os.access('vcenter_vars.yaml', os.R_OK):
-                conf_file = 'vcenter_vars.yaml'
-            else:
-                conf_file = 'vcenter_vars.yml'
-
-            _parse_vcenter = VcenterParmParse(inputs=self,conf_file=conf_file)
-            self.vcenter_dc = _parse_vcenter.vcenter_dc
-            self.vcenter_server = _parse_vcenter.vcenter_server
-            self.vcenter_port = _parse_vcenter.vcenter_port
-            self.vcenter_username = _parse_vcenter.vcenter_username
-            self.vcenter_password = _parse_vcenter.vcenter_password
-            self.dv_switch = _parse_vcenter.dv_switch
-            _parse_vcenter.add_esxi_info_to_host_data()
-            self.admin_username = self.vcenter_username
-            self.admin_password = self.vcenter_password
-            self.admin_tenant = self.stack_tenant
-            self.admin_domain = self.stack_domain
-
-        #vro parsing
-        self.vro_server = test_configs.get('vro_server', None)
-        if self.vro_server:
-            self.vro_ip = str(self.vro_server['ip'])
-            self.vro_username = self.vro_server['username']
-            self.vro_password = self.vro_server['password']
-            self.vro_port = str(self.vro_server['port'])
-
-
     def get_os_env(self, var, default=''):
         if var in os.environ:
             return os.environ.get(var)
@@ -901,11 +842,6 @@ class TestInputs(with_metaclass(Singleton, object)):
             host_dict['containers']['analytics-cassandra'] = host_dict['containers']['analyticsdb']
     # end _check_containers
 
-    def get_vcenter_gateway(self):
-        for orch in self.orchs:
-            if orch['type'] == 'vcenter':
-                return random.choice(orch['gateway_vrouters'])
-
     def _parse_fabric(self, fabrics):
         self.fabrics = list()
         for fabric in fabrics or list():
@@ -992,8 +928,6 @@ class TestInputs(with_metaclass(Singleton, object)):
         #ToDo: msenthil need to remove the usage of logging into mysqldb from fixtures
         if self.mysql_token:
             return self.mysql_token
-        if self.orchestrator == 'vcenter' or self.vcenter_present_in_this_setup:
-            return None
         username = self.host_data[self.openstack_ip]['username']
         password = self.host_data[self.openstack_ip]['password']
         cmd = 'cat /etc/contrail/mysql.token'
@@ -1014,13 +948,10 @@ class TestInputs(with_metaclass(Singleton, object)):
 
     def get_build_sku(self):
         if not getattr(self, 'build_sku', None):
-            try:
-                self.build_sku = get_build_sku(self.openstack_ip,
-                     self.host_data[self.openstack_ip]['password'],
-                     self.host_data[self.openstack_ip]['username'],
-                     container=self.host_data[self.openstack_ip]['containers'].get('nova'))
-            except Exception as e:
-                self.build_sku='vcenter'
+            self.build_sku = get_build_sku(self.openstack_ip,
+                    self.host_data[self.openstack_ip]['password'],
+                    self.host_data[self.openstack_ip]['username'],
+                    container=self.host_data[self.openstack_ip]['containers'].get('nova'))
         return self.build_sku
 
     def run_cmd_on_server(self, server_ip, issue_cmd, username=None,
@@ -1102,10 +1033,7 @@ class ContrailTestInit(object):
     # end __init__
 
     def is_ci_setup(self):
-        if 'ci_image' in os.environ:
-            return True
-        else:
-            return False
+        return 'ci_image' in os.environ
     # end is_ci_setup
 
     def set_af(self, af):
@@ -1730,12 +1658,8 @@ class ContrailTestInit(object):
         if restart_container:
             self.container_tool.action_on_container(node_ip, 'restart',
                                                     container_name, 60)
-
     # end _add_knob_to_container
 
-    def enable_vro(self, knob=False):
-        self.vro_based = knob
-    #end enable_vro
 
 def _parse_args( args_str):
     parser = argparse.ArgumentParser()
@@ -1744,56 +1668,6 @@ def _parse_args( args_str):
                 "--conf_file", nargs='?', default="check_string_for_empty",help="pass sanity_params.ini",required=True)
     args = parser.parse_args(remaining_argv)
     return args
-
-
-class VcenterParmParse(object):
-    def __init__(self,inputs=None,conf_file=None):
-        with open(conf_file, 'r') as fd:
-            self.config = yaml.load(fd)
-        self.inputs = inputs
-
-    def _parse(self,server):
-        for vc_server in self.config['vcenter_servers']:
-             if server in vc_server:
-                 return vc_server[server]
-
-    def _parse_esxi_info(self):
-        for esxi in self.config['esxihosts']:
-            dct =dict()
-            dct[esxi['name']] = esxi
-            self.inputs.host_data.update(dct)
-
-    def add_esxi_info_to_host_data(self):
-        self._parse_esxi_info()
-
-    @property
-    def vcenter_dc(self,server='server1'):
-        vc_server_dict = self._parse(server)
-        return vc_server_dict['datacentername']
-
-    @property
-    def vcenter_server(self,server='server1'):
-        vc_server_dict = self._parse(server)
-        return vc_server_dict['hostname']
-
-    @property
-    def vcenter_port(self,server='server1'):
-        return '443'
-
-    @property
-    def vcenter_username(self,server='server1'):
-        vc_server_dict = self._parse(server)
-        return vc_server_dict['username']
-
-    @property
-    def vcenter_password(self,server='server1'):
-        vc_server_dict = self._parse(server)
-        return vc_server_dict['password']
-
-    @property
-    def dv_switch(self,server='server1'):
-        vc_server_dict = self._parse(server)
-        return vc_server_dict['dv_switch']['dv_switch_name']
 
 
 def main(args_str = None):

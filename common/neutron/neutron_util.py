@@ -1,10 +1,6 @@
-from builtins import str
-from builtins import range
-import string
 import random
 import itertools
-import uuid
-from netaddr import IPAddress, IPNetwork
+from netaddr import IPNetwork
 from tcutils.util import get_random_ip, get_random_cidr
 
 

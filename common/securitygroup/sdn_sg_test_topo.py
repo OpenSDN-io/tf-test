@@ -1,6 +1,3 @@
-from __future__ import print_function
-from builtins import zip
-from builtins import object
 from vnc_api.vnc_api import *
 from tcutils.util import get_random_name, get_random_cidrs
 

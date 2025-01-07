@@ -1,8 +1,6 @@
 from common.vrouter.base import BaseVrouterTest
-from builtins import str
 from tcutils.wrappers import preposttest_wrapper
 import test
-from common.servicechain.config import ConfigSvcChain
 from common.servicechain.verify import VerifySvcChain
 from tcutils.util import get_random_name
 import random
@@ -594,8 +592,6 @@ class FatFlowSerialIpv6(FatFlowSerial):
         cls.inputs.set_af(AF_TEST)
 
     def is_test_applicable(self):
-        if self.inputs.orchestrator == 'vcenter' and not self.orch.is_feature_supported('ipv6'):
-            return(False, 'Skipping IPv6 Test on vcenter setup')
         return (True, None)
 
     @test.attr(type=['cb_sanity', 'sanity'])

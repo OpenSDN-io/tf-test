@@ -1,28 +1,18 @@
-from __future__ import absolute_import, unicode_literals
 from vnc_api.vnc_api import *
-from vcenter import *
-import test
-from tcutils.commands import ssh, execute_cmd, execute_cmd_out
-import time
-import inspect
-from common import isolated_creds
-from builtins import str
-from builtins import range
-import traffic_tests
+from tcutils.commands import execute_cmd_out
 from vn_test import *
 from vm_test import *
 from floating_ip import *
 from policy_test import *
-from user_test import UserFixture
 from multiple_vn_vm_test import *
 from tcutils.wrappers import preposttest_wrapper
 sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
-from traffic.core.profile import create, ContinuousProfile
 from tcutils.contrail_status_check import ContrailStatusChecker
 from common.l3_mh.base import BaseL3Multihoming
 from tcutils.cores import get_service_crashes
 from tcutils.tcpdump_utils import *
 from compute_node_test import ComputeNodeFixture
+
 
 class TestL3Multihoming(BaseL3Multihoming):
     @classmethod

@@ -1,13 +1,8 @@
-from __future__ import print_function
-from builtins import str
-from builtins import object
-import uuid
 import logging
 import json
 from tcutils.util import *
 from vnc_api.vnc_api import *
 from loadbalancer_vnc_api import *
-from future.utils import with_metaclass
 
 
 class ContrailVncApi(object):
@@ -4027,7 +4022,7 @@ class ContrailVncApi(object):
         return term
     # end _create_routing_policy_term
 
-class LBFeatureHandles(with_metaclass(Singleton, object)):
+class LBFeatureHandles(metaclass=Singleton):
     def __init__(self, vnc, log):
         self._vnc = vnc
         self._log = log

@@ -1,20 +1,14 @@
-from __future__ import print_function
-from builtins import str
-from builtins import range
-from builtins import object
-import test_v1
-from common import isolated_creds
 from vn_test import *
 from vm_test import *
 from policy_test import *
 import fixtures
-from future.utils import with_metaclass
+import os, sys
 sys.path.append(os.path.realpath('tcutils/pkgs/Traffic'))
 from traffic.core.stream import Stream
-from traffic.core.profile import create, ContinuousProfile, StandardProfile, BurstProfile, ContinuousSportRange
+from traffic.core.profile import StandardProfile
 from traffic.core.helpers import Host
 from traffic.core.helpers import Sender, Receiver
-from tcutils.util import Singleton
+from tcutils.util import *
 from common.base import GenericTestBase
 
 class AnalyticsBaseTest(GenericTestBase):
@@ -548,7 +542,7 @@ class ResourceFactory(object):
         return ResourceFactory.factories[id].create()
     createResource = staticmethod(createResource)
 
-class BaseSanityResource(with_metaclass(Singleton, fixtures.Fixture)):
+class BaseSanityResource(fixtures.Fixture, metaclass=Singleton):
 
     def setUp(self,inputs,connections):
         super(BaseSanityResource , self).setUp()
@@ -594,7 +588,7 @@ class BaseSanityResource(with_metaclass(Singleton, fixtures.Fixture)):
     #end verify_common_objects
 
 
-class BaseResource(with_metaclass(Singleton, BaseSanityResource)):
+class BaseResource(BaseSanityResource, metaclass=Singleton):
 
     def setUp(self,inputs,connections):
         super(BaseResource , self).setUp(inputs, connections)

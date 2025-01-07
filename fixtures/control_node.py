@@ -1,21 +1,10 @@
-from __future__ import print_function
-from builtins import str
 import fixtures
 from ipam_test import *
 from vn_test import *
 from tcutils.util import *
-import time
-import traceback
 from fabric.api import env
-from fabric.api import run
-from fabric.state import output
-from fabric.operations import get, put
-from fabric.context_managers import settings, hide
-import socket
 from contrail_fixtures import *
 env.disable_known_hosts = True
-import json
-import copy
 from netaddr import IPNetwork
 
 

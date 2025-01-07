@@ -1,16 +1,8 @@
-from builtins import str
 import test_v1
 from vn_test import MultipleVNFixture
 from vm_test import MultipleVMFixture
-from fabric.api import run, hide, settings
-from vn_test import VNFixture
-from vm_test import VMFixture
-from policy_test import PolicyFixture
-from common.policy.config import ConfigPolicy
 from security_group import SecurityGroupFixture, get_secgrp_id_from_name
-from common import isolated_creds
-from tcutils.util import get_random_name, copy_file_to_server, fab_put_file_to_vm
-import os
+from tcutils.util import get_random_name
 from tcutils.topo.sdn_topo_setup import *
 
 class BaseSGTest(test_v1.BaseTestCase_v1):
