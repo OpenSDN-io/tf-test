@@ -38,9 +38,6 @@ import itertools
 import json
 import xmlrpc.client
 
-import six
-
-from common import gettextutils
 from common import importutils
 from common import timeutils
 
@@ -52,8 +49,7 @@ _nasty_type_tests = [inspect.ismodule, inspect.isclass, inspect.ismethod,
                      inspect.iscode, inspect.isbuiltin, inspect.isroutine,
                      inspect.isabstract]
 
-_simple_types = (six.string_types + six.integer_types
-                 + (type(None), bool, float))
+_simple_types = (str + int + (type(None), bool, float))
 
 
 def to_primitive(value, convert_instances=False, convert_datetime=True,
@@ -96,7 +92,7 @@ def to_primitive(value, convert_instances=False, convert_datetime=True,
     # value of itertools.count doesn't get caught by nasty_type_tests
     # and results in infinite loop when list(value) is called.
     if type(value) == itertools.count:
-        return six.text_type(value)
+        return str(value)
 
     # FIXME(vish): Workaround for LP bug 852095. Without this workaround,
     #              tests that raise an exception in a mocked method that
@@ -118,7 +114,7 @@ def to_primitive(value, convert_instances=False, convert_datetime=True,
                                       level=level,
                                       max_depth=max_depth)
         if isinstance(value, dict):
-            return dict((k, recursive(v)) for k, v in six.items(value))
+            return dict((k, recursive(v)) for k, v in value.items())
         elif isinstance(value, (list, tuple)):
             return [recursive(lv) for lv in value]
 
@@ -130,8 +126,6 @@ def to_primitive(value, convert_instances=False, convert_datetime=True,
 
         if convert_datetime and isinstance(value, datetime.datetime):
             return timeutils.strtime(value)
-        elif isinstance(value, gettextutils.Message):
-            return value.data
         elif hasattr(value, 'items'):
             return recursive(dict(iter(value.items())), level=level + 1)
         elif hasattr(value, '__iter__'):
@@ -141,15 +135,15 @@ def to_primitive(value, convert_instances=False, convert_datetime=True,
             # Ignore class member vars.
             return recursive(value.__dict__, level=level + 1)
         elif netaddr and isinstance(value, netaddr.IPAddress):
-            return six.text_type(value)
+            return str(value)
         else:
             if any(test(value) for test in _nasty_type_tests):
-                return six.text_type(value)
+                return str(value)
             return value
     except TypeError:
         # Class objects are tricky since they may define something like
         # __iter__ defined but it isn't callable as list().
-        return six.text_type(value)
+        return str(value)
 
 
 def dumps(value, default=to_primitive, **kwargs):

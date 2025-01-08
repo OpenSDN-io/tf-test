@@ -22,7 +22,6 @@ import datetime
 import time
 
 import iso8601
-import six
 
 
 # ISO 8601 extended time format with microseconds
@@ -48,9 +47,9 @@ def parse_isotime(timestr):
     try:
         return iso8601.parse_date(timestr)
     except iso8601.ParseError as e:
-        raise ValueError(six.text_type(e))
+        raise ValueError(str(e))
     except TypeError as e:
-        raise ValueError(six.text_type(e))
+        raise ValueError(str(e))
 
 
 def strtime(at=None, fmt=PERFECT_TIME_FORMAT):
@@ -75,7 +74,7 @@ def normalize_time(timestamp):
 
 def is_older_than(before, seconds):
     """Return True if before is older than seconds."""
-    if isinstance(before, six.string_types):
+    if isinstance(before, str):
         before = parse_strtime(before).replace(tzinfo=None)
     else:
         before = before.replace(tzinfo=None)
@@ -85,7 +84,7 @@ def is_older_than(before, seconds):
 
 def is_newer_than(after, seconds):
     """Return True if after is newer than seconds."""
-    if isinstance(after, six.string_types):
+    if isinstance(after, str):
         after = parse_strtime(after).replace(tzinfo=None)
     else:
         after = after.replace(tzinfo=None)

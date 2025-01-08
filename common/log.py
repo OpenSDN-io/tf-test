@@ -27,7 +27,9 @@ It also allows setting of formatting information through conf.
 
 """
 
+import configparser
 import inspect
+import io
 import itertools
 import logging
 import logging.config
@@ -38,10 +40,7 @@ import sys
 import traceback
 
 from oslo.config import cfg
-import six
-from six import moves
 
-from common.gettextutils import _
 from common import importutils
 from common import jsonutils
 from common import local
@@ -249,7 +248,7 @@ def mask_password(message, secret="***"):
     >>> mask_password("u'original_password' :   u'aaaaa'")
     "u'original_password' :   u'***'"
     """
-    message = six.text_type(message)
+    message = str(message)
 
     # NOTE(ldbragst): Check to see if anything in message contains any key
     # specified in _SANITIZE_KEYS, if not then just return the message since
@@ -296,7 +295,7 @@ class ContextAdapter(BaseLoggerAdapter):
         return self.logger.handlers
 
     def deprecated(self, msg, *args, **kwargs):
-        stdmsg = _("Deprecated: %s") % msg
+        stdmsg = f"Deprecated: {msg}"
         if CONF.fatal_deprecations:
             self.critical(stdmsg, *args, **kwargs)
             raise DeprecatedConfig(msg=stdmsg)
@@ -308,8 +307,8 @@ class ContextAdapter(BaseLoggerAdapter):
         #                coerce to unicode before they can get
         #                to the python logging and possibly
         #                cause string encoding trouble
-        if not isinstance(msg, six.string_types):
-            msg = six.text_type(msg)
+        if not isinstance(msg, str):
+            msg = msg.decode()
 
         if 'extra' not in kwargs:
             kwargs['extra'] = {}
@@ -349,7 +348,7 @@ class JSONFormatter(logging.Formatter):
     def formatException(self, ei, strip_newlines=True):
         lines = traceback.format_exception(*ei)
         if strip_newlines:
-            lines = [moves.filter(
+            lines = [filter(
                 lambda x: x,
                 line.rstrip().splitlines()) for line in lines]
             lines = list(itertools.chain(*lines))
@@ -397,7 +396,7 @@ def _create_logging_excepthook(product_name):
 
 class LogConfigError(Exception):
 
-    message = _('Error loading logging config %(log_config)s: %(err_msg)s')
+    message = 'Error loading logging config %(log_config)s: %(err_msg)s'
 
     def __init__(self, log_config, err_msg):
         self.log_config = log_config
@@ -412,7 +411,7 @@ def _load_log_config(log_config_append):
     try:
         logging.config.fileConfig(log_config_append,
                                   disable_existing_loggers=False)
-    except moves.configparser.Error as exc:
+    except configparser.Error as exc:
         raise LogConfigError(log_config_append, str(exc))
 
 
@@ -452,7 +451,7 @@ def _find_facility_from_conf():
                   'LOG_LOCAL0', 'LOG_LOCAL1', 'LOG_LOCAL2', 'LOG_LOCAL3',
                   'LOG_LOCAL4', 'LOG_LOCAL5', 'LOG_LOCAL6', 'LOG_LOCAL7']
         valid_facilities.extend(consts)
-        raise TypeError(_('syslog facility must be one of: %s') %
+        raise TypeError('syslog facility must be one of: %s' %
                         ', '.join("'%s'" % fac
                                   for fac in valid_facilities))
 
@@ -589,7 +588,7 @@ class ContextFormatter(logging.Formatter):
         if not record:
             return logging.Formatter.formatException(self, exc_info)
 
-        stringbuffer = moves.StringIO()
+        stringbuffer = io.StringIO()
         traceback.print_exception(exc_info[0], exc_info[1], exc_info[2],
                                   None, stringbuffer)
         lines = stringbuffer.getvalue().split('\n')
@@ -622,7 +621,7 @@ class ColorHandler(logging.StreamHandler):
 
 
 class DeprecatedConfig(Exception):
-    message = _("Fatal call to deprecated config: %(msg)s")
+    message = "Fatal call to deprecated config: %(msg)s"
 
     def __init__(self, msg):
         super(Exception, self).__init__(self.message % dict(msg=msg))
