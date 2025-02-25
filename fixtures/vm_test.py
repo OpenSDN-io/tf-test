@@ -5,6 +5,7 @@ import threading
 import tempfile
 import fixtures
 import pexpect
+import platform
 from collections import defaultdict
 from fabric.api import env
 from fabric.state import output
@@ -31,6 +32,10 @@ try:
 except ImportError:
     pass
 
+try:
+    import distro
+except ImportError:
+    pass
 
 class VMFixture(fixtures.Fixture):
 
@@ -2386,6 +2391,11 @@ class VMFixture(fixtures.Fixture):
         '''
         Creates a file of "size" bytes and transfers to the VM in dest_vm_fixture using mode scp/tftp
         '''
+        if hasattr(platform, 'dist'):
+            (distname, version, _) = platform.dist()
+        else:
+            distname = distro.id()
+
         filename = 'testfile'
         # Create file
         cmd = 'dd bs=%s count=1 if=/dev/zero of=%s' % (size, filename)
@@ -2401,8 +2411,16 @@ class VMFixture(fixtures.Fixture):
         with settings(hide('everything'), host_string='%s@%s' % (host['username'],
                                                                  self.vm_node_ip), password=host['password'],
                       warn_only=True, abort_on_prompts=False):
+            scp_opts = '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null '
+            if distname == 'rocky':
+                # support old algorithms
+                # TODO: check and specify, probably excessive
+                scp_opts += '-o KexAlgorithms=+diffie-hellman-group14-sha1,diffie-hellman-group1-sha1 '
+                scp_opts += '-o HostKeyAlgorithms=+ssh-rsa,ssh-dss '
+                scp_opts += '-o PubkeyAcceptedAlgorithms=+ssh-rsa,ssh-dss '
             handle = pexpect.spawn(
-                'ssh -F /dev/null -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null %s@%s' % (self.vm_username, self.local_ip))
+                ('ssh -F /dev/null '
+                '%s %s@%s') % (scp_opts, self.vm_username, self.local_ip))
             handle.timeout = int(timeout)
             i = handle.expect(['\$ ', 'password:'])
             if i == 0:
