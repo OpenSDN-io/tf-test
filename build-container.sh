@@ -175,12 +175,12 @@ EOF
         fi
     fi
     echo "Waiting for base container"
-    while ! sudo docker pull ${CONTRAIL_REGISTRY}/contrail-base:${CONTRAIL_CONTAINER_TAG} 2>/dev/null ; do
+    while ! sudo docker pull ${CONTRAIL_REGISTRY}/opensdn-base:${CONTRAIL_CONTAINER_TAG} 2>/dev/null ; do
         printf "."
         i=$((i + 1))
         if (( i > 30 )) ; then
             echo ""
-            echo "ERROR: ${CONTRAIL_REGISTRY}/contrail-base:${CONTRAIL_CONTAINER_TAG} not found"
+            echo "ERROR: ${CONTRAIL_REGISTRY}/opensdn-base:${CONTRAIL_CONTAINER_TAG} not found"
             return 1
         fi
         sleep 30
