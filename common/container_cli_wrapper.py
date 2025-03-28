@@ -18,7 +18,7 @@ class DockerWrapper:
             filter_cmd = ' | grep -v "%s" ' % '\|'.join(filter_exprs)
         else:
             filter_cmd = ''
-        cmd = self.tool + ' ps -a 2>/dev/null ' + filter_cmd + \
+        cmd = self.tool + ' ps 2>/dev/null ' + filter_cmd + \
                           ' | awk \'{print $NF}\''
         output = self.inputs.run_cmd_on_server(host, cmd, as_sudo=True)
         containers = [x.strip('\r') for x in output.split('\n')]
