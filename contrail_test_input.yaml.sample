@@ -4,7 +4,7 @@ deployment:
     version: master-1
     orchestrator: openstack # kubernetes/openstack
     slave_orchestrator: # kubernetes
-    deployer: contrail-ansible-deployer
+    deployer: opensdn-ansible-deployer
 
 provider_config:
   bms:

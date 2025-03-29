@@ -3,7 +3,7 @@ import fixtures
 from vnc_api_test import *
 from contrail_fixtures import *
 from common.connections import ContrailConnections
-from tcutils.util import retry,get_plain_uuid
+from tcutils.util import retry, get_plain_uuid, get_dashed_uuid
 from openstack import OpenstackAuth
 
 

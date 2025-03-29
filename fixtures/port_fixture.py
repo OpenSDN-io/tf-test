@@ -4,6 +4,7 @@ import json
 import uuid
 from netaddr import EUI
 from vnc_api.vnc_api import NoIdError
+from tcutils.util import get_dashed_uuid
 import ast
 
 class PortFixture(vnc_api_test.VncLibFixture):

@@ -464,7 +464,7 @@ download the docker image to local system from remote registry
 ${GREEN}Possitional Parameters:
 
   <image>       $NO_COLOR remote image
-                eg: $0 pull myregistry.local:5000/contrail-test-test:4.1.0.0-6
+                eg: $0 pull myregistry.local:5000/opensdn-test-test:4.1.0.0-6
 
 EOF
     }

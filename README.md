@@ -40,7 +40,7 @@ Test scripts at a per-feature level. Sub-folders are created for the features.
 ## Test container
 
 The scripts can be executed from a containerized environment.
-As part of the contrail software the test containers are also being built and posted @ https://hub.docker.com/r/opencontrailnightly/contrail-test-test/
+As part of the contrail software the test containers are also being built and posted @ https://hub.docker.com/r/opensdn/opensdn-test-test/
 
 ### Build test container
 Test container is split into base and test containers where in base has sku and
@@ -72,8 +72,8 @@ One can also custom build base and test containers
 * Execute the testrunner.sh script
 ```
     $> wget https://github.com/opensdn-io/tf-test/raw/master/testrunner.sh
-    $> docker pull opencontrailnightly/contrail-test-test:ocata-bld-1
-    $> ./testrunner.sh run -P /path/to/contrail_test_input.yaml contrail-test-test:ocata-bld-1
+    $> docker pull opensdn/opensdn-test-test:ocata-bld-1
+    $> ./testrunner.sh run -P /path/to/contrail_test_input.yaml opensdn-test-test:ocata-bld-1
 ```
 You can find more detailed information about running tests @ (https://github.com/Juniper/contrail-test/wiki/How-to-use-contrail-test-container#sample-testrunnersh-commands)
 

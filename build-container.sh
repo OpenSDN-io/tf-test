@@ -73,7 +73,7 @@ Usage: $0 test [OPTIONS]
 
   -h|--help                     Print help message
   --tag           TAG           Docker container tag, default to sku
-  --base-tag      BASE_TAG      Specify contrail-base-test container tag to use. Defaults to 'latest'.
+  --base-tag      BASE_TAG      Specify opensdn-base-test container tag to use. Defaults to 'latest'.
   --sku           SKU           Openstack version. Defaults to ocata
   --contrail-repo CONTRAIL_REPO Contrail Repository, mandatory
   --openstack-repo OPENSTACK_REPO Openstack Repository, mandatory
@@ -186,10 +186,10 @@ EOF
         sleep 30
     done
 
-    docker_build_test_sku "docker" "contrail-test-test" "$TAG" "$build_arg_opts"
-    sudo docker tag contrail-test-test:$TAG $REGISTRY_SERVER/contrail-test-test:$TAG
+    docker_build_test_sku "docker" "opensdn-test-test" "$TAG" "$build_arg_opts"
+    sudo docker tag opensdn-test-test:$TAG $REGISTRY_SERVER/opensdn-test-test:$TAG
     if [[ -n $POST ]]; then
-        sudo docker push $REGISTRY_SERVER/contrail-test-test:$TAG
+        sudo docker push $REGISTRY_SERVER/opensdn-test-test:$TAG
     fi
 }
 
