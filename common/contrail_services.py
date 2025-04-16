@@ -51,40 +51,41 @@ _CONTRAIL_SERVICES_CONTAINER_MAP = {
 # Separate container names for JuJu deployer
 _CONTRAIL_SERVICES_JUJU_CONTAINER_MAP = {
     # Vrouter
-    'agent': ['vrouter_vrouter-agent_1'],
-    'vrouter-nodemgr': ['vrouter_nodemgr_1'],
+    'agent': ['vrouter_vrouter-agent_1', 'vrouter-vrouter-agent-1'],
+    'vrouter-nodemgr': ['vrouter_nodemgr_1', 'vrouter-nodemgr-1'],
     # Control
-    'control': ['control_control_1'],
-    'named': ['control_named_1'],
-    'dns': ['control_dns_1'],
-    'control-nodemgr': ['control_nodemgr_1'],
+    'control': ['control_control_1', 'control-control-1'],
+    'named': ['control_named_1', 'control-named-1'],
+    'dns': ['control_dns_1', 'control-dns-1'],
+    'control-nodemgr': ['control_nodemgr_1', 'control-nodemgr-1'],
     # Config
-    'api-server': ['configapi_api_1', 'config_api_api_1'],
-    'schema': ['configapi_schema_1', 'config_api_schema_1'],
-    'svc-monitor': ['configapi_svcmonitor_1', 'config_api_svcmonitor_1'],
-    'device-manager': ['configapi_devicemgr_1', 'config_api_devicemgr_1'],
-    'config-nodemgr': ['configapi_nodemgr_1', 'config_api_nodemgr_1'],
+    'api-server': ['configapi_api_1', 'config_api_api_1', 'config_api-api-1'],
+    'schema': ['configapi_schema_1', 'config_api_schema_1', 'config_api-schema-1'],
+    'svc-monitor': ['configapi_svcmonitor_1', 'config_api_svcmonitor_1', 'config_api-svcmonitor-1'],
+    'device-manager': ['configapi_devicemgr_1', 'config_api_devicemgr_1', 'config_api-devicemgr-1'],
+    'config-nodemgr': ['configapi_nodemgr_1', 'config_api_nodemgr_1', 'config_api-nodemgr-1'],
     # Config Database
-    'config-cassandra': ['configdatabase_cassandra_1', 'config_database_cassandra_1'],
-    'config-rabbitmq': ['configdatabase_rabbitmq_1', 'config_database_rabbitmq_1'],
-    'config-zookeeper': ['configdatabase_zookeeper_1', 'config_database_zookeeper_1'],
+    'config-cassandra': ['configdatabase_cassandra_1', 'config_database_cassandra_1', 'config_database-cassandra-1'],
+    'config-rabbitmq': ['configdatabase_rabbitmq_1', 'config_database_rabbitmq_1', 'config_database-rabbitmq-1'],
+    'config-zookeeper': ['configdatabase_zookeeper_1', 'config_database_zookeeper_1', 'config_database-zookeeper-1'],
     # Analytics Database
-    'analytics-cassandra': ['analyticsdatabase_cassandra_1', 'analytics_database_cassandra_1'],
-    'analyticsdb-nodemgr': ['analyticsdatabase_nodemgr_1', 'analytics_database_nodemgr_1'],
-    'query-engine': ['analyticsdatabase_query-engine_1', 'analytics_database_query-engine_1'],
+    'analytics-cassandra': ['analyticsdatabase_cassandra_1', 'analytics_database_cassandra_1', 'analytics_database-cassandra-1'],
+    'analyticsdb-nodemgr': ['analyticsdatabase_nodemgr_1', 'analytics_database_nodemgr_1', 'analytics_database-nodemgr-1'],
+    'query-engine': ['analyticsdatabase_query-engine_1', 'analytics_database_query-engine_1', 'analytics_database-query-engine-1'],
     # Analytics
-    'analytics-nodemgr': ['analytics_nodemgr_1'],
-    'analytics-api': ['analytics_api_1'],
-    'collector': ['analytics_collector_1'],
-    'snmp-collector': ['analyticssnmp_snmp-collector_1', 'analytics_snmp_snmp-collector_1'],
-    'snmp-topology': ['analyticssnmp_topology_1', 'analytics_snmp_topology_1'],
-    'alarmgen': ['analyticsalarm_alarm-gen_1', 'analytics_alarm_alarm-gen_1'],
+    'analytics-nodemgr': ['analytics_nodemgr_1', 'analytics-nodemgr-1'],
+    'analytics-api': ['analytics_api_1', 'analytics-api-1'],
+    'collector': ['analytics_collector_1', 'analytics-collector-1'],
+    'snmp-collector': ['analyticssnmp_snmp-collector_1', 'analytics_snmp_snmp-collector_1', 'analytics_snmp-snmp-collector-1'],
+    'snmp-topology': ['analyticssnmp_topology_1', 'analytics_snmp_topology_1', 'analytics_snmp-topology-1'],
+    'alarmgen': ['analyticsalarm_alarm-gen_1', 'analytics_alarm_alarm-gen_1', 'analytics_alarm-alarm-gen-1'],
     'contrail-kube-manager': ['contrailkubernetesmaster_kubemanager_1',
-                              'contrail-kubernetes-master_kubemanager_1'],
+                              'contrail-kubernetes-master_kubemanager_1',
+                              'contrail-kubernetes-master-kubemanager-1'],
     # WebUI
-    'webui': ['webui_web_1'],
-    'webui-middleware': ['webui_job_1'],
-    'redis': ['redis_redis_1'],
+    'webui': ['webui_web_1', 'webui-web-1'],
+    'webui-middleware': ['webui_job_1', 'webui-job-1'],
+    'redis': ['redis_redis_1', 'redis-redis-1'],
 }
 _CONTRAIL_SERVICES_JUJU_CONTAINERD_MAP = {
     # Vrouter
