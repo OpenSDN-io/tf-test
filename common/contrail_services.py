@@ -43,7 +43,7 @@ _CONTRAIL_SERVICES_CONTAINER_MAP = {
     'control-nodemgr': ['control_nodemgr', 'control-nodemgr'],
     'analyticsdb-nodemgr': ['analyticsdatabase_nodemgr',
                             'analyticsdb-nodemgr', 'analytics_database_nodemgr'],
-    'contrail-kube-manager': ['contrail-kube-manager', 'kubemanager'],
+    'contrail-kube-manager': ['contrail-kube-manager', 'kubemanager', 'opensdn-kube-manager'],
     'kube-apiserver': ['kube-apiserver'],
     'strongswan': ['strongswan_strongswan']
 }
