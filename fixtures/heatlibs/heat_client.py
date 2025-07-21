@@ -195,12 +195,6 @@ class HeatCli(object):
 
 class Inputs(object):
     def __init__(self,openstack_ip,username,password):
-        import logging
-        from fabric.api import env, run, local
-        from fabric.operations import get, put, reboot
-        from fabric.context_managers import settings, hide
-        from fabric.exceptions import NetworkError
-        from fabric.contrib.files import exists
         self.logger = contrail_logging.getLogger(__name__)
         self.openstack_ip = openstack_ip
         self.host_data = dict()

@@ -967,12 +967,11 @@ class TestInputs(metaclass=Singleton):
                 password = self.host_data[server_ip]['password']
         if container:
             cntr = self.host_data[server_ip].get('containers', {}).get(container)
-            # If the container does not exist on this host, log it and
-            # run the cmd on the host itself
-            # This helps backward compatibility
+            # If the container does not exist on this host, log and raise it
             if not cntr:
-                self.logger.debug('Container %s not in host %s, running on '
-                    ' host itself' % (container, server_ip))
+                msg = 'Container %s is not present on host %s' % (container, server_ip)
+                self.logger.debug(msg)
+                raise Exception(msg)
             container = cntr
         output = run_cmd_on_server(issue_cmd,
                           server_ip,
