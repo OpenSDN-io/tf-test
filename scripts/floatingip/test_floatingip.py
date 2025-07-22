@@ -1449,7 +1449,7 @@ class FloatingipTestSanity4(base.FloatingIpBaseTest):
         # frontend VM
         vm1_fixture = self.useFixture(
             VMFixture(
-                image_name='redmine-fe',
+                image_name='cirros',
                 project_name=self.inputs.project_name,
                 connections=self.connections,
                 vn_obj=vn1_fixture.obj,
@@ -1459,7 +1459,7 @@ class FloatingipTestSanity4(base.FloatingIpBaseTest):
         # backend VM
         vm2_fixture = self.useFixture(
             VMFixture(
-                image_name='redmine-be',
+                image_name='cirros',
                 project_name=self.inputs.project_name,
                 connections=self.connections,
                 vn_obj=vn2_fixture.obj,

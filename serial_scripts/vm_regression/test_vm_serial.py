@@ -13,6 +13,7 @@ from tcutils.util import skip_because, is_almost_same
 from tcutils.tcpdump_utils import start_tcpdump_for_intf,\
      stop_tcpdump_for_intf, verify_tcpdump_count
 import test
+import time
 from tcutils.contrail_status_check import ContrailStatusChecker
 from tcutils.traffic_utils.hping_traffic import Hping3
 
@@ -63,7 +64,7 @@ class TestBasicVMVN0(BaseVnVmTest):
             self.addCleanup(self.inputs.start_service,
                             'contrail-control', [entry],
                             container='control')
-        sleep(30)
+        time.sleep(30)
 
         vn1_vm1_name = get_random_name('vm1')
         vn1_vm2_name = get_random_name('vm2')
@@ -111,7 +112,7 @@ class TestBasicVMVN0(BaseVnVmTest):
                 result = result and False
 
         self.logger.info('Waiting for 120 sec for cleanup to begin')
-        sleep(120)
+        time.sleep(120)
         # Check agent should not have any VN info
         for entry in self.inputs.compute_ips:
             inspect_h = self.agent_inspect[entry]
@@ -128,7 +129,7 @@ class TestBasicVMVN0(BaseVnVmTest):
             self.logger.info('Starting the Control service in  %s' % (entry))
             self.inputs.start_service('contrail-control', [entry],
                                       container='control')
-        sleep(10)
+        time.sleep(10)
 
         self.logger.info('Checking the VM came up properly or not')
         assert vn1_fixture.verify_on_setup()
@@ -280,7 +281,7 @@ class TestBasicVMVN0(BaseVnVmTest):
         for compute_ip in self.inputs.compute_ips:
             self.inputs.stop_service('contrail-vrouter-agent', [compute_ip],
                                      container='agent')
-        #    self.addCleanup( sleep(10))
+        #    self.addCleanup( time.sleep(10))
             self.addCleanup(self.inputs.start_service,
                             'contrail-vrouter-agent', [compute_ip],
                             container='agent')
@@ -291,7 +292,7 @@ class TestBasicVMVN0(BaseVnVmTest):
             self.logger.info('Starting Vrouter Service')
             self.inputs.start_service('contrail-vrouter-agent', [compute_ip],
                                       container='agent')
-            sleep(10)
+            time.sleep(10)
         return True
     # end test_multistep_vm_delete_with_stop_start_service
 
@@ -335,7 +336,7 @@ class TestBasicVMVN0(BaseVnVmTest):
                                     container='nova-compute', verify_service=False)
         self.inputs.restart_service('openstack-nova-scheduler', self.inputs.cfgm_ips,
                                     container='nova-scheduler', verify_service=False)
-        sleep(30)
+        time.sleep(30)
         for vmobj in list(vm_fixture.vm_obj_dict.values()):
             assert vmobj.verify_on_setup()
         return True
@@ -502,7 +503,7 @@ class TestBasicVMVN0(BaseVnVmTest):
                 compute_ip.append(vm_host_ip)
         self.inputs.restart_service('contrail-vrouter-agent', compute_ip,
                                     container='agent')
-        sleep(50)
+        time.sleep(50)
         for vmobj in list(vm_fixture.vm_obj_dict.values()):
             assert vmobj.verify_on_setup()
         return True
@@ -581,7 +582,7 @@ class TestBasicVMVN0(BaseVnVmTest):
                                                    login_pwd,container=container)
             cmd_list_cores = "ls -lrt /var/crashes/core.*%s*" % (pid)
 
-            sleep(10)
+            time.sleep(10)
             output =  self.inputs.run_cmd_on_server(login_ip,cmd_list_cores,login_user,
                                                    login_pwd,container=container)
             if "No such file or directory" in output:
@@ -651,7 +652,7 @@ class TestBasicVMVN0(BaseVnVmTest):
         self.inputs.stop_service(
             'contrail-control', [active_controller_host_ip],
             container='control')
-        sleep(5)
+        time.sleep(5)
 
         # Check the control node shifted to other control node
         new_active_controller = None
@@ -685,7 +686,7 @@ class TestBasicVMVN0(BaseVnVmTest):
             container='control')
 
         # Check the BGP peering status from the currently active control node
-        sleep(5)
+        time.sleep(5)
         as4_ext_routers_dict = dict(self.inputs.as4_ext_routers)
         cn_bgp_entry = self.cn_inspect[
             new_active_controller_host_ip].get_cn_bgp_neigh_entry()
@@ -913,7 +914,7 @@ class TestBasicVMVN0(BaseVnVmTest):
         (session, pcap) = start_tcpdump_for_intf(compute_ip, compute_user,
             compute_password, comp_intf, filters, self.logger)
 
-        sleep(5)
+        time.sleep(5)
 
         # Ping broadcast address
         self.logger.info(
@@ -926,7 +927,7 @@ class TestBasicVMVN0(BaseVnVmTest):
                 self.inputs.host_data[item]['username'],
                 self.inputs.host_data[item]['password'],
                 container='agent')
-        sleep(5)
+        time.sleep(5)
 
         # Stop tcpdump
         stop_tcpdump_for_intf(session, pcap, self.logger)

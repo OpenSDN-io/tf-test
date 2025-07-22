@@ -508,7 +508,7 @@ class ComputeNodeFixture(fixtures.Fixture):
             reqd_entries['vrf_id'] = vrf_id
 
         for flow_entry_item in flow_table.items:
-            if reqd_entries.viewitems() <= flow_entry_item.viewitems():
+            if reqd_entries.items() <= flow_entry_item.items():
                 forward_flow_count+= 1
                 if flow_entry_item['rflow'] != '-1':
                     reverse_flow_count+= 1
@@ -560,7 +560,7 @@ class ComputeNodeFixture(fixtures.Fixture):
         if all_flows:
             all_flow_list = []
         for flow_entry_item in flow_table.items:
-            if reqd_entries.viewitems() <= flow_entry_item.viewitems():
+            if reqd_entries.items() <= flow_entry_item.items():
                 forward_flow = FlowEntry(flow_entry_item)
                 if flow_entry_item['rflow'] != '-1':
                     reverse_flow_item = [x for x

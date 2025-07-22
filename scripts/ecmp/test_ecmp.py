@@ -476,9 +476,6 @@ class TestECMPwithFIP_1(ECMPTestBase, VerifySvcFirewall, ECMPSolnSetup, ECMPTraf
         # Read the project obj and set to the floating ip object.
         fip_obj.set_project(project_fixture.project_obj)
 
-        vn2_fq_name = self.right_vn_fixture.vn_fq_name
-        vn2_vrf_name = self.right_vn_fixture.vrf_name
-        vn2_ri_name = self.right_vn_fixture.ri_name
         vmi1_id = self.right_vm_fixture.get_vmi_id(
             self.right_vn_fixture.vn_fq_name)
         vmi2_id = vm2_1.get_vmi_id(
