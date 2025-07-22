@@ -619,7 +619,7 @@ class TestBasicPolicyNegativeIpv4v6(test_policy_basic.TestBasicPolicyNegative):
             return(False, 'IPv6 tests not supported in this environment ')
         return (True, None)
 
-    @test.attr(type=['sanity'])
+    @test.attr(type=['sanity', 'ci_sanity'])
     @preposttest_wrapper
     def test_remove_policy_with_ref(self):
         super(TestBasicPolicyNegativeIpv4v6, self).test_remove_policy_with_ref()

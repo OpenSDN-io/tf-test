@@ -27,7 +27,7 @@ class TestRouters(BaseNeutronTest):
     def tearDownClass(cls):
         super(TestRouters, cls).tearDownClass()
 
-    @test.attr(type=['sanity', 'dev_sanity_dpdk'])
+    @test.attr(type=['sanity', 'dev_sanity_dpdk', 'ci_sanity'])
     @preposttest_wrapper
     def test_basic_router_behavior(self):
         '''Validate a router is able to route packets between two VNs

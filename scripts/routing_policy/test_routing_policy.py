@@ -29,7 +29,7 @@ class TestRP(RPBase, BaseBGPaaS, BaseHC, VerifySvcFirewall):
         super(TestRP, self).setUp()
         result = self.is_test_applicable()
 
-    @test.attr(type=['sanity'])
+    @test.attr(type=['sanity', 'ci_sanity'])
     @preposttest_wrapper
     def test_rp_interface(self):
         '''

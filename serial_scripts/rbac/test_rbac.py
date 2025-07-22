@@ -24,7 +24,7 @@ class TestRbac(BaseRbac):
         proj_rbac = self.create_rbac_acl(rules=rules)
         assert self.create_sc(connections=user1_conn), 'SC creation failed'
 
-    @test.attr(type=['sanity'])
+    @test.attr(type=['sanity', 'ci_sanity'])
     @preposttest_wrapper
     def test_perms2_global_share(self):
         '''

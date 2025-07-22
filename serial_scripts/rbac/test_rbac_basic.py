@@ -5,7 +5,7 @@ from tcutils.wrappers import preposttest_wrapper
 
 class TestRbacBasic(BaseRbac):
 
-    @test.attr(type=['sanity', 'suite1'])
+    @test.attr(type=['sanity', 'suite1', 'ci_sanity'])
     @preposttest_wrapper
     def test_rbac_acl_different_roles(self):
         '''
@@ -191,7 +191,7 @@ class TestRbacBasic(BaseRbac):
             assert vn.vn_fq_name in self.list_vn_from_analytics(user1_conn)
         self.associate_sg(sg, vm)
 
-    @test.attr(type=['sanity', 'suite1'])
+    @test.attr(type=['sanity', 'suite1', 'ci_sanity'])
     @preposttest_wrapper
     def test_perms2_owner(self):
         '''
