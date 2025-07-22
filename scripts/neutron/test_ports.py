@@ -141,7 +141,7 @@ class TestPorts(BaseNeutronTest):
                                                 vm2_fixture.vm_ip)
     # end test_ports_specific_subnet
 
-    @test.attr(type=['sanity', 'dev_sanity_dpdk'])
+    @test.attr(type=['sanity', 'dev_sanity_dpdk', 'ci_sanity'])
     @preposttest_wrapper
     def test_ports_specific_subnet_ip(self):
         '''Create ports with specific Subnet and IP
@@ -1191,7 +1191,7 @@ class TestPorts(BaseNeutronTest):
                                                 vm_test_fixture.vm_ip)
     # end test_aap_with_zero_mac
 
-    @test.attr(type=['sanity','dev_sanity_dpdk'])
+    @test.attr(type=['sanity','dev_sanity_dpdk', 'ci_sanity'])
     @preposttest_wrapper
     def test_ports_bindings(self):
         '''
