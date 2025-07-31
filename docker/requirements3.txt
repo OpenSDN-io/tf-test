@@ -27,15 +27,18 @@ easyprocess==0.2.10
 eventlet==0.31.0
 # TODO: move to fabric-2.5.0
 # Fabric3
-fabric3==1.14.post1
+fabric3==1.14.post1 ; python_version < "3.9"
+fabric3 ; python_version >= "3.9"
 # fabric==2.5.0
 fixtures==3.0.0
 future==0.18.2
 # gevent 1.4.0 doesnt work with paramiko in latest ubi8
 # (ssh connection hangs and faile don timeout https://contrail-jws.atlassian.net/browse/CEM-27366)
-gevent==1.5.0
+gevent==1.5.0 ; python_version < "3.9"
+gevent==23.9.1 ; python_version >= "3.9"
 google-auth==1.11.2
-greenlet==0.4.15 ; platform_python_implementation == 'CPython'
+greenlet==0.4.15 ; python_version < "3.9" and platform_python_implementation == 'CPython'
+greenlet>=2.0.0 ; python_version >= "3.9" and platform_python_implementation == 'CPython'
 idna==2.8
 importlib-metadata==1.5.0 ; python_version < '3.8'
 ipaddress==1.0.23
@@ -77,7 +80,7 @@ ptyprocess==0.6.0
 pyasn1-modules==0.2.8
 pyasn1==0.4.8
 pycparser==2.20
-pycrypto==2.6.1
+pycryptodome
 pyinotify==0.9.6
 pyjwt==1.7.1
 pynacl==1.3.0

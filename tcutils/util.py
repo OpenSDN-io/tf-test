@@ -1142,7 +1142,7 @@ def is_port_open(ip, port):
 
 def get_ips_of_host(host, nic=None, **kwargs):
     dev = 'dev %s '%nic if nic else ''
-    cmd = "ip addr show %s| grep 'inet .*/.* brd ' | awk '{print $2}'"%dev
+    cmd = "ip -4 -o addr show %s| awk '{print $4}'"%dev
     output = run_cmd_on_server(cmd, host, **kwargs)
     cidrs = output.split('\n') if output else []
     return [str(IPNetwork(cidr).ip) for cidr in cidrs]
