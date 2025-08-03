@@ -41,7 +41,7 @@ class VMFixture(fixtures.Fixture):
 
     '''
     Fixture to handle creation, verification and deletion of VM.
-    image_name : One of cirros, redmine-fe, redmine-be, ubuntu
+    image_name : One of cirros, ubuntu
 
     Deletion of the VM upon exit can be disabled by setting fixtureCleanup= 'no' in params file.
     If a VM with the vm_name is already present, it is not deleted upon exit. To forcefully clean them up, set fixtureCleanup= 'force'

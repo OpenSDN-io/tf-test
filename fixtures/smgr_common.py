@@ -1345,7 +1345,7 @@ class SmgrFixture(fixtures.Fixture):
                     continue
             actual_state[server_ip] = status
 
-        if expected_state.viewitems() != actual_state.viewitems():
+        if expected_state.items() != actual_state.items():
            self.logger.error(
                 'Cluster status \"%s\" is incorrectly updated for %s ' %
                 (status, cluster_id))

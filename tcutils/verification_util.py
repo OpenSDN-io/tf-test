@@ -363,6 +363,8 @@ class EtreeToDict(object):
 
         Returns the list of dictionary/didctionary.
         """
+        if not path:
+            return []
         xps = path.xpath(self.xpath)
         if not xps:
             # sometime ./xpath dosen't work; work around

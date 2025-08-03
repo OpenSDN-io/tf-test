@@ -13,6 +13,7 @@ import re
 import openstack
 import shlex
 import glance_test
+from testtools.testcase import TestSkipped
 
 
 class NovaHelper(object):
@@ -398,10 +399,14 @@ class NovaHelper(object):
            Requires Image path
         """
         image_abs_path = self.download_image(build_path, folder=self.images_dir, do_local=True)
+        if not os.path.exists(image_abs_path):
+            raise TestSkipped(f"image {image_abs_path} is not found")
         image_path_real = image_abs_path.split('.gz')[0]
         if '.gz' in image_abs_path:
             self.logger.debug('Unzip image')
             self.execute_cmd_with_proxy('gunzip -f %s' % image_abs_path, do_local=True)
+        if not os.path.exists(image_path_real):
+            raise TestSkipped(f"image {image_path_real} is not found")
         try:
             self.logger.debug('Try to create image in user context')
             image_id = self.glance_h.create_image(generic_image_name, image_path_real, **params)

@@ -5,6 +5,7 @@ from tcutils.verification_util import *
 from tcutils.util import is_v6, get_random_name
 from netaddr import IPNetwork, AddrFormatError
 from tcutils.test_lib.contrail_utils import get_ri_name
+import time
 
 LOG.basicConfig(format='%(levelname)s: %(message)s', level=LOG.DEBUG)
 
@@ -36,11 +37,15 @@ class ControlNodeInspect (VerificationUtilBase):
         table_name = re.match('(\S+?):', match)
         new_table_req = 'Snh_IFMapTableShowReq?table_name=' + table_name.group(1) + '&search_string=' + match
         p = self.dict_get(new_table_req)
+        if not p:
+            return d
         xp = p.xpath('./IFMapTableShowResp/ifmap_db/list/IFMapNodeShowInfo')
         if not xp:
             # sometime ./xpath dosen't work; work around
             # should debug to find the root cause.
             xp = p.xpath('/IFMapTableShowResp/ifmap_db/list/IFMapNodeShowInfo')
+        if not xp:
+            return d
         f = [x for x in xp if x.xpath('./node_name')[0].text == match]
         if 1 == len(f):
             d = {}
