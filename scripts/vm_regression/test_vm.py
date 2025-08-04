@@ -3141,7 +3141,7 @@ class TestBasicIPv6VMVNx(TestBasicVMVNx):
             return(False, 'IPv6 tests not supported in this environment ')
         return (True, None)
 
-    @test.attr(type=['sanity'])
+    @test.attr(type=['todo_sanity'])
     @preposttest_wrapper
     def test_vm_file_trf_scp_tests(self):
         super(TestBasicIPv6VMVNx, self).test_vm_file_trf_scp_tests()

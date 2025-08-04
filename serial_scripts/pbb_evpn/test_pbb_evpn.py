@@ -17,7 +17,7 @@ class TestPbbEvpnMacLearning(PbbEvpnTestBase):
         super(TestPbbEvpnMacLearning, cls).tearDownClass()
     # end tearDownClass
 
-    @test.attr(type=['cb_sanity', 'sanity'])
+    @test.attr(type=['cb_sanity', 'full_sanity'])
     @preposttest_wrapper
     def test_mac_learning_single_isid(self):
         '''

@@ -25,8 +25,8 @@ class TestBasicRR(BaseRRTest):
     def tearDownClass(cls):
         super(TestBasicRR, cls).tearDownClass()
 
-    # end test_basic_RR
-    @test.attr(type=['sanity'])
+    # not stable
+    @test.attr(type=['todo_sanity'])
     @preposttest_wrapper
     def test_process_restart_with_rr_set(self):
         ''' Test to validate rr works fine

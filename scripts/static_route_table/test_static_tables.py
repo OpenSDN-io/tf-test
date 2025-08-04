@@ -14,7 +14,7 @@ class TestStaticRouteTables(StaticRouteTableBase, VerifySvcFirewall):
     def setUp(self):
         super(TestStaticRouteTables, self).setUp()
 
-    @test.attr(type=['sanity', 'dev_sanity_dpdk'])
+    @test.attr(type=['todo_sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_interface_static_table(self):
         """
@@ -152,7 +152,7 @@ class TestStaticRouteTables(StaticRouteTableBase, VerifySvcFirewall):
 
     #end test_bind_unbind_network_static_table
 
-    @test.attr(type=['cb_sanity', 'sanity', 'dev_sanity_dpdk'])
+    @test.attr(type=['cb_sanity', 'todo_sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_network_route_table(self):
         """

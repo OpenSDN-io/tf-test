@@ -73,7 +73,7 @@ class TestLBaaSV2(BaseLBaaSTest):
         assert self.verify_lb_method(client_vm1_fixture, lb_pool_servers, rr_listener.fip_ip, port=listener_port, https=True),\
             "Verify LB Method failed for ROUND ROBIN"
 
-    @attr(type=['sanity'])
+    @attr(type=['full_sanity'])
     @skip_because(dpdk_cluster=True, sku='train')
     @preposttest_wrapper
     def test_lbaas_client_pool_in_same_net(self):
@@ -121,7 +121,7 @@ class TestLBaaSV2(BaseLBaaSTest):
 
     # end test_lbaas_client_pool_in_same_net
 
-    @attr(type=['sanity'])
+    @attr(type=['full_sanity'])
     @skip_because(dpdk_cluster=True, sku='train')
     @preposttest_wrapper
     def test_lbaas_with_sg_vip(self):
@@ -193,7 +193,7 @@ class TestLBaaSV2(BaseLBaaSTest):
         assert self.verify_lb_method(client_vm1_fixture, lb_pool_servers, rr_listener.fip_ip),\
             "Verify LB Method failed for ROUND ROBIN"
 
-    @attr(type=['cb_sanity', 'sanity'])
+    @attr(type=['cb_sanity', 'full_sanity'])
     @skip_because(dpdk_cluster=True, sku='train')
     @preposttest_wrapper
     def test_lbaas_with_different_fip(self):

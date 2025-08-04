@@ -1019,7 +1019,7 @@ class TestPorts(BaseNeutronTest):
             cmd], 'Requests not being answered'
     # end test_aap_active_active_mode
 
-    @test.attr(type=['cb_sanity', 'sanity'])
+    @test.attr(type=['cb_sanity', 'full_sanity'])
     @preposttest_wrapper
     def test_aap_with_fip(self):
 
@@ -1118,7 +1118,7 @@ class TestPorts(BaseNeutronTest):
 
     # end test_aap_with_fip
 
-    @test.attr(type=['cb_sanity', 'sanity'])
+    @test.attr(type=['cb_sanity', 'full_sanity'])
     @preposttest_wrapper
     def test_aap_with_zero_mac(self):
         '''
@@ -1142,7 +1142,6 @@ class TestPorts(BaseNeutronTest):
         vm2_name = get_random_name('vm2')
         vm_test_name = get_random_name('vm_test')
         vID = '51'
-        result = False
 
         vn1_fixture = self.create_vn(vn1_name, vn1_subnets)
         vIP = get_an_ip(vn1_subnets[0], offset=10)

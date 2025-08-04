@@ -17,7 +17,7 @@ class TestIntfMirror(BaseIntfMirrorTest, VerifyIntfMirror):
         pass
     # end runTest
 
-    @test.attr(type=['ci_sanity_WIP', 'sanity', 'quick_sanity'])
+    @test.attr(type=['ci_sanity_WIP', 'full_sanity', 'quick_sanity'])
     @preposttest_wrapper
     def test_intf_mirroring_disable_enable_scenarios(self):
         """Validate the interface mirroring
@@ -30,7 +30,7 @@ class TestIntfMirror(BaseIntfMirrorTest, VerifyIntfMirror):
         """
         return self.verify_intf_mirroring_disable_enable_scenarios()
 
-    @test.attr(type=['sanity'])
+    @test.attr(type=['full_sanity'])
     @preposttest_wrapper
     @skip_because(dpdk_cluster=True ,msg='Limitation in DPDK setup.Please Refer#CEM-27424 and CEM-27492')
     def test_juniper_header(self):
@@ -60,7 +60,7 @@ class TestIntfMirror(BaseIntfMirrorTest, VerifyIntfMirror):
         """
         return self.verify_juniper_header_testcase(header = 2, direction = direction)
 
-    @test.attr(type=['sanity'])
+    @test.attr(type=['full_sanity'])
     @preposttest_wrapper
     def test_juniper_header_without_header_ingress(self, direction = 'ingress'):
         """Validate the presence of no juniper header
@@ -77,7 +77,7 @@ class TestIntfMirror(BaseIntfMirrorTest, VerifyIntfMirror):
         """
         return self.verify_intf_mirroring_src_on_cn1_vn1_dst_on_cn2_vn1_analyzer_on_cn3_vn1()
 
-    @test.attr(type=['cb_sanity', 'ci_sanity_WIP', 'sanity', 'quick_sanity'])
+    @test.attr(type=['cb_sanity', 'ci_sanity_WIP', 'full_sanity', 'quick_sanity'])
     @preposttest_wrapper
     def test_intf_mirror_src_cn1vn1_dst_cn2vn2_analyzer_cn3vn3(self):
         """Validate the interface mirroring
@@ -115,7 +115,7 @@ class TestIntfMirror(BaseIntfMirrorTest, VerifyIntfMirror):
         """
         return self.verify_intf_mirroring_src_on_cn1_vn1_dst_on_cn2_vn1_analyzer_on_cn3_vn1(sub_intf=True)
 
-    @test.attr(type=['ci_sanity_WIP', 'sanity', 'quick_sanity'])
+    @test.attr(type=['ci_sanity_WIP', 'full_sanity', 'quick_sanity'])
     @preposttest_wrapper
     def test_intf_mirror_with_subintf_src_cn1vn1_dst_cn2vn2_analyzer_cn3vn3(self):
         """Validate the interface mirroring
@@ -133,7 +133,7 @@ class TestIntfMirror(BaseIntfMirrorTest, VerifyIntfMirror):
         return self.verify_intf_mirroring_src_on_cn1_vn1_dst_on_cn2_vn1_analyzer_on_cn3_vn2(sub_intf=True)
 
     @preposttest_wrapper
-    def test_intf_mirror_with_subintf_src_cn1vn1_dst_cn2vn2_analyzer_cn3vn1(self):
+    def zmirror_with_subintf_src_cn1vn1_dst_cn2vn2_analyzer_cn3vn1(self):
         """Validate the interface mirroring
         src vm, dst vm and analyzer vm on different CNs, src and analyzer in vn1, dst in vn2
         when src vmi, dst vmi and analyzer vmi are sub interfaces
@@ -236,8 +236,6 @@ class TestIntfMirror(BaseIntfMirrorTest, VerifyIntfMirror):
         """
         return self.verify_intf_mirroring_src_on_cn1_vn1_dst_on_cn1_vn2_analyzer_on_cn1_vn2(sub_intf=True)
 
-
-
     @preposttest_wrapper
     def test_intf_mirror_src_cn1vn1_dst_cn1vn1_analyzer_cn2vn1(self):
         """Validate the interface mirroring
@@ -272,7 +270,6 @@ class TestIntfMirror(BaseIntfMirrorTest, VerifyIntfMirror):
         src vm, dst vm on same CN and analyzer vm on different CN, src in vn1, dst and analyzer in vn2
         """
         return self.verify_intf_mirroring_src_on_cn1_vn1_dst_on_cn1_vn2_analyzer_on_cn2_vn2()
-
 
     @preposttest_wrapper
     def test_intf_mirror_with_subintf_src_cn1vn1_dst_cn1vn1_analyzer_cn2vn1(self):
@@ -314,9 +311,6 @@ class TestIntfMirror(BaseIntfMirrorTest, VerifyIntfMirror):
         """
         return self.verify_intf_mirroring_src_on_cn1_vn1_dst_on_cn1_vn2_analyzer_on_cn2_vn2(sub_intf=True)
 
-
-
-
     @preposttest_wrapper
     @skip_because(dpdk_cluster=True ,msg='Limitation in DPDK setup.Please Refer#CEM-27424 and CEM-27492')
     def test_intf_mirror_src_cn1vn1_dst_cn2vn1_analyzer_cn1vn1(self):
@@ -356,8 +350,6 @@ class TestIntfMirror(BaseIntfMirrorTest, VerifyIntfMirror):
         src vm, analyzer vm on same CN and dst vm on different CN, src in vn1, dst and analyzer in vn2
         """
         return self.verify_intf_mirroring_src_on_cn1_vn1_dst_on_cn2_vn2_analyzer_on_cn1_vn2()
-
-
 
     @preposttest_wrapper
     @skip_because(dpdk_cluster=True ,msg='Limitation in DPDK setup.Please Refer#CEM-27424 and CEM-27492')
@@ -404,8 +396,6 @@ class TestIntfMirror(BaseIntfMirrorTest, VerifyIntfMirror):
         """
         return self.verify_intf_mirroring_src_on_cn1_vn1_dst_on_cn2_vn2_analyzer_on_cn1_vn2(sub_intf=True)
 
-
-
     @preposttest_wrapper
     def test_intf_mirror_src_cn2vn1_dst_cn1vn1_analyzer_cn1vn1(self):
         """Validate the interface mirroring
@@ -440,7 +430,6 @@ class TestIntfMirror(BaseIntfMirrorTest, VerifyIntfMirror):
         dst vm, analyzer vm on same CN and src vm on different CN, src in vn1, dst and analyzer in vn2
         """
         return self.verify_intf_mirroring_src_on_cn2_vn1_dst_on_cn1_vn2_analyzer_on_cn1_vn2()
-
 
     @preposttest_wrapper
     def test_intf_mirror_with_subintf_src_cn2vn1_dst_cn1vn1_analyzer_cn1vn1(self):

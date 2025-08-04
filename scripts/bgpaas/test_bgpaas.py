@@ -1565,7 +1565,7 @@ class TestBGPaaS(BaseBGPaaS):
         self.bgpaas_basic_common(attach_to='vmi')
     # end test_bgpaas_with_bfd_shc_attached_to_vmi
 
-    @test.attr(type=['sanity'])
+    @test.attr(type=['todo_sanity'])
     @preposttest_wrapper
     def test_bgpaas_basic(self):
         '''

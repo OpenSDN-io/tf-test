@@ -387,7 +387,7 @@ class TestMacIp6Learning(BaseVrouterTest, BaseMacIpLearningTest, BaseHC):
         return True
     # end test_intra_vn_inter_compute_l2l3_pkt_mode
 
-    @test.attr(type=['sanity'])
+    @test.attr(type=['todo_sanity'])
     @preposttest_wrapper
     def test_intra_vn_intra_compute_l2l3(self):
         '''

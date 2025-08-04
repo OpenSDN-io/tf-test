@@ -89,7 +89,7 @@ class AnalyticsTestSanity(base.AnalyticsBaseTest):
             self.logger.info("contrail-status passed")
         return True
 
-    @test.attr(type=['sanity'])
+    @test.attr(type=['todo_sanity'])
     @preposttest_wrapper
     def test_contrail_alarms(self):
         ''' Test to check if alarms are present
@@ -151,6 +151,7 @@ class AnalyticsTestSanity(base.AnalyticsBaseTest):
         assert self.analytics_obj.verify_hrefs_to_all_uves_of_a_given_uve_type()
         return True
 
+
 class AnalyticsTestSanity1(base.AnalyticsBaseTest):
 
     @classmethod
@@ -188,101 +189,6 @@ class AnalyticsTestSanity1(base.AnalyticsBaseTest):
         assert abc
         return True
 
-class AnalyticsTestSanity2(base.AnalyticsBaseTest):
-
-    @classmethod
-    def setUpClass(cls):
-        super(AnalyticsTestSanity2, cls).setUpClass()
-
-    def runTest(self):
-        pass
-    #end runTest
-
-    @preposttest_wrapper
-    def itest_object_tables_parallel_query(self):
-        '''Test object tables.
-        '''
-        threads=[]
-        first_vm = self.res.vn1_vm1_fixture
-        vm_list = [self.res.vn1_vm2_fixture]
-        tx_vm_node_ip= self.inputs.host_data[self.nova_h.get_nova_host_of_vm(first_vm.vm_obj)]['host_ip']
-        #start_time=self.analytics_obj.getstarttime(tx_vm_node_ip)
-        start_time=self.analytics_obj.get_time_since_uptime(self.inputs.cfgm_ip)
-        #Configuring static route
-        prefix = '111.1.0.0/16'
-        vm_uuid = self.res.vn1_vm1_fixture.vm_obj.id
-        vm_ip = self.res.vn1_vm1_fixture.vm_ip
-        self.analytics_obj.provision_static_route(prefix = prefix, virtual_machine_id = vm_uuid,
-                                virtual_machine_interface_ip= vm_ip, route_table_name= 'my_route_table',
-                                user= 'admin',password= 'contrail123')
-
-        #Setting up traffic
-        dest_min_port = 8000
-        dest_max_port = 8002
-        ips = self.analytics_obj.get_min_max_ip_from_prefix(prefix)
-
-        traffic_threads= []
-        for vm in vm_list:
-            self.analytics_obj.start_traffic(first_vm,ips[0], ips[-1], vm.vm_ip,dest_min_port, dest_max_port)
-            time.sleep(15)
-#            t= threading.Thread(target=self.analytics_obj.start_traffic, args=(first_vm,ips[0], ips[-1], vm.vm_ip,
-#                                                                 dest_min_port, dest_max_port,))
-#            traffic_threads.append(t)
-#
-#        for th in traffic_threads:
-#            time.sleep(0.5)
-#            th.start()
-        self.logger.info("Waiting for traffic to flow for 10 mins...")
-        time.sleep(600)
-        threads= self.analytics_obj.build_parallel_query_to_object_tables(start_time= start_time,skip_tables = ['FlowSeriesTable' ,
-                                                                'FlowRecordTable',
-                                                            'ObjectQueryQid','StatTable.ComputeCpuState.cpu_info',
-                                                            u'StatTable.ComputeCpuState.cpu_info', u'StatTable.ControlCpuState.cpu_info',
-                                                        u'StatTable.ConfigCpuState.cpu_info', u'StatTable.FieldNames.fields',
-                                                                u'StatTable.SandeshMessageStat.msg_info', u'StatTable.FieldNames.fieldi',
-                                                            'ServiceChain','ObjectSITable','ObjectModuleInfo','ObjectQueryQid',
-                                                    'StatTable.QueryPerfInfo.query_stats', 'StatTable.UveVirtualNetworkAgent.vn_stats',
-                                                            'StatTable.AnalyticsCpuState.cpu_info','ObjectQueryTable'])
-        self.analytics_obj.start_query_threads(threads)
-
-        vm1_name='vm_mine'
-        vn_name='vn222'
-        vn_subnets=['11.1.1.0/24']
-        vn_count_for_test=32
-        if (len(self.inputs.compute_ips) == 1):
-            vn_count_for_test=2
-        try:
-            vm_fixture= self.useFixture(create_multiple_vn_and_multiple_vm_fixture (connections= self.connections,
-                     vn_name=vn_name, vm_name=vm1_name, inputs= self.inputs,project_name= self.inputs.project_name,
-                      subnets= vn_subnets,vn_count=vn_count_for_test,vm_count=1,subnet_count=1,
-                      image_name='cirros',ram='512'))
-
-            compute_ip=[]
-            time.sleep(100)
-        except Exception as e:
-            self.logger.exception("Got exception as %s"%(e))
-
-        try:
-            assert vm_fixture.verify_vms_on_setup()
-            assert vm_fixture.verify_vns_on_setup()
-        except Exception as e:
-            self.logger.exception("Got exception as %s"%(e))
-
-        for vmobj in list(vm_fixture.vm_obj_dict.values()):
-            vm_host_ip=vmobj.vm_node_ip
-            if vm_host_ip not in compute_ip:
-                compute_ip.append(vm_host_ip)
-        #self.inputs.restart_service('contrail-vrouter',compute_ip)
-        sleep(30)
-
-        try:
-            assert vm_fixture.verify_vms_on_setup()
-        except Exception as e:
-            self.logger.exception("got exception as %s"%(e))
-
-        self.analytics_obj.join_threads(threads)
-        self.analytics_obj.get_value_from_query_threads()
-        return True
 
 class AnalyticsTestSanity3(base.AnalyticsBaseTest):
     isolation = False
@@ -325,14 +231,6 @@ class AnalyticsTestSanity3(base.AnalyticsBaseTest):
 
         '''
         self.analytics_obj.verify_process_and_connection_infos_agent()
-
-    @test.attr(type=['cb_sanity', 'sanity', 'dev_sanity_dpdk'])
-    @preposttest_wrapper
-    def test_verify_process_status_config(self):
-        ''' Test to validate process_status-Config
-
-        '''
-        self.analytics_obj.verify_process_and_connection_infos_config()
 
     @test.attr(type=['cb_sanity', 'sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper

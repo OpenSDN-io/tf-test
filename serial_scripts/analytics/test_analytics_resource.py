@@ -1304,7 +1304,7 @@ class AnalyticsTestSanityWithResource(
         assert result,'Failed to get expected number of samples'
     #end test_verify_session_series_table_intra_vn
 
-    @test.attr(type=['sanity'])
+    @test.attr(type=['full_sanity'])
     @preposttest_wrapper
     def test_verify_session_series_table_inter_vn(self):
         '''Verify session series table ,generated stats between different vns
@@ -1342,7 +1342,7 @@ class AnalyticsTestSanityWithResource(
         self.verify_session_series_table(start_time, src_vn, dst_vn)
     #test_verify_session_series_table_inter_vn
 
-    @test.attr(type=['sanity'])
+    @test.attr(type=['full_sanity'])
     @preposttest_wrapper
     def test_verify_session_record_table_inter_vn(self):
         '''Verify session record table ,generated stats between different vns

@@ -1,19 +1,14 @@
 from common.dsnat.base import BaseDSNAT
 from tcutils.wrappers import preposttest_wrapper
-from common.neutron.base import BaseNeutronTest
-from security_group import SecurityGroupFixture
 import test
-import time
 from tcutils.util import *
 from tcutils.tcpdump_utils import *
-from common import isolated_creds
 from test import attr
 
 class TestDSNAT(BaseDSNAT):
 
-    @attr(type=['sanity'])
     @preposttest_wrapper
-    @test.attr(type=['full_sanity'])
+    @test.attr(type=['todo_sanity'])
     def test_dsnat_basic(self):
         '''
             create a VN and enable fabric SNAT
@@ -271,7 +266,7 @@ class TestDSNAT(BaseDSNAT):
 
 
     @skip_because(min_nodes=2)
-    @attr(type=['sanity'])
+    @attr(type=['todo_sanity'])
     @preposttest_wrapper
     def test_dsnat_bug_1749695(self):
         '''

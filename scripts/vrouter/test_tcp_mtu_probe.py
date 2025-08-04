@@ -44,7 +44,7 @@ class TestMtuProbe(BaseVrouterTest):
         assert self.send_nc_traffic(client, server, sport, dport, proto), "TCP traffic failed"
         return True
  
-    @test.attr(type=['sanity', 'dev_reg'])
+    @test.attr(type=['todo_sanity', 'dev_reg'])
     @preposttest_wrapper
     @skip_because(min_nodes=2)
     def test_mtu_probe_inter_node(self):

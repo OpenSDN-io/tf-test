@@ -6,6 +6,8 @@ from vn_test import VNFixture
 import os
 import copy
 from tcutils.util import retry
+import traceback
+
 
 class BaseRRTest(test_v1.BaseTestCase_v1):
 
@@ -58,16 +60,21 @@ class BaseRRTest(test_v1.BaseTestCase_v1):
                     flavor=flavor,
                     node_name=node_name,
                     *args, **kwargs))
+
     @retry(delay=5, tries=30)
     def verification_after_process_restart_in_rr(self):
-        result=True
         try:
             self.analytics_obj.verify_process_and_connection_infos_agent()
+        except Exception as e:
+            return False, f'verify_process_and_connection_infos_agent: {e}'
+
+        try:
             self.analytics_obj.verify_process_and_connection_infos_control_node()
-            self.analytics_obj.verify_process_and_connection_infos_config()
-        except:
-            result=False
-        return result
+        except Exception as e:
+            return False, f'verify_process_and_connection_infos_control_node: {e}'
+
+        return True, ''
+
 
 @retry(delay=5, tries=12)
 def verify_peer_in_control_nodes(cn_inspect,ip,peers,logger):

@@ -2132,7 +2132,7 @@ class TestIpVlanLearning(BaseVrouterTest, BaseMacIpLearningTest, BaseBGPaaS, Sta
             
         return True
     # end ttest_bfd_health_check_crpd_l2mode
-    @test.attr(type=['sanity'])
+    @test.attr(type=['full_sanity'])
     @preposttest_wrapper
     def test_ipvlan_with_BFD_vrouter_agent_restart(self):
         '''
@@ -2264,7 +2264,7 @@ class TestIpVlanLearning(BaseVrouterTest, BaseMacIpLearningTest, BaseBGPaaS, Sta
         return True
     # end ttest_bfd_health_check_crpd_l2mode
         
-    @test.attr(type=['sanity'])
+    @test.attr(type=['full_sanity'])
     @preposttest_wrapper
     def test_ipvlan_with_BFD_controller_container_restart(self):
         '''

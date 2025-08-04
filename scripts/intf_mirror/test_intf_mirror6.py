@@ -62,7 +62,7 @@ class TestIntfMirror6(BaseIntfMirrorTest, VerifyIntfMirror):
         """
         return self.verify_juniper_header_testcase(header=2, direction='egress', ipv6=True)
 
-    @test.attr(type=['sanity'])
+    @test.attr(type=['full_sanity'])
     @preposttest_wrapper
     def test_juniper_header6_without_header_ingress(self):
         """Validate the presence of no juniper header IPv6 cases
@@ -82,7 +82,7 @@ class TestIntfMirror6(BaseIntfMirrorTest, VerifyIntfMirror):
         """
         return self.verify_intf_mirroring_src_on_cn1_vn1_dst_on_cn2_vn1_analyzer_on_cn3_vn1(ipv6=True)
 
-    @test.attr(type=['cb_sanity', 'ci_sanity_WIP', 'sanity', 'quick_sanity'])
+    @test.attr(type=['cb_sanity', 'ci_sanity_WIP', 'full_sanity', 'quick_sanity'])
     @preposttest_wrapper
     def test_intf_mirror6_src_cn1vn1_dst_cn2vn2_analyzer_cn3vn3(self):
         """Validate the interface mirroring IPv6

@@ -158,7 +158,6 @@ class AnalyticsBaseTest(GenericTestBase):
     #end verify_vna_stats
 
     def setup_and_create_streams(self, src_vm, dst_vm, sport=8000, dport=9000, count=100):
-
         traffic_objs = list()
         for i in range(3):
             sport = sport

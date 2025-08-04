@@ -6,6 +6,7 @@ from test import attr
 
 class TestDSNAT(BaseDSNAT):
 
+    @attr(type=['full_sanity'])
     @skip_because(min_nodes=2)
     @preposttest_wrapper
     def test_dsnat_udp_basic(self):
@@ -60,7 +61,7 @@ class TestDSNAT(BaseDSNAT):
         assert self.verify_flow_with_port(vm1_fixture, vm2_fixture, port_range, **traffic)
 
 
-    @attr(type=['sanity'])
+    @attr(type=['full_sanity'])
     @skip_because(min_nodes=2,dpdk_cluster=True)
     @preposttest_wrapper
     def test_dsnat_tcp_basic(self):

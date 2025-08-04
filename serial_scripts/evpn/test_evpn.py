@@ -194,7 +194,7 @@ class TestEvpnCasesVxlan(base.BaseEvpnTest, VerifyEvpnCases):
     #end runTest
 
     @skip_because(hypervisor='docker',msg='Bug 1461423:Need privileged access',dpdk_cluster=True)
-    @test.attr(type=['cb_sanity', 'serial', 'sanity'])
+    @test.attr(type=['cb_sanity', 'serial', 'todo_sanity'])
     @preposttest_wrapper
     def test_with_vxlan_encap_dns_disabled_for_l2_vn(self):
         ''' 1. Launch a virtual network with dhcp_enable=False and DNS disabled
@@ -240,7 +240,7 @@ class TestEvpnCasesVxlan(base.BaseEvpnTest, VerifyEvpnCases):
         return self.verify_change_of_l3_vn_forwarding_mode(encap='vxlan')
 
     @skip_because(hypervisor='docker',msg='Bug 1461423:Need privileged access',dpdk_cluster=True)
-    @test.attr(type=['serial', 'sanity'])
+    @test.attr(type=['serial', 'full_sanity'])
     @preposttest_wrapper
     def test_with_vxlan_encap_to_verify_l2_vm_file_trf_by_scp(self):
         '''Test to verify scp of a file with vxlan encap

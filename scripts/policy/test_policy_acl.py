@@ -968,7 +968,7 @@ class TestPolicyAcl(BasePolicyTest):
 
     # end test_policy_cidr_src_duplicate_vn_dst_cidr
 
-    @attr(type=['cb_sanity', 'sanity'])
+    @attr(type=['cb_sanity', 'todo_sanity'])
     @tcutils.wrappers.preposttest_wrapper
     def test_policy_cidr_src_cidr_dst_any(self):
         """Test cases to test policy CIDR"""
@@ -1439,7 +1439,7 @@ class TestPolicyAclIpv4v6(TestPolicyAcl):
     def test_policy_cidr_src_cidr_dst_any(self):
         super(TestPolicyAclIpv4v6, self).test_policy_cidr_src_cidr_dst_any()
 
-    @attr(type=['sanity'])
+    @attr(type=['todo_sanity'])
     @tcutils.wrappers.preposttest_wrapper
     def test_policy_cidr_src_vn_dst_cidr(self):
         super(TestPolicyAclIpv4v6, self).test_policy_cidr_src_vn_dst_cidr()

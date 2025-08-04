@@ -7,6 +7,7 @@ from user_test import UserFixture
 from multiple_vn_vm_test import *
 from tcutils.wrappers import preposttest_wrapper
 import test
+import time
 
 
 class TestBasicRTFilter(BaseRtFilterTest):
@@ -75,7 +76,7 @@ class TestBasicRTFilter(BaseRtFilterTest):
         self.logger.info('Will add a user-defined RT to the VN')
         vn1_fixture.add_route_target(
             routing_instance, self.inputs.router_asn, user_def_rt_num)
-        sleep(5)
+        time.sleep(5)
         rt_list = [user_def_rt, system_rt]
         for bgp_ip in self.inputs.bgp_ips:
             for rt in rt_list:
@@ -92,7 +93,7 @@ class TestBasicRTFilter(BaseRtFilterTest):
             'Will remove the user-defined RT to the VN and verify that the entry is removed from the tables')
         vn1_fixture.del_route_target(
             routing_instance, self.inputs.router_asn, user_def_rt_num)
-        sleep(5)
+        time.sleep(5)
         assert self.verify_rt_entry_removal(active_ctrl_node, user_def_rt)
         self.logger.info(
             'Will verify that the system generated RT is still seen in the control-nodes')
@@ -136,7 +137,7 @@ class TestBasicRTFilter(BaseRtFilterTest):
             routing_instance1, self.inputs.router_asn, user_def_rt_num)
         vn2_fixture.add_route_target(
             routing_instance2, self.inputs.router_asn, user_def_rt_num)
-        sleep(5)
+        time.sleep(5)
         vm1_fixture = self.create_vm(vn1_fixture, vm_name=vn1_vm1_name,
                                      flavor='contrail_flavor_small', image_name='ubuntu-traffic')
         assert vm1_fixture.wait_till_vm_is_up()
@@ -153,7 +154,7 @@ class TestBasicRTFilter(BaseRtFilterTest):
         self.logger.info('The entry for VM1 should still persist')
         vn2_fixture.del_route_target(
             routing_instance2, self.inputs.router_asn, user_def_rt_num)
-        sleep(5)
+        time.sleep(5)
         assert self.verify_dep_rt_entry_removal(
             active_ctrl_node, user_def_rt, ip2)
         assert self.verify_dep_rt_entry(active_ctrl_node, user_def_rt, ip1)
@@ -186,7 +187,7 @@ class TestBasicRTFilter(BaseRtFilterTest):
         self.logger.info('Will add a user-defined RT to the VN')
         vn1_fixture.add_route_target(
             routing_instance, self.inputs.router_asn, user_def_rt_num)
-        sleep(5)
+        time.sleep(5)
         rt_list = [user_def_rt, system_rt]
         for bgp_ip in self.inputs.bgp_ips:
             for rt in rt_list:
@@ -203,7 +204,7 @@ class TestBasicRTFilter(BaseRtFilterTest):
             'Will remove the user-defined RT to the VN and verify that the entry is removed from the tables')
         vn1_fixture.del_route_target(
             routing_instance, self.inputs.router_asn, user_def_rt_num)
-        sleep(5)
+        time.sleep(5)
         assert self.verify_rt_entry_removal(active_ctrl_node, user_def_rt)
         self.logger.info(
             'Will verify that the system generated RT is still seen in the control-nodes')

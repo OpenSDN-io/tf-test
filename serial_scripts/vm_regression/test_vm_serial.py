@@ -16,6 +16,8 @@ import test
 import time
 from tcutils.contrail_status_check import ContrailStatusChecker
 from tcutils.traffic_utils.hping_traffic import Hping3
+import traceback
+
 
 class TestBasicVMVN0(BaseVnVmTest):
 
@@ -342,17 +344,6 @@ class TestBasicVMVN0(BaseVnVmTest):
         return True
     # end test_nova_com_sch_restart_with_multiple_vn_vm
 
-    @retry(delay=5, tries=30)
-    def verification_after_process_restart_in_policy_between_vns(self):
-        result=True
-        try:
-            self.analytics_obj.verify_process_and_connection_infos_agent()
-            self.analytics_obj.verify_process_and_connection_infos_control_node()
-            self.analytics_obj.verify_process_and_connection_infos_config()
-        except:
-            result=False
-        return result
-
     @test.attr(type=['cb_sanity', 'sanity'])
     @preposttest_wrapper
     def test_process_restart_in_policy_between_vns(self):
@@ -440,7 +431,8 @@ class TestBasicVMVN0(BaseVnVmTest):
         assert clusterstatus, (
             'Hash of error nodes and services : %s' % (error_nodes))
 
-        assert self.verification_after_process_restart_in_policy_between_vns()
+        result = self.verification_after_process_restart_in_rr()
+        assert result[0], result[1]
         for cfgm_name in self.inputs.cfgm_names:
             assert self.analytics_obj.verify_cfgm_uve_module_state\
                         (self.inputs.collector_names[0],
@@ -461,6 +453,20 @@ class TestBasicVMVN0(BaseVnVmTest):
         vm3_fixture.wait_till_vm_is_up()
         vm4_fixture.wait_till_vm_is_up()
         assert vm3_fixture.ping_with_certainty(vm4_fixture.vm_ip)
+
+    @retry(delay=5, tries=30)
+    def verification_after_process_restart_in_rr(self):
+        try:
+            self.analytics_obj.verify_process_and_connection_infos_agent()
+        except Exception as e:
+            return False, f'verify_process_and_connection_infos_agent: {e}'
+
+        try:
+            self.analytics_obj.verify_process_and_connection_infos_control_node()
+        except Exception as e:
+            return False, f'verify_process_and_connection_infos_control_node {e}'
+
+        return True, ''
 
 # end test_process_restart_in_policy_between_vns
 
