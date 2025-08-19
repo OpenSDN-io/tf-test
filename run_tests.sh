@@ -354,7 +354,10 @@ function apply_patches {
 
 function apply_subunitfilters_patch { 
     patch_path=$PWD/tools/patches
-    filepath=/usr/local/lib/python3.6/site-packages/subunit
+    filepath='/usr/local/lib/python3.6/site-packages/subunit'
+    if [ ! -d $filepath ]; then
+        filepath='/usr/local/lib/python3.9/site-packages/subunit'
+    fi
     (patch -p0 -N --dry-run --silent $filepath/filters.py < $patch_path/subunit-filters.patch 2>/dev/null)
     if [ $? -eq 0 ]; then
         echo 'Applied subunit-filter patch for python3'
@@ -387,7 +390,10 @@ function apply_junitxml_patch {
         (cd $filepath; patch -p0 -N < $patch_path/junitxml.patch)
     fi
 
-    filepath=/usr/local/lib/python3.6/site-packages/junitxml
+    filepath='/usr/local/lib/python3.6/site-packages/junitxml'
+    if [ ! -d $filepath ]; then
+        filepath='/usr/local/lib/python3.9/site-packages/junitxml'
+    fi
     (patch -d $filepath -p0 -N --dry-run --silent < $patch_path/junitxml.patch 2>/dev/null)
     if [ $? -eq 0 ]; then
         echo 'Applied patch for python3'
