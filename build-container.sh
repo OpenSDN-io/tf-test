@@ -157,22 +157,6 @@ EOF
         if [ -e /run/secrets/etc-pki-entitlement ] ; then
             build_arg_opts+=' -v /run/secrets/etc-pki-entitlement:/run/secrets/etc-pki-entitlement:ro'
         fi
-        #We set default only for undefined RHEL_HOST_REPOS (use empty RHEL_HOST_REPOS for local mirrors)
-        if [[ -z ${RHEL_HOST_REPOS+x} ]] ; then
-            RHEL_HOST_REPOS=${RHEL_HOST_REPOS:-}
-            RHEL_HOST_REPOS+=",rhel-8-for-x86_64-baseos-rpms"
-            RHEL_HOST_REPOS+=",rhel-8-for-x86_64-appstream-rpms"
-            RHEL_HOST_REPOS+=",rhel-8-for-x86_64-appstream-debug-rpms"
-            RHEL_HOST_REPOS+=",codeready-builder-for-rhel-8-x86_64-rpms"
-            RHEL_HOST_REPOS+=",openstack-16.2-for-rhel-8-x86_64-rpms"
-            RHEL_HOST_REPOS+=",ansible-2-for-rhel-8-x86_64-rpms"
-        fi
-        export YUM_ENABLE_REPOS+=",${RHEL_HOST_REPOS}"
-        YUM_ENABLE_REPOS="${YUM_ENABLE_REPOS##,}"
-        YUM_ENABLE_REPOS="${YUM_ENABLE_REPOS%%,}"
-        if [ -n "$YUM_ENABLE_REPOS" ] ; then
-            build_arg_opts+=" --build-arg YUM_ENABLE_REPOS=\"$YUM_ENABLE_REPOS\""
-        fi
     fi
     echo "Waiting for base container"
     while ! sudo docker pull ${CONTRAIL_REGISTRY}/opensdn-base:${CONTRAIL_CONTAINER_TAG} 2>/dev/null ; do
