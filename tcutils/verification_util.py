@@ -2,7 +2,7 @@ import os
 import re
 import json
 import pprint
-import urllib.request, urllib.error, urllib.parse
+import urllib.error
 import requests
 import threading
 import logging as LOG
