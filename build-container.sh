@@ -159,7 +159,8 @@ EOF
         fi
     fi
     echo "Waiting for base container"
-    while ! sudo docker pull ${CONTRAIL_REGISTRY}/opensdn-base:${CONTRAIL_CONTAINER_TAG} 2>/dev/null ; do
+    # don't use 'pull' - it may download old version from internet. just wait for local build
+    while ! sudo docker inspect ${CONTRAIL_REGISTRY}/opensdn-base:${CONTRAIL_CONTAINER_TAG} 2>/dev/null ; do
         printf "."
         i=$((i + 1))
         if (( i > 30 )) ; then
