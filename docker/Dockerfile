@@ -31,10 +31,6 @@ RUN \
     SSHPASS_RPM_NAME=sshpass-1.06-9.el8.x86_64.rpm && \
     download_package https://archives.fedoraproject.org pub/archive/epel/8.4/Everything/x86_64/Packages/s/${SSHPASS_RPM_NAME} ${SSHPASS_RPM_NAME} && \
     rpm -Uvh --nodeps --replacepkgs ${SSHPASS_RPM_NAME} && \
-    if [[ "$ID" == 'centos' ]] ; then \
-      yum remove -y python-ipaddress && \
-      python2 -m pip install ipaddress==1.0.23 ; \
-    fi && \
     yum install -y python3-devel && \
     /etc/yum.repos.d/prepare_repos.sh && \
     yum install -y python3-contrail && \
