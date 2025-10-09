@@ -42,12 +42,6 @@ Test scripts at a per-feature level. Sub-folders are created for the features.
 The scripts can be executed from a containerized environment.
 As part of the contrail software the test containers are also being built and posted @ https://hub.docker.com/r/opensdn/opensdn-test-test/
 
-### Build test container
-Test container is split into base and test containers where in base has sku and
-orchestrator independent packages like testr, chrome, wget, git etal and
-test container has orchestrator and sku specific packages on top of base.
-
-One can also custom build base and test containers
 #### To build test container
 ```
     $> ./build-container.sh test -h
@@ -56,13 +50,10 @@ One can also custom build base and test containers
        Usage: ./build-container.sh test [OPTIONS]
 
          -h|--help                     Print help message
-         --tag           TAG           Docker container tag, default to sku
-         --base-tag      BASE_TAG      Specify contrail-base-test container tag to use. Defaults to 'latest'.
-         --sku           SKU           Openstack version. Defaults to ocata
-         --contrail-repo CONTRAIL_REPO Contrail Repository, mandatory.
+         --tag           TAG           Docker container tag
          --registry-server REGISTRY_SERVER Docker registry hosting the base test container, Defaults to docker.io/opencontrail
          --post          POST          Upload the test container to the registy-server, if specified
-    $> ./build-container.sh test --tag ocata-bld-1 --base-tag ocata-bld-1 --sku ocata --package-url http://path/to/contrail-install-packages.rpm --contrail-repo http://path/to/contrail/repo/bld-1 --registry-server opencontrailnightly
+    $> ./build-container.sh test --tag ocata-bld-1 --registry-server opencontrailnightly
 ```
 
 ## Running Tests

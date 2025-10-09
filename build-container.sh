@@ -1,11 +1,8 @@
 #!/bin/bash
 
-# TODO: move CONTRAIL_REPO from test-test to test-base to decrease time build
+echo "Run build-container.sh with params $@"
 
 REGISTRY_SERVER="opencontrail"
-SKU=""
-CONTRAIL_REPO=""
-OPENSTACK_REPO=""
 TAG=""
 
 LINUX_ID=$(awk -F"=" '/^ID=/{print $2}' /etc/os-release | tr -d '"')
@@ -40,22 +37,8 @@ docker_build_test_sku () {
     local build_arg_opts+=' --network host'
     local dockerfile=${dir}'/Dockerfile'
     local docker_ver=$(sudo docker -v | awk -F' ' '{print $3}' | sed 's/,//g')
-    if [[ "$docker_ver" < '17.06' ]] ; then
-        cat $dockerfile | sed \
-        -e 's/\(^ARG REGISTRY_SERVER=.*\)/#\1/' \
-        -e "s|\$REGISTRY_SERVER|${REGISTRY_SERVER}|g" \
-        -e 's/\(^ARG BASE_TAG=.*\)/#\1/' \
-        -e "s/\$BASE_TAG/$BASE_TAG/g" \
-        > ${dockerfile}.nofromargs
-        dockerfile="${dockerfile}.nofromargs"
-    else
-        build_arg_opts+=" --build-arg REGISTRY_SERVER=${REGISTRY_SERVER}"
-        build_arg_opts+=" --build-arg BASE_TAG=${BASE_TAG}"
-    fi
-    build_arg_opts+=" --build-arg SKU=${SKU}"
+    build_arg_opts+=" --build-arg REGISTRY_SERVER=${REGISTRY_SERVER}"
     build_arg_opts+=" --build-arg PIP_REPOSITORY=${PIP_REPOSITORY}"
-    build_arg_opts+=" --build-arg CONTRAIL_REPO=${CONTRAIL_REPO}"
-    build_arg_opts+=" --build-arg OPENSTACK_REPO=${OPENSTACK_REPO}"
     build_arg_opts+=" --build-arg DOCKERFILE_DIR=${dir}"
     [ -z "$SITE_MIRROR" ] || build_arg_opts+=" --build-arg SITE_MIRROR=${SITE_MIRROR}"
     echo "Building test container ${name}:${tag} (sudo docker build ${build_arg_opts} -t ${name}:${tag} -f $dockerfile .)"
@@ -72,16 +55,12 @@ Build test container
 Usage: $0 test [OPTIONS]
 
   -h|--help                     Print help message
-  --tag           TAG           Docker container tag, default to sku
-  --base-tag      BASE_TAG      Specify opensdn-base-test container tag to use. Defaults to 'latest'.
-  --sku           SKU           Openstack version. Defaults to ocata
-  --contrail-repo CONTRAIL_REPO Contrail Repository, mandatory
-  --openstack-repo OPENSTACK_REPO Openstack Repository, mandatory
+  --tag           TAG           Docker container tag
   --registry-server REGISTRY_SERVER Docker registry hosting the base test container, Defaults to docker.io/opencontrail
   --post          POST          Upload the test container to the registy-server, if specified
 EOF
     }
-    if ! options=$(getopt -o h -l help,base-tag:,tag:,sku:,contrail-repo:,openstack-repo:,package-url:,registry-server:,post -- "$@"); then
+    if ! options=$(getopt -o h -l help,tag:,registry-server:,post -- "$@"); then
         usage
         exit 1
     fi
@@ -90,39 +69,19 @@ EOF
     while [ $# -gt 0 ]; do
         case "$1" in
             -h|--help) usage; exit;;
-            --base-tag) BASE_TAG=$2; shift;;
             --tag) TAG=$2; shift;;
-            --sku) SKU=$2; shift;;
-            --contrail-repo) CONTRAIL_REPO=$2; shift;;
-            --openstack-repo) OPENSTACK_REPO=$2; shift;;
             --registry-server) REGISTRY_SERVER=$2; shift;;
             --post) POST=1; shift;;
         esac
         shift
     done
 
-    if [[ -z $CONTRAIL_REPO ]]; then
-        echo "Need to specify either --contrail-repo"; echo
-        usage
-        exit 1
-    fi
     if [[ -z $REGISTRY_SERVER ]]; then
         echo "--registry-server is unspecified, using docker.io/opencontrail"; echo
     fi
-    if [[ -z $SKU ]]; then
-        echo "SKU(--sku) is unspecified. Assuming ocata"; echo
-        SKU=ocata
-    fi
     if [[ -z $TAG ]]; then
-        echo "TAG(--tag) is unspecified. using $SKU"; echo
-        TAG=$SKU
-    fi
-    if [[ -z $BASE_TAG ]]; then
-        echo "BASE_TAG(--base-tag) is unspecified, using 'latest'."; echo
-        BASE_TAG='latest'
-    fi
-    if [[ -z $OPENSTACK_REPO ]]; then
-        OPENSTACK_REPO="http://vault.centos.org/centos/7/cloud/x86_64/openstack-${SKU}"
+        echo "TAG(--tag) is unspecified. using 'ocata'"; echo
+        TAG=ocata
     fi
 
     local dockerfile='docker/Dockerfile'
