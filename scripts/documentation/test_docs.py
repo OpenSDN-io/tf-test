@@ -11,6 +11,12 @@ import requests
 
 import test
 
+from urllib3.exceptions import InsecureRequestWarning
+
+
+# Suppress the InsecureRequestWarning that is raised when verify=False
+requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+
 
 class DocumentationTest(GenericTestBase):
     isolation = False
@@ -22,7 +28,7 @@ class DocumentationTest(GenericTestBase):
     @test.attr(type=['cb_sanity', 'ci_sanity', 'sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_config_docs(self):
-        ''' Test db_manage.py tool
+        ''' Test docs from config API
 
         config api docs
         curl -s http://cfgm_ips[0]:8082/documentation/index.html | grep "<title>Juniper Contrail Configuration API Model"
@@ -44,7 +50,7 @@ class DocumentationTest(GenericTestBase):
     @test.attr(type=['cb_sanity', 'ci_sanity', 'sanity', 'dev_sanity_dpdk'])
     @preposttest_wrapper
     def test_analytics_docs(self):
-        ''' Test db_manage.py tool
+        ''' Test docs from analytics API
 
         analytics api docs
         curl -s http://collector_ips[0]:8081/documentation/index.html | grep "<title>Welcome to Contrail Analytics API documentation!"
