@@ -37,7 +37,8 @@ class DocumentationTest(GenericTestBase):
             self.logger.error("there is no cfgm_ips in inputs. please provide")
             return False
 
-        resp = requests.get(f"http://{self.inputs.cfgm_ips[0]}:8082/documentation/index.html")
+        protocol = 'https' if self.inputs.contrail_configs.get('SSL_ENABLE') else 'http'
+        resp = requests.get(f"{protocol}://{self.inputs.cfgm_ips[0]}:8082/documentation/index.html", verify=False)
         if resp.status_code != 200:
             self.logger.error(f"status code is not 200 for request (status_code={resp.status_code})")
             return False
@@ -59,7 +60,8 @@ class DocumentationTest(GenericTestBase):
             self.logger.error("there is no collector_ips in inputs. please provide")
             return False
 
-        resp = requests.get(f"http://{self.inputs.collector_ips[0]}:8081/documentation/index.html")
+        protocol = 'https' if self.inputs.contrail_configs.get('SSL_ENABLE') else 'http'
+        resp = requests.get(f"{protocol}://{self.inputs.collector_ips[0]}:8081/documentation/index.html", verify=False)
         if resp.status_code != 200:
             self.logger.error(f"status code is not 200 for request (status_code={resp.status_code})")
             return False
