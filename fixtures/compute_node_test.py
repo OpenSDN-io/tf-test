@@ -428,15 +428,6 @@ class ComputeNodeFixture(fixtures.Fixture):
         self.sup_vrouter_process_restart()
     # end set_agent_headless_mode
 
-    # Needs implementation
-    # def get_OsVersion(self):
-
-    # def get_VrouterReleaseVersion(self):
-
-    # def get_VrouterBuildVersion(self):
-
-    # def get_OS_Release_BuildVersion(self):
-
     def get_active_controller(self, refresh=False):
         ''' Get the active contol node.
         '''

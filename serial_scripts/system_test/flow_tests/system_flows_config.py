@@ -1,7 +1,6 @@
 import math
 from tcutils.topo.sdn_topo_setup import sdnTopoSetupFixture
 from tcutils.test_lib.test_utils import assertEqual, get_ip_list_from_prefix
-from common.policy.get_version import get_OS_Release_BuildVersion
 
 
 # get source min, max ip's and destination max port.
@@ -145,7 +144,7 @@ def config_topo_single_proj(class_instance,
     proj = list(topo.keys())[0]
 
     # Get the vrouter build version for logging purposes.
-    class_instance.BuildTag = get_OS_Release_BuildVersion(class_instance)
+    class_instance.BuildTag = "latest"
 
     # Create traffic profile with all details like IP addresses, port
     # numbers and no of flows, from the profile defined in the topology.

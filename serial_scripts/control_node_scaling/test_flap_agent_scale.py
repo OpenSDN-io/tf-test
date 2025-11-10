@@ -1765,7 +1765,7 @@ class FlapAgentScaleInit (object):
             #
             result1 = cnshell_self.execCmd('ps e `pidof contrail-control`')
             result2 = cnshell_self.execCmd(
-                'contrail-status; contrail-version')
+                'contrail-status')
             result3 = cnshell_self.execCmd(
                 'ls -lt %s' % self._args.control_node_binary_location)
             result4 = cnshell_self.execCmd("cat " + self._model)
@@ -1774,7 +1774,7 @@ class FlapAgentScaleInit (object):
             self._log_print(
                 "INFO: ip:{0} ps e `pidof contrail-control`\n{1}".format(cn_ip, result1))
             self._log_print(
-                "INFO: ip:{0} contrail-status; contrail-version\n{1}".format(cn_ip, result2))
+                "INFO: ip:{0} contrail-status\n{1}".format(cn_ip, result2))
             self._log_print(
                 "INFO: ip:{0} ls -lt {1}\n{2}".format(cn_ip, self._args.control_node_binary_location, result3))
             self._log_print(

@@ -1228,12 +1228,6 @@ class SmgrFixture(fixtures.Fixture):
         sleep(PROVISION_TIME)
         if not self.verify_server_status("provision_completed"):
             result = result and False
-        for node in env.roledefs['all']:
-            try:
-                with settings(host_string=node, warn_only=True):
-                    output = run('contrail-version')
-            except:
-                continue
         if not self.verify_contrail_status():
             result = result and False
 
