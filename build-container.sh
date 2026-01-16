@@ -21,7 +21,7 @@ download_pkg () {
     elif [[ $pkg =~ ^ssh[s]*:// ]]; then
         server=$(echo $pkg | sed 's=scp://==;s|\/.*||')
         path=$(echo $pkg |sed -r 's#scp://[a-zA-Z0-9_\.\-]+##')
-        yum install -y sshpass
+        dnf install -y sshpass
         sshpass -e scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${sshuser_sub}${server}:${path} $dir
     else
         echo "ERROR, Unknown url format, only http[s], ssh supported" >&2
