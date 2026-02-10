@@ -496,8 +496,9 @@ class BaseK8sTest(GenericTestBase, vnc_api_test.VncLibFixture):
             host_str = '--header "Host:%s" ' % (host)
         if 'https' in link and not cert:
             cert_str = ' --no-check-certificate'
-        cmd = 'wget %s %s -O %s -T %s -t %s %s' % (link, host_str, output_file,
-                                                timeout, tries, cert_str)
+        #cmd = 'wget %s %s -O %s -T %s -t %s %s' % (link, host_str, output_file,
+        #                                        timeout, tries, cert_str)
+        cmd = 'wget %s %s -T %s -t %s %s' % (link, host_str, timeout, tries, cert_str)
         if not pod:
             with settings(warn_only=True):
                 output = self.inputs.run_cmd_on_server(self.inputs.server_manager, cmd,self.inputs.server_manager_user,self.inputs.server_manager_password)
