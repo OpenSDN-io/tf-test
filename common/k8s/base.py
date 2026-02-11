@@ -496,29 +496,23 @@ class BaseK8sTest(GenericTestBase, vnc_api_test.VncLibFixture):
             host_str = '--header "Host:%s" ' % (host)
         if 'https' in link and not cert:
             cert_str = ' --no-check-certificate'
-        #cmd = 'wget %s %s -O %s -T %s -t %s %s' % (link, host_str, output_file,
-        #                                        timeout, tries, cert_str)
-        cmd = 'wget %s %s -T %s -t %s %s' % (link, host_str, timeout, tries, cert_str)
+        cmd = 'wget %s %s -O %s -T %s -t %s %s' % (link, host_str, output_file, timeout, tries, cert_str)
         if not pod:
             with settings(warn_only=True):
-                output = self.inputs.run_cmd_on_server(self.inputs.server_manager, cmd,self.inputs.server_manager_user,self.inputs.server_manager_password)
+                output = self.inputs.run_cmd_on_server(self.inputs.server_manager, cmd, self.inputs.server_manager_user,self.inputs.server_manager_password)
             pod_str = self.inputs.server_manager
         else:
             output = pod.run_cmd(cmd, shell='/bin/sh -l -c')
             pod_str = 'Pod %s' % (pod.name)
         if '100%' in output:
             self.logger.debug('[Pod %s] Cmd %s passed' % (pod_str, cmd))
-            self.logger.debug('[Pod %s] Cmd output: %s' % (pod_str, output))
             result = True
         else:
-            self.logger.debug('[Pod %s] Cmd %s failed. Output :%s' % (pod_str,
-                                                                      cmd, output))
-            self.logger.debug('[Pod %s] Cmd output: %s' % (pod_str, output))
+            self.logger.debug('[Pod %s] Cmd %s failed.' % (pod_str, cmd))
             result = False
-        if return_output:
-            return (result, output)
-        else:
-            return result
+        self.logger.debug('[Pod %s] Cmd output: %s' % (pod_str, output))
+
+        return (result, output) if return_output else result
     # end do_wget
 
     @retry(delay=2, tries=15)
