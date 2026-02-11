@@ -9,7 +9,6 @@
 #
 
 import requests
-import pkg_resources
 import xmltodict
 import json
 from lxml import etree
@@ -125,10 +124,7 @@ class TraceUtils(object):
     def get_url_http(url):
         data = None
         try:
-            if int(pkg_resources.get_distribution("requests").version[0]) == 1:
-                data = requests.get(url, stream=True)
-            else:
-                data = requests.get(url, prefetch=False)
+            data = requests.get(url, stream=True)
         except requests.exceptions.ConnectionError as e:
             print("Connection to %s failed" % url)
         if data.status_code == 200:

@@ -11,7 +11,6 @@
 import datetime
 import time
 import requests
-import pkg_resources
 import xmltodict
 import json
 import gevent
@@ -65,15 +64,9 @@ class OpServerUtils(object):
         if token:
             headers['X-AUTH-TOKEN'] = token['X-AUTH-TOKEN']
         try:
-            print('request version : %s'%(pkg_resources.get_distribution("requests").version[0]))
-            if int(pkg_resources.get_distribution("requests").version[0]) >= 1:
-                response = requests.post(url, stream=True,
-                                         data=params,
-                                         headers=headers)
-            else:
-                response = requests.post(url, prefetch=False,
-                                         data=params,
-                                         headers=headers)
+            response = requests.post(url, stream=True,
+                                     data=params,
+                                     headers=headers)
         except requests.exceptions.ConnectionError as e:
             print("Connection to %s failed" % url)
             return None
@@ -88,10 +81,7 @@ class OpServerUtils(object):
     def get_url_http(url, headers=None):
         data = {}
         try:
-            if int(pkg_resources.get_distribution("requests").version[0]) >= 1:
-                data = requests.get(url, stream=True, headers=headers)
-            else:
-                data = requests.get(url, prefetch=False, headers=headers)
+            data = requests.get(url, stream=True, headers=headers)
         except requests.exceptions.ConnectionError as e:
             print("Connection to %s failed" % url)
 
