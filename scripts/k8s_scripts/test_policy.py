@@ -2856,10 +2856,10 @@ class TestNetworkPolicyServiceIngress(BaseK8sTest):
         assert self.client2_pod_ns1.ping_with_certainty(self.client1_pod_ns1.pod_ip)
         assert self.client1_pod_ns1.ping_with_certainty(self.client2_pod_ns1.pod_ip)
         assert self.client1_pod_ns2.ping_with_certainty(self.client2_pod_ns1.pod_ip)
-        assert self.validate_wget(self.client2_pod_ns1, url1)
-        assert self.validate_wget(self.client2_pod_ns1, url2)
-        assert self.validate_wget(self.client1_pod_ns1, url2, expectation=False)
-        assert self.validate_wget(self.client2_pod_ns2, url1, expectation=False)
+        assert self.validate_wget(self.client2_pod_ns1, url1, output_file='-')
+        assert self.validate_wget(self.client2_pod_ns1, url2, output_file='-')
+        assert self.validate_wget(self.client1_pod_ns1, url2, expectation=False, output_file='-')
+        assert self.validate_wget(self.client2_pod_ns2, url1, expectation=False, output_file='-')
         # Updating the policy and adding the namespace selector
         ingress_list = [
             {'from': [
@@ -2883,10 +2883,10 @@ class TestNetworkPolicyServiceIngress(BaseK8sTest):
         assert self.client2_pod_ns1.ping_with_certainty(self.client1_pod_ns1.pod_ip)
         assert self.client1_pod_ns1.ping_with_certainty(self.client2_pod_ns1.pod_ip)
         assert self.client1_pod_ns2.ping_with_certainty(self.client2_pod_ns1.pod_ip)
-        assert self.validate_wget(self.client2_pod_ns1, url1)
-        assert self.validate_wget(self.client2_pod_ns1, url2)
-        assert self.validate_wget(self.client1_pod_ns1, url2, expectation=False)
-        assert self.validate_wget(self.client2_pod_ns2, url1)
+        assert self.validate_wget(self.client2_pod_ns1, url1, output_file='-')
+        assert self.validate_wget(self.client2_pod_ns1, url2, output_file='-')
+        assert self.validate_wget(self.client1_pod_ns1, url2, expectation=False, output_file='-')
+        assert self.validate_wget(self.client2_pod_ns2, url1, output_file='-')
     #end test_ingress_rule_on_pod_with_service
 
     @preposttest_wrapper
