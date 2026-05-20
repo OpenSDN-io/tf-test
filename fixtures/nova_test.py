@@ -621,7 +621,16 @@ class NovaHelper(object):
         self.obj.servers.add_security_group(vm_id, secgrp)
 
     def remove_security_group(self, vm_id, secgrp):
-        self.obj.servers.remove_security_group(vm_id, secgrp)
+        try:
+            self.obj.servers.remove_security_group(vm_id, secgrp)
+        except novaException.NotFound:
+            self.logger.debug(
+                'Security group %s not found for VM %s, skip remove',
+                secgrp, vm_id)
+        except novaException.BadRequest:
+            self.logger.debug(
+                'Security group %s not attached to VM %s, skip remove',
+                secgrp, vm_id)
 
     def get_vm_obj(self, vm_obj, wait_time=30):
         ''' It has been noticed that sometimes get() takes upto 20-30mins

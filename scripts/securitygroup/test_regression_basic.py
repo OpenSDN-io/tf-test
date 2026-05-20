@@ -31,10 +31,11 @@ class SecurityGroupBasicRegressionTests1(BaseSGTest, VerifySecGroup, ConfigPolic
             3. Launch VM with custom created security group and verify
             4. Remove secuity group association with VM
             5. Add back custom security group to VM and verify
-            6. Try to delete security group with association to VM. It should fail.
-            7. Test with ping, which should fail
-            8. Test with TCP which should pass
-            9. Update the rules to allow icmp, ping should pass now.
+            6. Test with ping, which should fail
+            7. Test with TCP which should pass
+            8. Update the rules to allow icmp, ping should pass now
+            9. Delete security group while ports still reference it; SG is
+               detached from VMs and removed (Neutron and Contrail API)
         """
         secgrp_name = get_random_name('test_sec_group')
         (prefix, prefix_len) = get_random_cidrs(self.inputs.get_af())[0].split('/')
@@ -105,30 +106,8 @@ class SecurityGroupBasicRegressionTests1(BaseSGTest, VerifySecGroup, ConfigPolic
         vm1_fixture.add_security_group(secgrp=secgrp_id)
         result, msg = vm1_fixture.verify_security_group(secgrp_name)
         assert result, msg
-        #Try to delete security group with back ref
-        self.logger.info(
-            "Try deleting the security group %s with back ref.", secgrp_name)
-        try:
-            if sg_fixture.option == 'openstack':
-                sg_fixture.quantum_h.delete_security_group(sg_fixture.secgrp_id)
-            else:
-                sg_fixture.cleanUp()
-        except Exception as msg:
-            self.logger.info(msg)
-            self.logger.info(
-                "Not able to delete the security group with back ref as expected")
-        else:
-            try:
-                secgroup = self.vnc_lib.security_group_read(
-                    fq_name=sg_fixture.secgrp_fq_name)
-                self.logger.info(
-                    "Not able to delete the security group with back ref as expected")
-            except NoIdError:
-                errmsg = "Security group deleted, when it is attached to a VM."
-                self.logger.error(errmsg)
-                assert False, errmsg
 
-        #Ping test, should fail
+        # Ping test, should fail
         assert vm1_fixture.ping_with_certainty(ip=vm2_fixture.vm_ip,
             expectation=False)
         self.logger.info("Ping FAILED as expected")
@@ -162,9 +141,46 @@ class SecurityGroupBasicRegressionTests1(BaseSGTest, VerifySecGroup, ConfigPolic
         #Update the rules
         sg_fixture.replace_rules(rule)
 
-        #Ping should pass now
+        # Ping should pass now
         assert vm1_fixture.ping_with_certainty(ip=vm2_fixture.vm_ip,
             expectation=True)
+
+        #Try to delete security group with back ref
+        self.logger.info(
+            "Try deleting the security group %s with back ref.", secgrp_name)
+        try:
+            if self.option == 'openstack':
+                self.quantum_h.delete_security_group(sg_fixture.secgrp_id)
+            else:
+                sg_fixture.cleanUp()
+            self.remove_from_cleanups(sg_fixture)
+        except Exception as msg:
+            self.logger.info(msg)
+            assert False, (
+                "Not able to delete the security group %s with back ref" % (
+                    secgrp_name))
+        else:
+            try:
+                secgroup = self.vnc_lib.security_group_read(
+                    fq_name=sg_fixture.secgrp_fq_name)
+                self.logger.info(
+                    "Not able to delete the security group with back ref as "
+                    "expected")
+                assert False, (
+                    "Security group %s still present after delete" % (
+                        secgrp_name))
+            except NoIdError:
+                self.logger.info(
+                    "Security group %s removed from API as expected",
+                    secgrp_name)
+        result, msg = vm1_fixture.verify_security_group(secgrp_name)
+        assert not result, (
+            "Security group %s still attached to VM %s after delete" % (
+                secgrp_name, vm1_fixture.vm_name))
+        result, msg = vm2_fixture.verify_security_group(secgrp_name)
+        assert not result, (
+            "Security group %s still attached to VM %s after delete" % (
+                secgrp_name, vm2_fixture.vm_name))
 
     @preposttest_wrapper
     def test_sec_group_hold_flow_negative_test(self):
