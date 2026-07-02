@@ -584,4 +584,49 @@ class TestCRUD(BaseNeutronTest):
         # end for attribute_list
     # end update_router_test
 
+    @test.attr(type=['sanity', 'ci_sanity'])
+    @preposttest_wrapper
+    def test_network_tags_crud(self):
+        '''Tag CRUD on a network: set/list/append/show/delete/delete-all/
+           filter. Regression guard for OpenSDN-io/community#124.
+        '''
+        from common.openstack_libs import neutron_exception
+        c = self.neutron_h
+        net_id = c.create_network(
+            {'network': {'name': get_random_name('tagvn')}})['network']['id']
+        self.addCleanup(self._delete_network, net_id)
+
+        def tags():
+            return set(c.show_network(net_id)['network']['tags'])
+
+        # set (replace-all)
+        c.replace_tag('networks', net_id, {'tags': ['a', 'b']})
+        assert tags() == {'a', 'b'}, 'replace_tag did not persist'
+
+        # append: single PUT must add, not wipe the set
+        c.add_tag('networks', net_id, 'c')
+        assert tags() == {'a', 'b', 'c'}, 'add_tag replaced the set'
+
+        # show: present -> ok, absent -> 404
+        c.get(c.tag_path % ('networks', net_id, 'c'))
+        try:
+            c.get(c.tag_path % ('networks', net_id, 'zzz'))
+            assert False, 'show on a missing tag should 404'
+        except neutron_exception.NotFound:
+            pass
+
+        # delete one
+        c.remove_tag('networks', net_id, 'a')
+        assert tags() == {'b', 'c'}, 'remove_tag failed'
+
+        # filter by tag
+        nets = c.list_networks(tags='b')['networks']
+        assert net_id in [n['id'] for n in nets], 'tag filter missed net'
+
+        # delete all
+        c.remove_tag_all('networks', net_id)
+        assert tags() == set(), 'remove_tag_all left tags behind'
+        self.log.info('neutron tag CRUD passed for %s' % net_id)
+    # end test_network_tags_crud
+
 # end class TestCRUD
